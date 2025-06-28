@@ -1,0 +1,106 @@
+/* Animation Classes */
+
+.animate-slide-in {
+  animation: slide-in 0.8s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-typewriter {
+  overflow: hidden;
+  border-right: 0.15em solid #3b82f6;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.15em;
+  animation: 
+    typewriter 4s steps(40, end),
+    blink 0.75s step-end infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Gradient background animation */
+.animate-gradient {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Breathing animation */
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.animate-wobble {
+  animation: wobble 1s ease-in-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-morph {
+  animation: morph 8s ease-in-out infinite;
+}
+
+.animate-ripple {
+  animation: ripple 0.6s linear;
+}
+
+.animate-text-reveal {
+  animation: textReveal 1s ease-out forwards;
+}
+
+/* Title animation on hover */
+.animated-title:hover {
+  animation: slide-in 0.5s ease-out;
+}
+
+/* Smooth transitions for all animated elements */
+.animate-slide-in,
+.animate-fade-in-up {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.animate-slide-in:hover {
+  transform: scale(1.05);
+}
+
+/* Additional utility animations */
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+/* Notification animations */
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.3s ease-in;
+}
+
+/* Success/Error state animations */
+.animate-checkmark {
+  stroke-dasharray: 100;
+  animation: checkmark 0.6s ease-in-out;
+}
+
+.animate-error-x {
+  stroke-dasharray: 100;
+  animation: errorX 0.6s ease-in-out;
+}
