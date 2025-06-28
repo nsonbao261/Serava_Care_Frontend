@@ -2,93 +2,97 @@
 
 /* Enhanced button animations */
 .morphing-button {
-  position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
+   position: relative;
+   overflow: hidden;
+   transform-style: preserve-3d;
 }
 
 .morphing-button:hover {
-  transform: translateY(-1px);
+   transform: translateY(-1px);
 }
 
 .morphing-button:active {
-  transform: translateY(0);
+   transform: translateY(0);
 }
 
 /* Prevent animation conflicts */
 .morphing-button * {
-  pointer-events: none;
+   pointer-events: none;
 }
 
 .morphing-button {
-  pointer-events: auto;
+   pointer-events: auto;
 }
 
 /* Smooth morphing transitions */
 .button-content-enter {
-  transform: translateY(100%);
-  opacity: 0;
+   transform: translateY(100%);
+   opacity: 0;
 }
 
 .button-content-enter-active {
-  transform: translateY(0);
-  opacity: 1;
-  transition: all 300ms ease-in-out;
+   transform: translateY(0);
+   opacity: 1;
+   transition: all 300ms ease-in-out;
 }
 
 .button-content-exit {
-  transform: translateY(0);
-  opacity: 1;
+   transform: translateY(0);
+   opacity: 1;
 }
 
 .button-content-exit-active {
-  transform: translateY(-100%);
-  opacity: 0;
-  transition: all 300ms ease-in-out;
+   transform: translateY(-100%);
+   opacity: 0;
+   transition: all 300ms ease-in-out;
 }
 
 /* Page transition effects */
 .page-transition-enter {
-  opacity: 0;
-  transform: translateX(100px);
+   opacity: 0;
+   transform: translateX(100px);
 }
 
 .page-transition-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
+   opacity: 1;
+   transform: translateX(0);
+   transition:
+      opacity 300ms,
+      transform 300ms;
 }
 
 .page-transition-exit {
-  opacity: 1;
-  transform: translateX(0);
+   opacity: 1;
+   transform: translateX(0);
 }
 
 .page-transition-exit-active {
-  opacity: 0;
-  transform: translateX(-100px);
-  transition: opacity 300ms, transform 300ms;
+   opacity: 0;
+   transform: translateX(-100px);
+   transition:
+      opacity 300ms,
+      transform 300ms;
 }
 
 /* Loading skeleton */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.5s infinite;
+   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+   background-size: 200px 100%;
+   animation: skeleton-loading 1.5s infinite;
 }
 
 .skeleton-dark {
-  background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.5s infinite;
+   background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+   background-size: 200px 100%;
+   animation: skeleton-loading 1.5s infinite;
 }
 
 /* Progressive image loading */
 .image-fade-in {
-  opacity: 0;
-  transition: opacity 0.3s ease;
+   opacity: 0;
+   transition: opacity 0.3s ease;
 }
 
 .image-fade-in.loaded {
-  opacity: 1;
+   opacity: 1;
 }

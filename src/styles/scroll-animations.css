@@ -1,187 +1,199 @@
 /* Scroll-based Animation Classes */
 
 .animate-on-scroll {
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll.fade-up {
-  transform: translateY(30px);
-  opacity: 0;
+   transform: translateY(30px);
+   opacity: 0;
 }
 
 .animate-on-scroll.fade-up.in-view {
-  transform: translateY(0);
-  opacity: 1;
+   transform: translateY(0);
+   opacity: 1;
 }
 
 .animate-on-scroll.fade-down {
-  transform: translateY(-30px);
-  opacity: 0;
+   transform: translateY(-30px);
+   opacity: 0;
 }
 
 .animate-on-scroll.fade-down.in-view {
-  transform: translateY(0);
-  opacity: 1;
+   transform: translateY(0);
+   opacity: 1;
 }
 
 .animate-on-scroll.fade-left {
-  transform: translateX(30px);
-  opacity: 0;
+   transform: translateX(30px);
+   opacity: 0;
 }
 
 .animate-on-scroll.fade-left.in-view {
-  transform: translateX(0);
-  opacity: 1;
+   transform: translateX(0);
+   opacity: 1;
 }
 
 .animate-on-scroll.fade-right {
-  transform: translateX(-30px);
-  opacity: 0;
+   transform: translateX(-30px);
+   opacity: 0;
 }
 
 .animate-on-scroll.fade-right.in-view {
-  transform: translateX(0);
-  opacity: 1;
+   transform: translateX(0);
+   opacity: 1;
 }
 
 .animate-on-scroll.scale {
-  transform: scale(0.95);
-  opacity: 0;
+   transform: scale(0.95);
+   opacity: 0;
 }
 
 .animate-on-scroll.scale.in-view {
-  transform: scale(1);
-  opacity: 1;
+   transform: scale(1);
+   opacity: 1;
 }
 
 .animate-on-scroll.slide-up {
-  transform: translateY(50px);
-  opacity: 0;
+   transform: translateY(50px);
+   opacity: 0;
 }
 
 .animate-on-scroll.slide-up.in-view {
-  transform: translateY(0);
-  opacity: 1;
+   transform: translateY(0);
+   opacity: 1;
 }
 
 /* Advanced animation effects */
 .animate-on-scroll.bounce-up {
-  transform: translateY(60px) scale(0.9);
-  opacity: 0;
+   transform: translateY(60px) scale(0.9);
+   opacity: 0;
 }
 
 .animate-on-scroll.bounce-up.in-view {
-  animation: bounceUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+   animation: bounceUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
 .animate-on-scroll.bounce-in {
-  transform: scale(0.3);
-  opacity: 0;
+   transform: scale(0.3);
+   opacity: 0;
 }
 
 .animate-on-scroll.bounce-in.in-view {
-  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+   animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
 .animate-on-scroll.rotate-in {
-  transform: rotate(-180deg) scale(0.5);
-  opacity: 0;
+   transform: rotate(-180deg) scale(0.5);
+   opacity: 0;
 }
 
 .animate-on-scroll.rotate-in.in-view {
-  animation: rotateIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+   animation: rotateIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .animate-on-scroll.flip-up {
-  transform: perspective(400px) rotateX(90deg);
-  opacity: 0;
+   transform: perspective(400px) rotateX(90deg);
+   opacity: 0;
 }
 
 .animate-on-scroll.flip-up.in-view {
-  animation: flipUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+   animation: flipUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .animate-on-scroll.zoom-in {
-  transform: scale(0.5);
-  opacity: 0;
+   transform: scale(0.5);
+   opacity: 0;
 }
 
 .animate-on-scroll.zoom-in.in-view {
-  animation: zoomIn 0.6s ease-out forwards;
+   animation: zoomIn 0.6s ease-out forwards;
 }
 
 .animate-on-scroll.slide-left {
-  transform: translateX(-100px);
-  opacity: 0;
+   transform: translateX(-100px);
+   opacity: 0;
 }
 
 .animate-on-scroll.slide-left.in-view {
-  animation: slideLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+   animation: slideLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .animate-on-scroll.slide-right {
-  transform: translateX(100px);
-  opacity: 0;
+   transform: translateX(100px);
+   opacity: 0;
 }
 
 .animate-on-scroll.slide-right.in-view {
-  animation: slideRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+   animation: slideRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .animate-on-scroll.elastic-up {
-  transform: translateY(100px) scale(0.8);
-  opacity: 0;
+   transform: translateY(100px) scale(0.8);
+   opacity: 0;
 }
 
 .animate-on-scroll.elastic-up.in-view {
-  animation: elasticUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+   animation: elasticUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
 .animate-on-scroll.magnetic {
-  transform: translateY(30px);
-  opacity: 0;
-  filter: blur(3px);
+   transform: translateY(30px);
+   opacity: 0;
+   filter: blur(3px);
 }
 
 .animate-on-scroll.magnetic.in-view {
-  animation: magnetic 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+   animation: magnetic 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Enhanced scroll animations */
 .scroll-reveal {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+   opacity: 0;
+   transform: translateY(50px);
+   transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .scroll-reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
+   opacity: 1;
+   transform: translateY(0);
 }
 
 .scroll-animate {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+   opacity: 0;
+   transform: translateY(30px);
+   transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .scroll-animate.visible {
-  opacity: 1;
-  transform: translateY(0);
+   opacity: 1;
+   transform: translateY(0);
 }
 
 .scroll-animate-fast {
-  transition-duration: 0.3s;
+   transition-duration: 0.3s;
 }
 
 .scroll-animate-slow {
-  transition-duration: 1s;
+   transition-duration: 1s;
 }
 
 /* Staggered animations for lists/grids */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
-.stagger-6 { animation-delay: 0.6s; }
+.stagger-1 {
+   animation-delay: 0.1s;
+}
+.stagger-2 {
+   animation-delay: 0.2s;
+}
+.stagger-3 {
+   animation-delay: 0.3s;
+}
+.stagger-4 {
+   animation-delay: 0.4s;
+}
+.stagger-5 {
+   animation-delay: 0.5s;
+}
+.stagger-6 {
+   animation-delay: 0.6s;
+}
