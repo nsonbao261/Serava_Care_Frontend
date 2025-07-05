@@ -1,13 +1,12 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { Search, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DoctorCard } from '@/components/ui/doctor-card';
-import { Doctor } from '@/types/doctor';
-import { mockDoctors } from '@/data/doctors';
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { Search, Filter } from 'lucide-react'
+import { Button, DoctorCard, LoadingSpinner } from '@/components'
+import { Doctor } from '@/types'
+import { mockDoctors } from '@/data'
 
 const specialties = [
    'Tất cả chuyên khoa',
@@ -21,27 +20,37 @@ const specialties = [
    'Nội tổng quát',
    'Tai - Mũi - Họng',
    'Mắt',
-   'Răng - Hàm - Mặt',
-];
+   'Răng - Hàm - Mặt'
+]
 
 export default function DoctorsPage() {
-   const searchParams = useSearchParams();
-   const [searchTerm, setSearchTerm] = useState('');
-   const [selectedSpecialty, setSelectedSpecialty] = useState('Tất cả chuyên khoa');
-   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(mockDoctors);
-   const [currentPage, setCurrentPage] = useState(1);
-   const doctorsPerPage = 6;
+   const searchParams = useSearchParams()
+   const [searchTerm, setSearchTerm] = useState('')
+   const [selectedSpecialty, setSelectedSpecialty] = useState('Tất cả chuyên khoa')
+   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(mockDoctors)
+   const [currentPage, setCurrentPage] = useState(1)
+   const [isLoading, setIsLoading] = useState(true)
+   const [isFiltering, setIsFiltering] = useState(false)
+   const doctorsPerPage = 6
 
    // Initialize search term from URL parameters
    useEffect(() => {
-      const searchFromUrl = searchParams.get('search');
+      const searchFromUrl = searchParams.get('search')
       if (searchFromUrl) {
-         setSearchTerm(searchFromUrl);
+         setSearchTerm(searchFromUrl)
       }
-   }, [searchParams]);
+      // Simulate initial data loading
+      setTimeout(() => {
+         setIsLoading(false)
+      }, 800)
+   }, [searchParams])
 
    useEffect(() => {
-      let filtered = mockDoctors;
+      if (!isLoading) {
+         setIsFiltering(true)
+      }
+
+      let filtered = mockDoctors
 
       // Filter by search term
       if (searchTerm) {
@@ -51,25 +60,32 @@ export default function DoctorsPage() {
                (doctor.specialty &&
                   doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase())) ||
                doctor.hospital.toLowerCase().includes(searchTerm.toLowerCase())
-         );
+         )
       }
 
       // Filter by specialty
       if (selectedSpecialty !== 'Tất cả chuyên khoa') {
          filtered = filtered.filter(
             (doctor) => doctor.specialty && doctor.specialty.includes(selectedSpecialty)
-         );
+         )
       }
 
-      setFilteredDoctors(filtered);
-      setCurrentPage(1);
-   }, [searchTerm, selectedSpecialty]);
+      // Simulate filtering delay for better UX
+      setTimeout(
+         () => {
+            setFilteredDoctors(filtered)
+            setCurrentPage(1)
+            setIsFiltering(false)
+         },
+         isLoading ? 0 : 300
+      )
+   }, [searchTerm, selectedSpecialty, isLoading])
 
    // Pagination
-   const indexOfLastDoctor = currentPage * doctorsPerPage;
-   const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
-   const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
-   const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
+   const indexOfLastDoctor = currentPage * doctorsPerPage
+   const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage
+   const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor)
+   const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage)
 
    return (
       <div className="bg-gray-50">
@@ -126,23 +142,35 @@ export default function DoctorsPage() {
          {/* Results Section */}
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16 md:pb-20 lg:pb-16 tablet-spacing-fix ipad-pro-spacing-fix">
             {/* Results Count */}
-            <div className="mb-6">
-               <p className="text-gray-600">
-                  Tìm thấy{' '}
-                  <span className="font-semibold text-gray-900">{filteredDoctors.length}</span> bác
-                  sĩ
-                  {selectedSpecialty !== 'Tất cả chuyên khoa' && (
-                     <span>
-                        {' '}
-                        cho chuyên khoa{' '}
-                        <span className="font-semibold text-blue-600">{selectedSpecialty}</span>
-                     </span>
-                  )}
-               </p>
-            </div>
+            {!isLoading && !isFiltering && (
+               <div className="mb-6">
+                  <p className="text-gray-600">
+                     Tìm thấy{' '}
+                     <span className="font-semibold text-gray-900">{filteredDoctors.length}</span>{' '}
+                     bác sĩ
+                     {selectedSpecialty !== 'Tất cả chuyên khoa' && (
+                        <span>
+                           {' '}
+                           cho chuyên khoa{' '}
+                           <span className="font-semibold text-blue-600">{selectedSpecialty}</span>
+                        </span>
+                     )}
+                  </p>
+               </div>
+            )}
+
+            {/* Loading State */}
+            {(isLoading || isFiltering) && (
+               <div className="py-16">
+                  <LoadingSpinner
+                     size="lg"
+                     text={isLoading ? 'Đang tải danh sách bác sĩ...' : 'Đang lọc kết quả...'}
+                  />
+               </div>
+            )}
 
             {/* Doctors Grid */}
-            {currentDoctors.length > 0 ? (
+            {!isLoading && !isFiltering && currentDoctors.length > 0 && (
                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 tablet-grid-spacing">
                   {currentDoctors.map((doctor, index) => (
                      <DoctorCard
@@ -153,7 +181,10 @@ export default function DoctorsPage() {
                      />
                   ))}
                </div>
-            ) : (
+            )}
+
+            {/* No Data State */}
+            {!isLoading && !isFiltering && currentDoctors.length === 0 && (
                <div className="text-center py-12">
                   <p className="text-red-600 font-semibold">Không có bác sĩ nào để hiển thị.</p>
                   <p className="text-sm text-gray-500 mt-2">
@@ -163,7 +194,7 @@ export default function DoctorsPage() {
             )}
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {!isLoading && !isFiltering && totalPages > 1 && (
                <div className="flex justify-center items-center space-x-2 mb-8 tablet-pagination-spacing">
                   <Button
                      variant="outline"
@@ -174,7 +205,7 @@ export default function DoctorsPage() {
                   </Button>
 
                   {[...Array(totalPages)].map((_, index) => {
-                     const page = index + 1;
+                     const page = index + 1
                      if (
                         page === 1 ||
                         page === totalPages ||
@@ -189,16 +220,16 @@ export default function DoctorsPage() {
                            >
                               {page}
                            </Button>
-                        );
+                        )
                      }
                      if (page === currentPage - 2 || page === currentPage + 2) {
                         return (
                            <span key={page} className="px-2">
                               ...
                            </span>
-                        );
+                        )
                      }
-                     return null;
+                     return null
                   })}
 
                   <Button
@@ -212,7 +243,7 @@ export default function DoctorsPage() {
             )}
 
             {/* No Results */}
-            {filteredDoctors.length === 0 && (
+            {!isLoading && !isFiltering && filteredDoctors.length === 0 && (
                <div className="text-center py-12">
                   <div className="text-gray-400 mb-4">
                      <Search className="h-16 w-16 mx-auto" />
@@ -225,14 +256,14 @@ export default function DoctorsPage() {
                   </p>
                   {searchTerm && (
                      <div className="space-x-4">
-                        <Link href={`/bac-si/chuyen-khoa?search=${encodeURIComponent(searchTerm)}`}>
+                        <Link href={`/chuyen-khoa?search=${encodeURIComponent(searchTerm)}`}>
                            <Button variant="outline">Tìm trong chuyên khoa</Button>
                         </Link>
                         <Button
                            variant="outline"
                            onClick={() => {
-                              setSearchTerm('');
-                              setSelectedSpecialty('Tất cả chuyên khoa');
+                              setSearchTerm('')
+                              setSelectedSpecialty('Tất cả chuyên khoa')
                            }}
                         >
                            Xóa bộ lọc
@@ -243,5 +274,5 @@ export default function DoctorsPage() {
             )}
          </div>
       </div>
-   );
+   )
 }

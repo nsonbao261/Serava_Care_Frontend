@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { use } from 'react';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { use, useState } from 'react'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { Button, BookingModal } from '@/components'
 import {
    MapPin,
    Clock,
@@ -18,16 +18,18 @@ import {
    Share2,
    ChevronRight,
    Bookmark,
-   ThumbsUp,
-} from 'lucide-react';
-import { mockDoctorDetails } from '@/data/doctor-details';
+   ThumbsUp
+} from 'lucide-react'
+import { mockDoctorDetails } from '@/data'
+import { Doctor, Article } from '@/types'
 
 export default function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-   const { slug } = use(params);
-   const doctor = mockDoctorDetails[slug];
+   const { slug } = use(params)
+   const doctor = mockDoctorDetails[slug]
+   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
    if (!doctor) {
-      notFound();
+      notFound()
    }
 
    const generateInitials = (name: string) => {
@@ -35,8 +37,8 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
          .split(' ')
          .slice(-2)
          .map((n) => n[0])
-         .join('');
-   };
+         .join('')
+   }
 
    return (
       <div className="min-h-screen bg-gray-50">
@@ -140,7 +142,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
                      <h2 className="text-2xl font-bold text-gray-900 mb-6">Học vấn</h2>
                      <div className="space-y-3">
-                        {doctor.education.map((item, index) => (
+                        {doctor.education.map((item: string, index: number) => (
                            <div key={index} className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
                               <p className="text-gray-700">{item}</p>
@@ -155,7 +157,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                         Thành tích & Chứng chỉ
                      </h2>
                      <div className="grid md:grid-cols-2 gap-4">
-                        {doctor.achievements.map((achievement, index) => (
+                        {doctor.achievements.map((achievement: string, index: number) => (
                            <div key={index} className="flex items-start space-x-3">
                               <Award className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                               <p className="text-gray-700">{achievement}</p>
@@ -171,7 +173,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                            Bài viết của {doctor.name}
                         </h2>
                         <div className="space-y-4">
-                           {doctor.articles.map((article) => (
+                           {doctor.articles.map((article: Article) => (
                               <div
                                  key={article.id}
                                  className="border-b border-gray-100 pb-4 last:border-b-0"
@@ -212,7 +214,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                         </div>
                      </div>
 
-                     <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-4">
+                     <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-4"
+                        onClick={() => setIsBookingModalOpen(true)}
+                     >
                         <Calendar className="h-4 w-4 mr-2" />
                         Đặt lịch khám ngay
                      </Button>
@@ -233,7 +238,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                      <h3 className="text-lg font-bold text-gray-900 mb-4">Ngôn ngữ</h3>
                      <div className="flex flex-wrap gap-2">
-                        {doctor.languages.map((language, index) => (
+                        {doctor.languages.map((language: string, index: number) => (
                            <span
                               key={index}
                               className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -293,6 +298,13 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                </div>
             </div>
          </div>
+
+         {/* Booking Modal */}
+         <BookingModal
+            doctor={doctor as unknown as Doctor}
+            isOpen={isBookingModalOpen}
+            onClose={() => setIsBookingModalOpen(false)}
+         />
       </div>
-   );
+   )
 }

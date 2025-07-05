@@ -1,16 +1,14 @@
-'use client';
+'use client'
 
-import { MorphingButton } from '@/components/ui/morphing-button';
-import { TypewriterText } from '@/components/ui/typewriter-text';
-import { ParticleBackground } from '@/components/ui/particle-background';
-import { Search, Calendar, Play } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { MorphingButton, TypewriterText, ParticleBackground } from '@/components'
+import { Search, Calendar, Play } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const HeroSection = () => {
-   const [searchTerm, setSearchTerm] = useState('');
-   const router = useRouter();
+   const [searchTerm, setSearchTerm] = useState('')
+   const router = useRouter()
 
    // Define specialty keywords for smart routing
    const specialtyKeywords = [
@@ -98,21 +96,21 @@ const HeroSection = () => {
       'dinh dưỡng',
       'nutrition',
       'bác sĩ gia đình',
-      'family medicine',
-   ];
+      'family medicine'
+   ]
 
    const handleSearch = () => {
-      const searchText = searchTerm.trim().toLowerCase();
+      const searchText = searchTerm.trim().toLowerCase()
 
       if (!searchText) {
-         router.push('/bac-si');
-         return;
+         router.push('/bac-si')
+         return
       }
 
       // Check if search term contains specialty keywords
       const isSpecialtySearch = specialtyKeywords.some((keyword) =>
          searchText.includes(keyword.toLowerCase())
-      );
+      )
 
       // Check if search contains doctor-specific terms
       const doctorKeywords = [
@@ -124,33 +122,34 @@ const HeroSection = () => {
          'phó giáo sư',
          'pgs',
          'giáo sư',
-         'gs',
-      ];
+         'gs'
+      ]
       const isDoctorSearch = doctorKeywords.some((keyword) =>
          searchText.includes(keyword.toLowerCase())
-      );
+      )
 
       // Smart routing based on search content
       if (isSpecialtySearch && !isDoctorSearch) {
          // Pure specialty search
-         router.push(`/bac-si/chuyen-khoa?search=${encodeURIComponent(searchTerm.trim())}`);
+         router.push(`/chuyen-khoa?search=${encodeURIComponent(searchTerm.trim())}`)
       } else if (isDoctorSearch && !isSpecialtySearch) {
          // Pure doctor search
-         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`);
+         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`)
       } else if (isSpecialtySearch && isDoctorSearch) {
          // Mixed search - prioritize doctors page as it's more specific
-         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`);
+         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`)
       } else {
          // General search - default to doctors page
-         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`);
+         router.push(`/bac-si?search=${encodeURIComponent(searchTerm.trim())}`)
       }
-   };
+   }
 
    const handleKeyPress = (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-         handleSearch();
+         handleSearch()
       }
-   };
+   }
+
    return (
       <section className="relative py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
          <ParticleBackground particleCount={30} particleColor="#3b82f6" />
@@ -158,23 +157,22 @@ const HeroSection = () => {
          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center">
                <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                  <span className="animate-slide-in">Đặt lịch khám bệnh</span>
+                  <span className="animate-in slide-in-from-left-4 duration-700">
+                     Đặt lịch khám bệnh
+                  </span>
                   <span className="block text-blue-600">
                      <TypewriterText
                         texts={[
                            'Dễ dàng & Nhanh chóng',
                            'Tiện lợi & Tin cậy',
-                           'Chuyên nghiệp & Uy tín',
+                           'Chuyên nghiệp & Uy tín'
                         ]}
                         speed={120}
                         pauseDuration={2500}
                      />
                   </span>
                </h1>
-               <p
-                  className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-2 animate-fade-in-up"
-                  style={{ animationDelay: '0.6s', animationFillMode: 'both' }}
-               >
+               <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
                   Tìm bác sĩ chính xác - Đặt lịch khám dễ dàng với hơn 1000 bác sĩ, 25 bệnh viện,
                   100 phòng khám trên toàn quốc
                </p>
@@ -204,10 +202,7 @@ const HeroSection = () => {
 
                {/* Animated Quick Search Suggestions */}
                <div className="max-w-4xl mx-auto mb-8 px-2">
-                  <p
-                     className="text-sm text-gray-500 mb-3 animate-fade-in-up"
-                     style={{ animationDelay: '0.8s', animationFillMode: 'both' }}
-                  >
+                  <p className="text-sm text-gray-500 mb-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-500">
                      Tìm kiếm phổ biến:
                   </p>
                   <div className="flex flex-wrap gap-2 justify-center">
@@ -217,17 +212,17 @@ const HeroSection = () => {
                         'Sản phụ khoa',
                         'Bác sĩ da liễu',
                         'Tiêu hóa gan mật',
-                        'Thần kinh',
+                        'Thần kinh'
                      ].map((suggestion, index) => (
                         <button
                            key={suggestion}
                            onClick={() => {
-                              setSearchTerm(suggestion);
+                              setSearchTerm(suggestion)
                               // Auto-trigger search
-                              const searchText = suggestion.toLowerCase();
+                              const searchText = suggestion.toLowerCase()
                               const isSpecialtySearch = specialtyKeywords.some((keyword) =>
                                  searchText.includes(keyword.toLowerCase())
-                              );
+                              )
                               const doctorKeywords = [
                                  'bác sĩ',
                                  'bs',
@@ -237,24 +232,24 @@ const HeroSection = () => {
                                  'phó giáo sư',
                                  'pgs',
                                  'giáo sư',
-                                 'gs',
-                              ];
+                                 'gs'
+                              ]
                               const isDoctorSearch = doctorKeywords.some((keyword) =>
                                  searchText.includes(keyword.toLowerCase())
-                              );
+                              )
 
                               if (isSpecialtySearch && !isDoctorSearch) {
                                  router.push(
-                                    `/bac-si/chuyen-khoa?search=${encodeURIComponent(suggestion)}`
-                                 );
+                                    `/chuyen-khoa?search=${encodeURIComponent(suggestion)}`
+                                 )
                               } else {
-                                 router.push(`/bac-si?search=${encodeURIComponent(suggestion)}`);
+                                 router.push(`/bac-si?search=${encodeURIComponent(suggestion)}`)
                               }
                            }}
-                           className="px-3 py-1 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-700 rounded-full text-sm transition-all duration-200 hover-lift animate-fade-in-up"
+                           className="px-3 py-1 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-700 rounded-full text-sm transition-all duration-200 hover:-translate-y-0.5 animate-in fade-in slide-in-from-bottom-2"
                            style={{
-                              animationDelay: `${1 + index * 0.1}s`,
-                              animationFillMode: 'both',
+                              animationDuration: '500ms',
+                              animationDelay: `${700 + index * 100}ms`
                            }}
                         >
                            {suggestion}
@@ -293,7 +288,7 @@ const HeroSection = () => {
             </div>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default HeroSection;
+export default HeroSection

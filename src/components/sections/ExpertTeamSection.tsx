@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { GraduationCap, Users, Award, BookOpen } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from '@/components'
+import { GraduationCap, Users, Award, BookOpen } from 'lucide-react'
+import Link from 'next/link'
 
 const ExpertTeamSection = () => {
    const experts = [
@@ -10,7 +10,7 @@ const ExpertTeamSection = () => {
          specialty: 'Tim mạch can thiệp',
          experience: '20+ năm kinh nghiệm',
          education: 'Đại học Y Dược TP.HCM',
-         image: '/images/experts/expert-1.jpg', // Placeholder image
+         image: '/images/experts/expert-1.jpg' // Placeholder image
       },
       {
          name: 'TS. BS Trần Thị Hương',
@@ -18,7 +18,7 @@ const ExpertTeamSection = () => {
          specialty: 'Nhi khoa - Nội tiết',
          experience: '15+ năm kinh nghiệm',
          education: 'Bệnh viện Nhi Đồng 1',
-         image: '/images/experts/expert-2.jpg', // Placeholder image
+         image: '/images/experts/expert-2.jpg' // Placeholder image
       },
       {
          name: 'ThS. BS Lê Văn Đức',
@@ -26,7 +26,7 @@ const ExpertTeamSection = () => {
          specialty: 'Tiêu hóa - Gan mật',
          experience: '18+ năm kinh nghiệm',
          education: 'Bệnh viện Chợ Rẫy',
-         image: '/images/experts/expert-3.jpg', // Placeholder image
+         image: '/images/experts/expert-3.jpg' // Placeholder image
       },
       {
          name: 'BS. CK2 Phạm Thị Lan',
@@ -34,7 +34,7 @@ const ExpertTeamSection = () => {
          specialty: 'Sản phụ khoa',
          experience: '12+ năm kinh nghiệm',
          education: 'Bệnh viện Từ Dũ',
-         image: '/images/experts/expert-4.jpg', // Placeholder image
+         image: '/images/experts/expert-4.jpg' // Placeholder image
       },
       {
          name: 'TS. BS Hoàng Minh Tuấn',
@@ -42,7 +42,7 @@ const ExpertTeamSection = () => {
          specialty: 'Thần kinh - Tâm thần',
          experience: '16+ năm kinh nghiệm',
          education: 'Viện Sức khỏe Tâm thần',
-         image: '/images/experts/expert-5.jpg', // Placeholder image
+         image: '/images/experts/expert-5.jpg' // Placeholder image
       },
       {
          name: 'ThS. DS Nguyễn Thị Mai',
@@ -50,9 +50,9 @@ const ExpertTeamSection = () => {
          specialty: 'Dược lâm sàng',
          experience: '14+ năm kinh nghiệm',
          education: 'Đại học Dược Hà Nội',
-         image: '/images/experts/expert-6.jpg', // Placeholder image
-      },
-   ];
+         image: '/images/experts/expert-6.jpg' // Placeholder image
+      }
+   ]
 
    return (
       <section className="py-20 bg-white">
@@ -194,7 +194,7 @@ const ExpertTeamSection = () => {
             </div>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default ExpertTeamSection;
+export default ExpertTeamSection

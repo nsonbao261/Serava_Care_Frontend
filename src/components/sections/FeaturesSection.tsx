@@ -1,4 +1,4 @@
-import { Calendar, Users, Shield } from 'lucide-react';
+import { Calendar, Users, Shield } from 'lucide-react'
 
 const FeaturesSection = () => {
    return (
@@ -46,7 +46,7 @@ const FeaturesSection = () => {
             </div>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default FeaturesSection;
+export default FeaturesSection

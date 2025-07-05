@@ -1,49 +1,65 @@
-'use client';
+'use client'
 
-import HeroSection from '@/components/sections/HeroSection';
-import FeaturesSection from '@/components/sections/FeaturesSection';
-import SpecialtiesSection from '@/components/sections/SpecialtiesSection';
-import StatisticsSection from '@/components/sections/StatisticsSection';
-import ExpertTeamSection from '@/components/sections/ExpertTeamSection';
-import NewsletterSection from '@/components/sections/NewsletterSection';
-import CTASection from '@/components/sections/CTASection';
-import { AnimatedSection } from '@/components/ui/animated-section';
-import { FloatingActionButton } from '@/components/ui/floating-action-button';
-import { BackToTop } from '@/components/ui/back-to-top';
+import { Suspense, lazy } from 'react'
+import { HeroSection, LoadingSpinner, AnimatedSection } from '@/components'
+
+// Lazy load heavy sections for better initial page load
+const FeaturesSection = lazy(() => import('@/components/sections/FeaturesSection'))
+const SpecialtiesSection = lazy(() => import('@/components/sections/SpecialtiesSection'))
+const StatisticsSection = lazy(() => import('@/components/sections/StatisticsSection'))
+const ExpertTeamSection = lazy(() => import('@/components/sections/ExpertTeamSection'))
+const NewsletterSection = lazy(() => import('@/components/sections/NewsletterSection'))
+const CTASection = lazy(() => import('@/components/sections/CTASection'))
+
+// Optimized loading component
+const SectionLoader = () => (
+   <div className="py-8 flex justify-center">
+      <LoadingSpinner size="sm" />
+   </div>
+)
 
 export default function Home() {
    return (
-      <div className="min-h-screen bg-gray-50 page-entrance">
-         <AnimatedSection animation="magnetic">
-            <HeroSection />
-         </AnimatedSection>
+      <div className="min-h-screen bg-gray-50">
+         {/* Load Hero immediately for optimal LCP (Largest Contentful Paint) */}
+         <HeroSection />
 
-         <AnimatedSection animation="bounce-up" delay={200}>
-            <FeaturesSection />
-         </AnimatedSection>
+         {/* Lazy load sections with staggered animations for better perceived performance */}
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={100}>
+               <FeaturesSection />
+            </AnimatedSection>
+         </Suspense>
 
-         <AnimatedSection animation="elastic-up" delay={100}>
-            <SpecialtiesSection />
-         </AnimatedSection>
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={200}>
+               <SpecialtiesSection />
+            </AnimatedSection>
+         </Suspense>
 
-         <AnimatedSection animation="slide-left" delay={150}>
-            <StatisticsSection />
-         </AnimatedSection>
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={150}>
+               <StatisticsSection />
+            </AnimatedSection>
+         </Suspense>
 
-         <AnimatedSection animation="magnetic" delay={100}>
-            <ExpertTeamSection />
-         </AnimatedSection>
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={100}>
+               <ExpertTeamSection />
+            </AnimatedSection>
+         </Suspense>
 
-         <AnimatedSection animation="bounce-in" delay={200}>
-            <NewsletterSection />
-         </AnimatedSection>
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={200}>
+               <NewsletterSection />
+            </AnimatedSection>
+         </Suspense>
 
-         <AnimatedSection animation="zoom-in" delay={100}>
-            <CTASection />
-         </AnimatedSection>
-
-         <FloatingActionButton />
-         <BackToTop threshold={300} />
+         <Suspense fallback={<SectionLoader />}>
+            <AnimatedSection delay={100}>
+               <CTASection />
+            </AnimatedSection>
+         </Suspense>
       </div>
-   );
+   )
 }
