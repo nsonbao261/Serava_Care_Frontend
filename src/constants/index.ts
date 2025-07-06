@@ -13,7 +13,9 @@ import {
    Weight
 } from 'lucide-react'
 
-export const ACCESS_TOKEN = 'access_token'
+export const ACCESS_TOKEN = 'serava_care_access_token'
+export const REFRESH_TOKEN = 'serava_care_refresh_token'
+export const COOKIE_USER_DATA = 'user_data'
 
 // Booking status configuration
 export const BOOKING_STATUS_CONFIG = {
@@ -119,7 +121,7 @@ export const MEDICAL_RECORD_STATUS_LABELS = {
 // API endpoints
 export const API_ENDPOINTS = {
    AUTH: {
-      LOGIN: '/auth/login',
+      LOGIN: '/auth/sign-in',
       LOGOUT: '/auth/logout',
       REFRESH: '/auth/refresh',
       PROFILE: '/auth/profile'

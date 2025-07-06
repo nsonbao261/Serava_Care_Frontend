@@ -61,10 +61,10 @@ export default function PersonalInfoPage() {
       defaultValues: userProfile
    })
 
-   // Redirect to login if not authenticated
+   // Redirect to sign-in if not authenticated
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
-         router.push('/login?returnUrl=/thong-tin-ca-nhan')
+         router.push('/sign-in?returnUrl=/thong-tin-ca-nhan')
       }
    }, [isAuthenticated, authLoading, router])
 

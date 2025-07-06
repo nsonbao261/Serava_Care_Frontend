@@ -9,7 +9,7 @@ const userService = new UserService()
 // Auth Service Class
 export class AuthService {
    // Login method
-   async login(credentials: LoginInput): Promise<AuthResponse> {
+   async signIn(credentials: LoginInput): Promise<AuthResponse> {
       try {
          const response = await api.post('/auth/sign-in', credentials)
 
@@ -34,14 +34,14 @@ export class AuthService {
 
          return {
             statusCode: 500,
-            message: 'An unexpected error occurred during login.',
+            message: 'An unexpected error occurred during sign-in.',
             error: 'Network error or server unavailable'
          }
       }
    }
 
    // Signup method
-   async signup(userData: SignupInput): Promise<AuthResponse> {
+   async signUp(userData: SignupInput): Promise<AuthResponse> {
       try {
          console.log(2222)
 
@@ -50,8 +50,8 @@ export class AuthService {
 
          console.log('sign>>>>>>>>>>>>>>>>>>>>>>', response)
 
-         // Note: For signup, we might not immediately store tokens
-         // as user might need to verify email first
+         // Note: For sign-up, we might not immediately store tokens
+         // as user might need to verify username first
          if (response.data.statusCode === 200 && response.data.data?.accessToken) {
             setAuthTokens(
                response.data.data.accessToken,
@@ -62,8 +62,6 @@ export class AuthService {
 
          return response.data
       } catch (error: unknown) {
-         console.log(11111111111111111111111111111111, error)
-
          if (error instanceof Error) {
             return {
                statusCode: 400,
@@ -74,7 +72,7 @@ export class AuthService {
 
          return {
             statusCode: 500,
-            message: 'An unexpected error occurred during signup.',
+            message: 'An unexpected error occurred during sign-up.',
             error: 'Network error or server unavailable'
          }
       }
@@ -180,7 +178,7 @@ export class AuthService {
          await new Promise((resolve) => setTimeout(resolve, 1000))
 
          // Mock validation
-         if (!credentials.email || !credentials.password) {
+         if (!credentials.username || !credentials.password) {
             return {
                statusCode: 400,
                message: 'Email và mật khẩu là bắt buộc.',
@@ -197,7 +195,7 @@ export class AuthService {
          }
 
          // Check if user exists in our data
-         const userData = await userService.getUserByEmail(credentials.email)
+         const userData = await userService.getUserByEmail(credentials.username)
 
          let mockUser: User
          if (userData) {
@@ -206,7 +204,7 @@ export class AuthService {
          } else {
             // Create new user if doesn't exist
             const newUserData = await userService.createUser(
-               userService.fromAuthUser(generateMockUser(credentials.email) as User)
+               userService.fromAuthUser(generateMockUser(credentials.username) as User)
             )
             mockUser = userService.toAuthUser(newUserData)
          }
@@ -242,7 +240,7 @@ export class AuthService {
          await new Promise((resolve) => setTimeout(resolve, 1500))
 
          // Mock validation
-         if (!userData.email || !userData.password || !userData.fullName) {
+         if (!userData.username || !userData.password || !userData.fullName) {
             return {
                statusCode: 400,
                message: 'Vui lòng điền đầy đủ thông tin bắt buộc.',
@@ -261,7 +259,7 @@ export class AuthService {
          // Generate mock tokens and user data
          const mockTokens = generateMockTokens()
          const mockUser = generateMockUser(
-            userData.email,
+            userData.username,
             userData.fullName,
             userData.birthDate,
             userData.gender

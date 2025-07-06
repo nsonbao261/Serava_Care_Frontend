@@ -2,6 +2,9 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'ax
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
 
+// Deps
+import { ACCESS_TOKEN, COOKIE_USER_DATA, REFRESH_TOKEN } from '@/constants'
+
 // Create axios instance with default configuration
 const api = axios.create({
    baseURL: process.env.NEXT_API_URL || '/api',
@@ -14,10 +17,12 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
    (config: InternalAxiosRequestConfig) => {
-      const token = Cookies.get('access_token')
+      const token = Cookies.get(ACCESS_TOKEN)
+
       if (token) {
          config.headers.Authorization = `Bearer ${token}`
       }
+
       return config
    },
    (error: AxiosError) => {
@@ -38,14 +43,14 @@ api.interceptors.response.use(
          originalRequest._retry = true
 
          try {
-            const refreshToken = Cookies.get('refresh_token')
+            const refreshToken = Cookies.get(REFRESH_TOKEN)
             if (refreshToken) {
                const response = await refreshAuthToken(refreshToken)
 
                if (response.success) {
                   // Update tokens
-                  Cookies.set('access_token', response.data.accessToken, { expires: 1 }) // 1 day
-                  Cookies.set('refresh_token', response.data.refreshToken, { expires: 7 }) // 7 days
+                  Cookies.set(ACCESS_TOKEN, response.data.accessToken, { expires: 1 })
+                  Cookies.set(REFRESH_TOKEN, response.data.refreshToken, { expires: 7 })
 
                   // Retry original request with new token
                   originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
@@ -53,9 +58,9 @@ api.interceptors.response.use(
                }
             }
          } catch {
-            // Refresh failed, redirect to login
+            // Refresh failed, redirect to sign-in
             clearAuthTokens()
-            window.location.href = '/login'
+            window.location.href = '/sign-in'
          }
       }
 
@@ -89,12 +94,9 @@ api.interceptors.response.use(
 // Refresh token function
 async function refreshAuthToken(refreshToken: string) {
    try {
-      const response = await axios.post(
-         `${process.env.NEXT_PUBLIC_API_URL || '/api'}/refresh-token`,
-         {
-            refreshToken
-         }
-      )
+      const response = await axios.post(`${process.env.NEXT_API_URL || '/api'}/refresh-token`, {
+         refreshToken
+      })
       return response.data
    } catch {
       throw new Error('Failed to refresh token')
@@ -103,9 +105,9 @@ async function refreshAuthToken(refreshToken: string) {
 
 // Helper function to clear auth tokens
 export function clearAuthTokens() {
-   Cookies.remove('access_token')
-   Cookies.remove('refresh_token')
-   Cookies.remove('user_data')
+   Cookies.remove(ACCESS_TOKEN)
+   Cookies.remove(REFRESH_TOKEN)
+   Cookies.remove(COOKIE_USER_DATA)
 
    // Trigger custom event to notify components of user data change
    if (typeof window !== 'undefined') {
@@ -119,9 +121,9 @@ export function setAuthTokens(
    refreshToken: string,
    userData: Record<string, unknown>
 ) {
-   Cookies.set('access_token', accessToken, { expires: 1 }) // 1 day
-   Cookies.set('refresh_token', refreshToken, { expires: 7 }) // 7 days
-   Cookies.set('user_data', JSON.stringify(userData), { expires: 7 })
+   Cookies.set(ACCESS_TOKEN, accessToken, { expires: 1 }) // 1 day
+   Cookies.set(REFRESH_TOKEN, refreshToken, { expires: 7 }) // 7 days
+   Cookies.set(COOKIE_USER_DATA, JSON.stringify(userData), { expires: 7 })
 
    // Trigger custom event to notify components of user data change
    if (typeof window !== 'undefined') {
@@ -131,7 +133,7 @@ export function setAuthTokens(
 
 // Helper function to get user data
 export function getUserData() {
-   const userData = Cookies.get('user_data')
+   const userData = Cookies.get(COOKIE_USER_DATA)
    return userData ? JSON.parse(userData) : null
 }
 

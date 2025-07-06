@@ -98,11 +98,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
    const [order, setOrder] = useState<OrderDetail | null>(null)
    const [isLoading, setIsLoading] = useState(true)
 
-   // Redirect to login if not authenticated
+   // Redirect to sign-in if not authenticated
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
          const currentUrl = encodeURIComponent(`/lich-su-dat-kham/${id}`)
-         router.push(`/login?returnUrl=${currentUrl}`)
+         router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, authLoading, router, id])
 

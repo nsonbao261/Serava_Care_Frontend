@@ -1,6 +1,8 @@
-import { ACCESS_TOKEN } from '@/constants'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+
+// Deps
+import { ACCESS_TOKEN, COOKIE_USER_DATA } from '@/constants'
 
 export function middleware(request: NextRequest) {
    // Define protected routes
@@ -21,11 +23,11 @@ export function middleware(request: NextRequest) {
    if (isProtectedPath) {
       // Check for our custom auth cookies
       const accessToken = request.cookies.get(ACCESS_TOKEN)
-      const userData = request.cookies.get('user_data')
+      const userData = request.cookies.get(COOKIE_USER_DATA)
 
-      // If no auth cookies found, redirect to login
+      // If no auth cookies found, redirect to sign-in
       if (!accessToken || !userData) {
-         const loginUrl = new URL('/login', request.url)
+         const loginUrl = new URL('/sign-in', request.url)
          loginUrl.searchParams.set('returnUrl', request.nextUrl.pathname)
          return NextResponse.redirect(loginUrl)
       }

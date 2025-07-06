@@ -15,10 +15,10 @@ import { Button, Checkbox, Input, Label } from '@/components'
 import { useAuth } from '@/hooks'
 import { signupSchema, type SignupInput } from '@/schemas'
 
-export default function SignupForm() {
+export default function SignUpForm() {
    const router = useRouter()
    const searchParams = useSearchParams()
-   const { signup, mockSignup, isLoading } = useAuth()
+   const { signUp, mockSignup, isLoading } = useAuth()
    const [agreeTerms, setAgreeTerms] = useState(false)
    const [useMock, setUseMock] = useState(true) // Toggle between real and mock API
 
@@ -47,9 +47,9 @@ export default function SignupForm() {
       }
 
       try {
-         console.log('Submitting signup form with data:', data)
+         console.log('Submitting sign-up form with data:', data)
          // Choose between mock and real authentication
-         const response = useMock ? await mockSignup(data) : await signup(data)
+         const response = useMock ? await mockSignup(data) : await signUp(data)
          console.log('Signup response in form:', response)
 
          // Check for success conditions
@@ -292,7 +292,7 @@ export default function SignupForm() {
             <p className="text-xs text-gray-600">
                Đã có tài khoản?{' '}
                <a
-                  href="/login"
+                  href="/sign-in"
                   className="text-blue-500 hover:text-blue-600 font-medium transition-colors"
                >
                   Đăng nhập ngay

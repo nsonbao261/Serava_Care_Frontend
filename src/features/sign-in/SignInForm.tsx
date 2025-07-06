@@ -13,7 +13,7 @@ import { loginSchema, type LoginInput } from '@/schemas'
 export default function LoginForm() {
    const router = useRouter()
    const searchParams = useSearchParams()
-   const { login, mockLogin, isLoading } = useAuth()
+   const { signIn, mockLogin, isLoading } = useAuth()
    const [useMock, setUseMock] = useState(true) // Toggle between real and mock API
 
    const {
@@ -24,7 +24,7 @@ export default function LoginForm() {
    } = useForm<LoginInput>({
       resolver: zodResolver(loginSchema),
       defaultValues: {
-         email: '',
+         username: '',
          password: '',
          rememberMe: false
       }
@@ -33,7 +33,7 @@ export default function LoginForm() {
    const onSubmit = async (data: LoginInput) => {
       try {
          // Choose between mock and real authentication
-         const response = useMock ? await mockLogin(data) : await login(data)
+         const response = useMock ? await mockLogin(data) : await signIn(data)
 
          if (response.statusCode === 200) {
             // Redirect to return URL or dashboard
@@ -82,19 +82,21 @@ export default function LoginForm() {
          )}
 
          <div className="space-y-1">
-            <Label htmlFor="email" className="text-blue-700 font-medium text-base">
+            <Label htmlFor="username" className="text-blue-700 font-medium text-base">
                Email
             </Label>
             <Input
-               id="email"
-               type="email"
+               id="username"
+               type="username"
                placeholder="Nhập email để tiếp tục"
                className={`rounded-md focus:border-blue-700 h-12 text-base ${
-                  errors.email ? 'border-red-500' : 'border-blue-500'
+                  errors.username ? 'border-red-500' : 'border-blue-500'
                }`}
-               {...register('email')}
+               {...register('username')}
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+            {errors.username && (
+               <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
+            )}
          </div>
 
          <div className="space-y-1">

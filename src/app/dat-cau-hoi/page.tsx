@@ -20,10 +20,10 @@ export default function AskQuestionPage() {
       setValue
    } = form
 
-   // Redirect to login if not authenticated
+   // Redirect to sign-in if not authenticated
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
-         router.push('/login?returnUrl=/dat-cau-hoi')
+         router.push('/sign-in?returnUrl=/dat-cau-hoi')
       }
    }, [isAuthenticated, authLoading, router])
 

@@ -1,12 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Filter, Search } from 'lucide-react'
 import Link from 'next/link'
-import { Search, Filter } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+// Components
 import { Button, DoctorCard, LoadingSpinner } from '@/components'
-import { Doctor } from '@/types'
+
+// Deps
 import { mockDoctors } from '@/data'
+import { Doctor } from '@/types'
 
 const specialties = [
    'Tất cả chuyên khoa',

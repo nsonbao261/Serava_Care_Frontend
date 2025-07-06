@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
-// Auth validation schemas
 export const loginSchema = z.object({
-   username: z.string().min(1, 'Email là bắt buộc'),
+   username: z.string().min(1, 'Vui lòng nhập tên đăng nhập'),
    password: z
       .string()
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
@@ -12,7 +11,7 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
    .object({
-      username: z.string().min(1, 'Email là bắt buộc'),
+      username: z.string().min(1, 'Vui lòng nhập tên đăng nhập'),
       fullName: z
          .string()
          .min(2, 'Họ và tên phải có ít nhất 2 ký tự')
@@ -22,8 +21,6 @@ export const signupSchema = z
          .string()
          .min(1, 'Ngày sinh là bắt buộc')
          .refine((date) => {
-            // Java's LocalDate expects 'yyyy-MM-dd' format
-            // Here, we check if the string matches that format
             const regex = /^\d{4}-\d{2}-\d{2}$/
             if (!regex.test(date)) return false
             const [year, month, day] = date.split('-').map(Number)

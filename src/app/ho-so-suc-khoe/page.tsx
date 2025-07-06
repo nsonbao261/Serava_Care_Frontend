@@ -47,7 +47,7 @@ export default function HealthProfilePage() {
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
          const currentUrl = encodeURIComponent('/ho-so-suc-khoe')
-         router.push(`/login?returnUrl=${currentUrl}`)
+         router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, authLoading, router])
 

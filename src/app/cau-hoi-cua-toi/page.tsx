@@ -65,7 +65,7 @@ export default function MyQuestionsPage() {
    useEffect(() => {
       if (!isLoading && !isAuthenticated) {
          const currentUrl = encodeURIComponent('/cau-hoi-cua-toi')
-         router.push(`/login?returnUrl=${currentUrl}`)
+         router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, isLoading, router])
 

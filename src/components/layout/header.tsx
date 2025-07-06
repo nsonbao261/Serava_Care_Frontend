@@ -38,14 +38,14 @@ const Header = () => {
    const toggleUserDropdown = () => setIsUserDropdownOpen(!isUserDropdownOpen)
 
    // Create auth URLs with current page as returnUrl (client-side only)
-   const [loginUrl, setLoginUrl] = useState('/login')
+   const [loginUrl, setLoginUrl] = useState('/sign-in')
 
    useEffect(() => {
-      // Update login URL with returnUrl on client side
-      if (typeof window !== 'undefined' && pathname !== '/login') {
+      // Update sign-in URL with returnUrl on client side
+      if (typeof window !== 'undefined' && pathname !== '/sign-in') {
          // Use pathname + search instead of full URL for better security
          const currentPath = encodeURIComponent(`${pathname}${window.location.search}`)
-         setLoginUrl(`/login?returnUrl=${currentPath}`)
+         setLoginUrl(`/sign-in?returnUrl=${currentPath}`)
       }
    }, [pathname])
 

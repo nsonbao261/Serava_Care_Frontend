@@ -34,7 +34,7 @@ export default function BookingHistoryPage() {
    // Only redirect if we're sure the user is not authenticated and not loading
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
-         router.push('/login?returnUrl=/lich-su-dat-kham')
+         router.push('/sign-in?returnUrl=/lich-su-dat-kham')
       }
    }, [isAuthenticated, authLoading, router])
 

@@ -4,10 +4,6 @@ export { ParticleBackground } from './animations/particle-background'
 export { AnimatedSection } from './animations/animated-section'
 export { default as AnimatedPageTitle } from './animations/animated-page-title'
 
-// Auth
-export { default as LoginForm } from './auth/LoginForm'
-export { default as SignupForm } from './auth/SignupForm'
-
 // Booking
 export { StatusBadge, BookingCard } from './booking/booking-card'
 export { BookingModal } from './booking/booking-modal'

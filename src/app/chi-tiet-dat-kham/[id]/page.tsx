@@ -68,7 +68,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
          const currentUrl = encodeURIComponent(`/chi-tiet-dat-kham/${id}`)
-         router.push(`/login?returnUrl=${currentUrl}`)
+         router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, authLoading, router, id])
 

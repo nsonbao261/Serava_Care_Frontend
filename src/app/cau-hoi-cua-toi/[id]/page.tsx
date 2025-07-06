@@ -29,7 +29,7 @@ export default function QuestionDetailPage() {
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
          const currentUrl = encodeURIComponent(`/cau-hoi-cua-toi/${questionId}`)
-         router.push(`/login?returnUrl=${currentUrl}`)
+         router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, authLoading, router, questionId])
 

@@ -9,8 +9,8 @@ export interface UseAuthReturn {
    user: User | null
    isAuthenticated: boolean
    isLoading: boolean
-   login: (credentials: LoginInput) => Promise<AuthResponse>
-   signup: (userData: SignupInput) => Promise<AuthResponse>
+   signIn: (credentials: LoginInput) => Promise<AuthResponse>
+   signUp: (userData: SignupInput) => Promise<AuthResponse>
    mockLogin: (credentials: LoginInput) => Promise<AuthResponse>
    mockSignup: (userData: SignupInput) => Promise<AuthResponse>
    logout: () => void
@@ -47,10 +47,10 @@ export function useAuth(): UseAuthReturn {
       }
    }, [])
 
-   const login = async (credentials: LoginInput): Promise<AuthResponse> => {
+   const signIn = async (credentials: LoginInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
-         const response = await authService.login(credentials)
+         const response = await authService.signIn(credentials)
 
          if (response.statusCode === 200 && response.data?.user) {
             setUser(response.data.user)
@@ -68,11 +68,11 @@ export function useAuth(): UseAuthReturn {
       }
    }
 
-   const signup = async (userData: SignupInput): Promise<AuthResponse> => {
+   const signUp = async (userData: SignupInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
-         console.log('useAuth: Starting signup process')
-         const response = await authService.signup(userData)
+         console.log('useAuth: Starting sign-up process')
+         const response = await authService.signUp(userData)
          console.log('useAuth: Signup response received:', response)
 
          if (response.statusCode === 200 && response.data?.user) {
@@ -159,8 +159,8 @@ export function useAuth(): UseAuthReturn {
       user,
       isAuthenticated: !!user,
       isLoading,
-      login,
-      signup,
+      signIn,
+      signUp,
       mockLogin,
       mockSignup,
       logout,
