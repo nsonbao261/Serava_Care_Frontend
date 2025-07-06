@@ -4,7 +4,7 @@
    "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
    },
-   "editor.rulers": [100],
+   // "editor.rulers": [100],
    "editor.wordWrap": "bounded",
    "editor.wordWrapColumn": 100,
    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 // Auth validation schemas
 export const loginSchema = z.object({
-   email: z.string().min(1, 'Email là bắt buộc').email('Vui lòng nhập địa chỉ email hợp lệ'),
+   username: z.string().min(1, 'Email là bắt buộc'),
    password: z
       .string()
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
@@ -12,7 +12,7 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
    .object({
-      email: z.string().min(1, 'Email là bắt buộc').email('Vui lòng nhập địa chỉ email hợp lệ'),
+      username: z.string().min(1, 'Email là bắt buộc'),
       fullName: z
          .string()
          .min(2, 'Họ và tên phải có ít nhất 2 ký tự')
@@ -35,7 +35,11 @@ export const signupSchema = z
                age--
             }
             return age >= 13 && age <= 120
-         }, 'Ngày sinh phải theo định dạng yyyy-MM-dd và tuổi từ 13 đến 120'),
+         }, 'Ngày sinh phải theo định dạng yyyy-MM-dd và tuổi từ 13 đến 120')
+         .transform((dateStr) => {
+            // Chuyển "yyyy-MM-dd" → "yyyy-MM-ddT00:00:00Z"
+            return new Date(`${dateStr}T00:00:00Z`).toISOString()
+         }),
       gender: z.enum(['male', 'female', 'other'], {
          required_error: 'Vui lòng chọn giới tính'
       }),

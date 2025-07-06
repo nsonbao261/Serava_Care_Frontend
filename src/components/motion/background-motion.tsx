@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 const backgrounds = [
-   '/SeravaCare_Background.png',
-   '/SeravaCare_Background1.png',
-   '/SeravaCare_Background2.png',
-   '/SeravaCare_Background3.png',
-   '/SeravaCare_Background4.png'
+   '/images/public/app/SeravaCare_Background1.png',
+   '/images/public/app/SeravaCare_Background2.png',
+   '/images/public/app/SeravaCare_Background3.png',
+   '/images/public/app/SeravaCare_Background4.png'
+   // '/SeravaCare_Background1.png',
+   // '/SeravaCare_Background2.png',
+   // '/SeravaCare_Background3.png',
+   // '/SeravaCare_Background4.png'
 ]
 
 export default function BackgroundMotion() {

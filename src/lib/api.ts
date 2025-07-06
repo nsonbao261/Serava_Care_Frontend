@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 // Create axios instance with default configuration
 const api = axios.create({
-   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000/api',
+   baseURL: process.env.NEXT_API_URL || '/api',
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ api.interceptors.response.use(
 async function refreshAuthToken(refreshToken: string) {
    try {
       const response = await axios.post(
-         `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9000/api'}/refresh-token`,
+         `${process.env.NEXT_PUBLIC_API_URL || '/api'}/refresh-token`,
          {
             refreshToken
          }

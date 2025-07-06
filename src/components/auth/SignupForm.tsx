@@ -1,13 +1,17 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'react-toastify'
-import { Button, Input, Checkbox, Label } from '@/components'
 import { AlertCircle } from 'lucide-react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+
+// Components
+import { Button, Checkbox, Input, Label } from '@/components'
+
+// Deps
 import { useAuth } from '@/hooks'
 import { signupSchema, type SignupInput } from '@/schemas'
 
@@ -26,7 +30,7 @@ export default function SignupForm() {
    } = useForm<SignupInput>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
-         email: '',
+         username: '',
          fullName: '',
          birthDate: '',
          gender: undefined,
@@ -118,19 +122,21 @@ export default function SignupForm() {
 
          {/* Email Field */}
          <div className="space-y-1">
-            <Label htmlFor="email" className="text-blue-700 font-medium text-sm">
-               Email <span className="text-red-500">*</span>
+            <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
+               Tên tài khoản <span className="text-red-500">*</span>
             </Label>
             <Input
-               id="email"
-               type="email"
-               placeholder="Nhập email của bạn"
+               id="username"
+               type="username"
+               placeholder="Nhập tên tài khoản đăng nhập của bạn"
                className={`rounded-md focus:border-blue-700 h-10 text-sm ${
-                  errors.email ? 'border-red-500' : 'border-blue-500'
+                  errors.username ? 'border-red-500' : 'border-blue-500'
                }`}
-               {...register('email')}
+               {...register('username')}
             />
-            {errors.email && <p className="text-red-500 text-xs mt-0.5">{errors.email.message}</p>}
+            {errors.username && (
+               <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
+            )}
          </div>
 
          {/* Full Name Field */}

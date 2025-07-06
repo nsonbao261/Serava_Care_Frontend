@@ -13,6 +13,8 @@ import {
    Weight
 } from 'lucide-react'
 
+export const ACCESS_TOKEN = 'access_token'
+
 // Booking status configuration
 export const BOOKING_STATUS_CONFIG = {
    pending: {

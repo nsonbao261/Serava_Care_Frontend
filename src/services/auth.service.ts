@@ -43,7 +43,12 @@ export class AuthService {
    // Signup method
    async signup(userData: SignupInput): Promise<AuthResponse> {
       try {
+         console.log(2222)
+
          const response = await api.post('/auth/sign-up', userData)
+         console.log(11111)
+
+         console.log('sign>>>>>>>>>>>>>>>>>>>>>>', response)
 
          // Note: For signup, we might not immediately store tokens
          // as user might need to verify email first
@@ -57,6 +62,8 @@ export class AuthService {
 
          return response.data
       } catch (error: unknown) {
+         console.log(11111111111111111111111111111111, error)
+
          if (error instanceof Error) {
             return {
                statusCode: 400,

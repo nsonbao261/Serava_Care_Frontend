@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN } from '@/constants'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -19,7 +20,7 @@ export function middleware(request: NextRequest) {
    // If it's a protected path, check for authentication
    if (isProtectedPath) {
       // Check for our custom auth cookies
-      const accessToken = request.cookies.get('access_token')
+      const accessToken = request.cookies.get(ACCESS_TOKEN)
       const userData = request.cookies.get('user_data')
 
       // If no auth cookies found, redirect to login
