@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Question } from '@/types'
-import { UserQuestionService } from '@/services'
-
-const userQuestionService = new UserQuestionService()
+import { getUserQuestions, deleteQuestion, getQuestionById, rateQuestion, filterQuestions } from '@/services'
 
 interface UseUserQuestionsOptions {
    initialStatus?: Question['status']
@@ -35,7 +33,7 @@ export function useUserQuestions(options: UseUserQuestionsOptions = {}): UseUser
       try {
          setIsLoading(true)
          setError(null)
-         const data = await userQuestionService.getUserQuestions()
+         const data = await getUserQuestions()
          setQuestions(data)
       } catch (err) {
          setError('Không thể tải danh sách câu hỏi. Vui lòng thử lại.')
@@ -45,9 +43,9 @@ export function useUserQuestions(options: UseUserQuestionsOptions = {}): UseUser
       }
    }, [])
 
-   const deleteQuestion = useCallback(async (id: string) => {
+   const deleteQuestionHandler = useCallback(async (id: string) => {
       try {
-         await userQuestionService.deleteQuestion(id)
+         await deleteQuestion(id)
          setQuestions((prev) => prev.filter((q) => q.id !== id))
       } catch (err) {
          setError('Không thể xóa câu hỏi. Vui lòng thử lại.')
@@ -57,7 +55,7 @@ export function useUserQuestions(options: UseUserQuestionsOptions = {}): UseUser
 
    // Filter questions based on selected status and search query
    const filteredQuestions = useMemo(() => {
-      return userQuestionService.filterQuestions(questions, {
+      return filterQuestions(questions, {
          status: selectedStatus === 'all' ? undefined : selectedStatus,
          searchQuery: searchQuery.trim()
       })
@@ -80,7 +78,7 @@ export function useUserQuestions(options: UseUserQuestionsOptions = {}): UseUser
       setSelectedStatus,
       setSearchQuery,
       refetch: fetchQuestions,
-      deleteQuestion
+      deleteQuestion: deleteQuestionHandler
    }
 }
 
@@ -110,7 +108,7 @@ export function useQuestionDetail(options: UseQuestionDetailOptions): UseQuestio
       try {
          setIsLoading(true)
          setError(null)
-         const data = await userQuestionService.getQuestionById(questionId)
+         const data = await getQuestionById(questionId)
          setQuestion(data)
 
          if (!data) {
@@ -124,12 +122,12 @@ export function useQuestionDetail(options: UseQuestionDetailOptions): UseQuestio
       }
    }, [questionId])
 
-   const rateQuestion = useCallback(
+   const rateQuestionHandler = useCallback(
       async (rating: number) => {
          if (!question) return
 
          try {
-            await userQuestionService.rateQuestion(question.id, rating)
+            await rateQuestion(question.id, rating)
             setQuestion((prev) => (prev ? { ...prev, rating, hasRated: true } : null))
          } catch (err) {
             setError('Không thể đánh giá câu trả lời. Vui lòng thử lại.')
@@ -150,6 +148,6 @@ export function useQuestionDetail(options: UseQuestionDetailOptions): UseQuestio
       isLoading,
       error,
       refetch: fetchQuestion,
-      rateQuestion
+      rateQuestion: rateQuestionHandler
    }
 }

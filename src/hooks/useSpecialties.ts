@@ -6,9 +6,14 @@ import {
    SpecialtySearchResult,
    SpecialtyStats
 } from '@/types'
-import { SpecialtyService } from '@/services'
-
-const specialtyService = new SpecialtyService()
+import { 
+   getAllSpecialties,
+   getPopularSpecialties,
+   getSpecialtiesByCategory,
+   getSpecialtyBySlug,
+   searchSpecialties,
+   getSpecialtyStats
+} from '@/services'
 
 interface UseSpecialtiesOptions {
    autoFetch?: boolean
@@ -42,11 +47,11 @@ export function useSpecialties(options: UseSpecialtiesOptions = {}): UseSpecialt
          let data: SpecialtyWithCategory[]
 
          if (popularOnly) {
-            data = await specialtyService.getPopularSpecialties()
+            data = await getPopularSpecialties()
          } else if (category) {
-            data = await specialtyService.getSpecialtiesByCategory(category)
+            data = await getSpecialtiesByCategory(category)
          } else {
-            data = await specialtyService.getAllSpecialties()
+            data = await getAllSpecialties()
          }
 
          setSpecialties(data)
@@ -58,9 +63,9 @@ export function useSpecialties(options: UseSpecialtiesOptions = {}): UseSpecialt
       }
    }, [category, popularOnly])
 
-   const searchSpecialties = useCallback(async (query: string, filters?: SpecialtyFilters) => {
+   const searchSpecialtiesHandler = useCallback(async (query: string, filters?: SpecialtyFilters) => {
       try {
-         return await specialtyService.searchSpecialties(query, filters)
+         return await searchSpecialties(query, filters)
       } catch (err) {
          console.error('Error searching specialties:', err)
          return []
@@ -78,7 +83,7 @@ export function useSpecialties(options: UseSpecialtiesOptions = {}): UseSpecialt
       isLoading,
       error,
       refetch: fetchSpecialties,
-      searchSpecialties
+      searchSpecialties: searchSpecialtiesHandler
    }
 }
 
@@ -108,7 +113,7 @@ export function useSpecialtyDetail(options: UseSpecialtyDetailOptions): UseSpeci
          setIsLoading(true)
          setError(null)
 
-         const data = await specialtyService.getSpecialtyBySlug(slug)
+         const data = await getSpecialtyBySlug(slug)
          setSpecialty(data)
 
          if (!data) {
@@ -162,7 +167,7 @@ export function useSpecialtyStats(options: UseSpecialtyStatsOptions): UseSpecial
          setIsLoading(true)
          setError(null)
 
-         const data = await specialtyService.getSpecialtyStats()
+         const data = await getSpecialtyStats()
          setStats(data)
       } catch (err) {
          setError('Không thể tải thống kê chuyên khoa.')

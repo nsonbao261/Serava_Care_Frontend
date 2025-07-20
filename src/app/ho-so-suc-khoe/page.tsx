@@ -38,7 +38,7 @@ export default function HealthProfilePage() {
       recordsError,
       refreshVitalSigns,
       refreshMedicalRecords
-   } = useHealthData('current-user') // In real app, get from auth context
+   } = useHealthData() // In real app, get from auth context
 
    const isDataLoading = isLoadingVitals || isLoadingRecords
    const error = vitalsError || recordsError

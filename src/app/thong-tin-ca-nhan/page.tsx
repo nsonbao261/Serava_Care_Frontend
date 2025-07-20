@@ -23,10 +23,8 @@ import {
 } from 'lucide-react'
 import { LoadingSpinner } from '@/components'
 import { mockUserProfile } from '@/data'
-import { UserService } from '@/services'
+import { updateUserProfile } from '@/services'
 import { formatDate } from '@/lib'
-
-const userService = new UserService()
 
 export default function PersonalInfoPage() {
    const router = useRouter()
@@ -85,7 +83,7 @@ export default function PersonalInfoPage() {
                ? mockUserProfile[0]
                : mockUserProfile
             const userId = mockProfile.id
-            await userService.updateUserProfile(userId, {
+            await updateUserProfile(userId, {
                fullName: data.fullName,
                email: data.email,
                phone: data.phone,

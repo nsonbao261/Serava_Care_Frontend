@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { VitalSign, MedicalRecord } from '@/types'
-import { HealthService } from '@/services'
-
-const healthService = new HealthService()
+import { getVitalSigns, getMedicalRecords, addVitalSign, updateVitalSign, deleteVitalSign } from '@/services'
 
 export interface UseHealthDataReturn {
    // Data
@@ -25,7 +23,7 @@ export interface UseHealthDataReturn {
    deleteVitalSign: (id: string) => Promise<void>
 }
 
-export const useHealthData = (userId: string): UseHealthDataReturn => {
+export const useHealthData = (): UseHealthDataReturn => {
    const [vitalSigns, setVitalSigns] = useState<VitalSign[]>([])
    const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
 
@@ -39,7 +37,7 @@ export const useHealthData = (userId: string): UseHealthDataReturn => {
       try {
          setIsLoadingVitals(true)
          setVitalsError(null)
-         const data = await healthService.getVitalSigns(userId)
+         const data = await getVitalSigns()
          setVitalSigns(data)
       } catch (error) {
          setVitalsError(
@@ -48,13 +46,13 @@ export const useHealthData = (userId: string): UseHealthDataReturn => {
       } finally {
          setIsLoadingVitals(false)
       }
-   }, [userId])
+   }, [])
 
    const refreshMedicalRecords = useCallback(async () => {
       try {
          setIsLoadingRecords(true)
          setRecordsError(null)
-         const data = await healthService.getMedicalRecords(userId)
+         const data = await getMedicalRecords()
          setMedicalRecords(data)
       } catch (error) {
          setRecordsError(
@@ -63,22 +61,22 @@ export const useHealthData = (userId: string): UseHealthDataReturn => {
       } finally {
          setIsLoadingRecords(false)
       }
-   }, [userId])
+   }, [])
 
-   const addVitalSign = useCallback(async (data: Omit<VitalSign, 'id'>) => {
-      const newVitalSign = await healthService.addVitalSign(data)
+   const addVitalSignHandler = useCallback(async (data: Omit<VitalSign, 'id'>) => {
+      const newVitalSign = await addVitalSign(data)
       setVitalSigns((prev) => [newVitalSign, ...prev])
       return newVitalSign
    }, [])
 
-   const updateVitalSign = useCallback(async (id: string, data: Partial<VitalSign>) => {
-      const updatedVitalSign = await healthService.updateVitalSign(id, data)
+   const updateVitalSignHandler = useCallback(async (id: string, data: Partial<VitalSign>) => {
+      const updatedVitalSign = await updateVitalSign(id, data)
       setVitalSigns((prev) => prev.map((vs) => (vs.id === id ? updatedVitalSign : vs)))
       return updatedVitalSign
    }, [])
 
-   const deleteVitalSign = useCallback(async (id: string) => {
-      await healthService.deleteVitalSign(id)
+   const deleteVitalSignHandler = useCallback(async (id: string) => {
+      await deleteVitalSign()
       setVitalSigns((prev) => prev.filter((vs) => vs.id !== id))
    }, [])
 
@@ -97,8 +95,8 @@ export const useHealthData = (userId: string): UseHealthDataReturn => {
       recordsError,
       refreshVitalSigns,
       refreshMedicalRecords,
-      addVitalSign,
-      updateVitalSign,
-      deleteVitalSign
+      addVitalSign: addVitalSignHandler,
+      updateVitalSign: updateVitalSignHandler,
+      deleteVitalSign: deleteVitalSignHandler
    }
 }

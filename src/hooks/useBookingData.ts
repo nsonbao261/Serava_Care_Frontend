@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { BookingOrder, BookingFilters } from '@/types'
-import { BookingService } from '@/services'
-
-const bookingService = new BookingService()
+import { getBookings, cancelBooking, rescheduleBooking, getBookingById } from '@/services'
 
 export interface UseBookingDataReturn {
    // Data
@@ -40,7 +38,7 @@ export const useBookingData = (userId: string): UseBookingDataReturn => {
       try {
          setIsLoading(true)
          setError(null)
-         const data = await bookingService.getBookings(userId, filters)
+         const data = await getBookings(userId, filters)
          setBookings(data)
          setFilteredBookings(data)
       } catch (error) {
@@ -54,9 +52,9 @@ export const useBookingData = (userId: string): UseBookingDataReturn => {
       setFilters((prev) => ({ ...prev, ...newFilters }))
    }, [])
 
-   const cancelBooking = useCallback(async (id: string, reason?: string) => {
+   const cancelBookingHandler = useCallback(async (id: string, reason?: string) => {
       try {
-         const updatedBooking = await bookingService.cancelBooking(id, reason)
+         const updatedBooking = await cancelBooking(id, reason)
          setBookings((prev) =>
             prev.map((booking) => (booking.id === id ? updatedBooking : booking))
          )
@@ -68,22 +66,29 @@ export const useBookingData = (userId: string): UseBookingDataReturn => {
       }
    }, [])
 
-   const rescheduleBooking = useCallback(async (id: string, newDate: string, newTime: string) => {
-      try {
-         const updatedBooking = await bookingService.rescheduleBooking(id, newDate, newTime)
-         setBookings((prev) =>
-            prev.map((booking) => (booking.id === id ? updatedBooking : booking))
-         )
-         setFilteredBookings((prev) =>
-            prev.map((booking) => (booking.id === id ? updatedBooking : booking))
-         )
-      } catch (error) {
-         throw new Error(error instanceof Error ? error.message : 'Không thể dời lịch hẹn')
-      }
-   }, [])
+   const rescheduleBookingHandler = useCallback(
+      async (
+         id: string,
+         newDate: string,
+         newTime: string
+      ) => {
+         try {
+            const updatedBooking = await rescheduleBooking(id, newDate, newTime)
+            setBookings((prev) =>
+               prev.map((booking) => (booking.id === id ? updatedBooking : booking))
+            )
+            setFilteredBookings((prev) =>
+               prev.map((booking) => (booking.id === id ? updatedBooking : booking))
+            )
+         } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Không thể dời lịch hẹn')
+         }
+      },
+      []
+   )
 
-   const getBookingById = useCallback(async (id: string) => {
-      return await bookingService.getBookingById(id)
+   const getBookingByIdHandler = useCallback(async (id: string) => {
+      return await getBookingById(id)
    }, [])
 
    // Apply filters when they change
@@ -129,8 +134,8 @@ export const useBookingData = (userId: string): UseBookingDataReturn => {
       filters,
       refreshBookings,
       updateFilters,
-      cancelBooking,
-      rescheduleBooking,
-      getBookingById
+      cancelBooking: cancelBookingHandler,
+      rescheduleBooking: rescheduleBookingHandler,
+      getBookingById: getBookingByIdHandler
    }
 }

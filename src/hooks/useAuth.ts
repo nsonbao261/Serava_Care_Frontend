@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
-import { AuthService } from '@/services/auth.service'
+import { 
+   signIn, 
+   signUp, 
+   logout, 
+   getCurrentUser, 
+   mockLogin, 
+   mockSignup 
+} from '@/services/auth.service'
 import { type User, type AuthResponse } from '@/types'
 import { type LoginInput, type SignupInput } from '@/schemas'
-
-const authService = new AuthService()
 
 export interface UseAuthReturn {
    user: User | null
@@ -23,7 +28,7 @@ export function useAuth(): UseAuthReturn {
 
    // Initialize auth state on mount
    useEffect(() => {
-      const currentUser = authService.getCurrentUser()
+      const currentUser = getCurrentUser()
       setUser(currentUser)
       setIsLoading(false)
    }, [])
@@ -31,7 +36,7 @@ export function useAuth(): UseAuthReturn {
    // Listen for storage changes to sync across tabs
    useEffect(() => {
       const handleStorageChange = () => {
-         const currentUser = authService.getCurrentUser()
+         const currentUser = getCurrentUser()
          setUser(currentUser)
       }
 
@@ -47,10 +52,10 @@ export function useAuth(): UseAuthReturn {
       }
    }, [])
 
-   const signIn = async (credentials: LoginInput): Promise<AuthResponse> => {
+   const signInHandler = async (credentials: LoginInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
-         const response = await authService.signIn(credentials)
+         const response = await signIn(credentials)
 
          if (response.statusCode === 200 && response.data?.user) {
             setUser(response.data.user)
@@ -68,11 +73,11 @@ export function useAuth(): UseAuthReturn {
       }
    }
 
-   const signUp = async (userData: SignupInput): Promise<AuthResponse> => {
+   const signUpHandler = async (userData: SignupInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
          console.log('useAuth: Starting sign-up process')
-         const response = await authService.signUp(userData)
+         const response = await signUp(userData)
          console.log('useAuth: Signup response received:', response)
 
          if (response.statusCode === 200 && response.data?.user) {
@@ -97,9 +102,9 @@ export function useAuth(): UseAuthReturn {
       }
    }
 
-   const logout = async () => {
+   const logoutHandler = async () => {
       try {
-         await authService.logout()
+         await logout()
          setUser(null)
       } catch (error) {
          // Even if logout fails on server, we still clear local state
@@ -108,10 +113,10 @@ export function useAuth(): UseAuthReturn {
       }
    }
 
-   const mockLogin = async (credentials: LoginInput): Promise<AuthResponse> => {
+   const mockLoginHandler = async (credentials: LoginInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
-         const response = await authService.mockLogin(credentials)
+         const response = await mockLogin(credentials)
 
          if (response.statusCode === 200 && response.data?.user) {
             setUser(response.data.user)
@@ -129,10 +134,10 @@ export function useAuth(): UseAuthReturn {
       }
    }
 
-   const mockSignup = async (userData: SignupInput): Promise<AuthResponse> => {
+   const mockSignupHandler = async (userData: SignupInput): Promise<AuthResponse> => {
       setIsLoading(true)
       try {
-         const response = await authService.mockSignup(userData)
+         const response = await mockSignup(userData)
 
          if (response.statusCode === 200 && response.data?.user) {
             setUser(response.data.user)
@@ -151,7 +156,7 @@ export function useAuth(): UseAuthReturn {
    }
 
    const refreshUser = () => {
-      const currentUser = authService.getCurrentUser()
+      const currentUser = getCurrentUser()
       setUser(currentUser)
    }
 
@@ -159,11 +164,11 @@ export function useAuth(): UseAuthReturn {
       user,
       isAuthenticated: !!user,
       isLoading,
-      signIn,
-      signUp,
-      mockLogin,
-      mockSignup,
-      logout,
+      signIn: signInHandler,
+      signUp: signUpHandler,
+      mockLogin: mockLoginHandler,
+      mockSignup: mockSignupHandler,
+      logout: logoutHandler,
       refreshUser
    }
 }

@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { BookingOrder } from '@/types'
-import { OrderDetailService } from '@/services'
-
-const orderDetailService = new OrderDetailService()
+import { getOrderById, cancelOrder, rescheduleOrder, downloadInvoice, printInvoice } from '@/services'
 
 interface UseOrderDetailReturn {
    order: BookingOrder | null
@@ -26,7 +24,7 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       try {
          setIsLoading(true)
          setError(null)
-         const data = await orderDetailService.getOrderById(orderId)
+         const data = await getOrderById(orderId)
          setOrder(data)
 
          if (!data) {
@@ -40,11 +38,11 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       }
    }, [orderId])
 
-   const cancelOrder = useCallback(async () => {
+   const cancelOrderHandler = useCallback(async () => {
       if (!order) return
 
       try {
-         await orderDetailService.cancelOrder(order.id)
+         await cancelOrder(order.id)
          setOrder((prev) =>
             prev
                ? {
@@ -60,12 +58,12 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       }
    }, [order])
 
-   const rescheduleOrder = useCallback(
+   const rescheduleOrderHandler = useCallback(
       async (newDate: string, newTime: string) => {
          if (!order) return
 
          try {
-            await orderDetailService.rescheduleOrder(order.id, newDate, newTime)
+            await rescheduleOrder(order.id, newDate, newTime)
             setOrder((prev) =>
                prev
                   ? {
@@ -84,11 +82,11 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       [order]
    )
 
-   const downloadInvoice = useCallback(async (): Promise<string> => {
+   const downloadInvoiceHandler = useCallback(async (): Promise<string> => {
       if (!order) throw new Error('No order found')
 
       try {
-         return await orderDetailService.downloadInvoice(order.id)
+         return await downloadInvoice(order.id)
       } catch (err) {
          setError('Không thể tải hóa đơn. Vui lòng thử lại.')
          console.error('Error downloading invoice:', err)
@@ -96,11 +94,11 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       }
    }, [order])
 
-   const printInvoice = useCallback(async () => {
+   const printInvoiceHandler = useCallback(async () => {
       if (!order) return
 
       try {
-         await orderDetailService.printInvoice(order.id)
+         await printInvoice(order.id)
       } catch (err) {
          setError('Không thể in hóa đơn. Vui lòng thử lại.')
          console.error('Error printing invoice:', err)
@@ -118,9 +116,9 @@ export function useOrderDetail(orderId: string, autoFetch: boolean = true): UseO
       isLoading,
       error,
       refetch: fetchOrder,
-      cancelOrder,
-      rescheduleOrder,
-      downloadInvoice,
-      printInvoice
+      cancelOrder: cancelOrderHandler,
+      rescheduleOrder: rescheduleOrderHandler,
+      downloadInvoice: downloadInvoiceHandler,
+      printInvoice: printInvoiceHandler
    }
 }

@@ -2,10 +2,8 @@ import { useState, useCallback } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { questionFormSchema, QuestionFormData } from '@/schemas'
-import { QuestionService } from '@/services'
+import { submitQuestion } from '@/services'
 import { Question } from '@/types'
-
-const questionService = new QuestionService()
 
 export interface UseQuestionFormReturn {
    // Form control
@@ -40,13 +38,13 @@ export const useQuestionForm = (): UseQuestionFormReturn => {
       }
    })
 
-   const submitQuestion = useCallback(
+   const submitQuestionHandler = useCallback(
       async (data: QuestionFormData) => {
          try {
             setIsSubmitting(true)
             setSubmitError(null)
 
-            const result = await questionService.submitQuestion(data)
+            const result = await submitQuestion(data)
 
             setSubmittedQuestion(result)
             setSubmitSuccess(true)
@@ -78,7 +76,7 @@ export const useQuestionForm = (): UseQuestionFormReturn => {
       submitError,
       submitSuccess,
       submittedQuestion,
-      submitQuestion,
+      submitQuestion: submitQuestionHandler,
       resetForm,
       clearErrors
    }
