@@ -1,42 +1,45 @@
-'use client';
+'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react'
 
 interface UseInViewOptions {
-   threshold?: number;
-   rootMargin?: string;
-   triggerOnce?: boolean;
+   threshold?: number
+   rootMargin?: string
+   triggerOnce?: boolean
 }
 
 export const useInView = (options: UseInViewOptions = {}) => {
-   const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
-   const ref = useRef<HTMLDivElement>(null);
-   const [isInView, setIsInView] = useState(false);
+   const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options
+   const ref = useRef<HTMLDivElement>(null)
+   const [isInView, setIsInView] = useState(false)
+
+   const handleIntersection = useCallback(
+      ([entry]: IntersectionObserverEntry[]) => {
+         if (entry.isIntersecting) {
+            setIsInView(true)
+         } else if (!triggerOnce) {
+            setIsInView(false)
+         }
+      },
+      [triggerOnce]
+   )
 
    useEffect(() => {
-      const element = ref.current;
-      if (!element) return;
+      const element = ref.current
+      if (!element) return
 
-      const observer = new IntersectionObserver(
-         ([entry]) => {
-            if (entry.isIntersecting) {
-               setIsInView(true);
-               if (triggerOnce) {
-                  observer.unobserve(element);
-               }
-            } else if (!triggerOnce) {
-               setIsInView(false);
-            }
-         },
-         { threshold, rootMargin }
-      );
+      // Use passive observation for better performance
+      const observer = new IntersectionObserver(handleIntersection, {
+         threshold,
+         rootMargin
+      })
 
-      observer.observe(element);
+      observer.observe(element)
 
       return () => {
-         observer.unobserve(element);
-      };
-   }, [threshold, rootMargin, triggerOnce]);
+         observer.disconnect()
+      }
+   }, [threshold, rootMargin, handleIntersection])
 
-   return [ref, isInView] as const;
-};
+   return [ref, isInView] as const
+}

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Mail } from 'lucide-react';
+import { Button } from '@/components'
+import { Mail } from 'lucide-react'
 
 const NewsletterSection = () => {
    return (
@@ -47,7 +47,7 @@ const NewsletterSection = () => {
             </p>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default NewsletterSection;
+export default NewsletterSection

@@ -1,15 +1,15 @@
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { SpecialtyCard } from '@/types/specialty';
-import { homepageSpecialties } from '@/data/specialties';
-import { ChevronRight } from 'lucide-react';
+import { Button } from '@/components'
+import Link from 'next/link'
+import { SpecialtyCard } from '@/types'
+import { homepageSpecialties } from '@/data'
+import { ChevronRight } from 'lucide-react'
 
 const SpecialtiesSection = () => {
    const SpecialtyCard = ({ specialty }: { specialty: SpecialtyCard }) => {
-      const IconComponent = specialty.icon;
+      const IconComponent = specialty.icon
 
       return (
-         <Link href={`/bac-si/chuyen-khoa/${specialty.id}`} className="group block">
+         <Link href={`/chuyen-khoa/${specialty.id}`} className="group block">
             <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden transform hover:-translate-y-1">
                <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -39,8 +39,8 @@ const SpecialtiesSection = () => {
                </div>
             </div>
          </Link>
-      );
-   };
+      )
+   }
 
    return (
       <section className="py-20 bg-gray-50">
@@ -62,7 +62,7 @@ const SpecialtiesSection = () => {
 
             {/* Call to Action */}
             <div className="text-center">
-               <Link href="/bac-si/chuyen-khoa">
+               <Link href="/chuyen-khoa">
                   <Button
                      size="lg"
                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full"
@@ -74,7 +74,7 @@ const SpecialtiesSection = () => {
             </div>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default SpecialtiesSection;
+export default SpecialtiesSection

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Button } from '@/components'
+import Link from 'next/link'
 
 const CTASection = () => {
    return (
@@ -30,7 +30,7 @@ const CTASection = () => {
             </div>
          </div>
       </section>
-   );
-};
+   )
+}
 
-export default CTASection;
+export default CTASection

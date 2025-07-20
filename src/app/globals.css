@@ -4,12 +4,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Custom Modular Styles */
+/* Essential Custom Styles Only */
 @import '../styles/variables.css';
 @import '../styles/base.css';
-@import '../styles/keyframes.css';
-@import '../styles/animations.css';
-@import '../styles/scroll-animations.css';
-@import '../styles/interactive.css';
-@import '../styles/components.css';
-@import '../styles/responsive.css';
