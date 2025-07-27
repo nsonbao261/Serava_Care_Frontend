@@ -29,6 +29,8 @@ export default function SignUpForm() {
    } = useForm<SignupInput>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
+         email: '',
+         phoneNumber: '',
          username: '',
          fullName: '',
          birthDate: '',
@@ -103,7 +105,7 @@ export default function SignUpForm() {
          animate={{ opacity: 1, x: 0 }}
          transition={{ duration: 0.3 }}
          onSubmit={handleSubmit(onSubmit)}
-         className="space-y-2.5 max-w-md mx-auto"
+         className="w-full max-w-xl px-4 mx-auto"
       >
          {/* General Error Message */}
          {errors.root && (
@@ -113,55 +115,97 @@ export default function SignUpForm() {
             </div>
          )}
 
-         {/* Email Field */}
-         <div className="space-y-1">
-            <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
-               Tên tài khoản <span className="text-red-500">*</span>
-            </Label>
-            <Input
-               id="username"
-               type="username"
-               placeholder="Nhập tên tài khoản đăng nhập của bạn"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
-                  errors.username ? 'border-red-500' : 'border-blue-500'
-               }`}
-               {...register('username')}
-            />
-            {errors.username && (
-               <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
-            )}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {/* Email Field */}
+            <div className="space-y-2 mt-2">
+               <Label htmlFor="email" className="text-blue-700 font-medium text-sm">
+                  Email <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="email"
+                  type="email"
+                  placeholder="Nhập email của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('email')}
+               />
+               {errors.email && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.email.message}</p>
+               )}
+            </div>
+
+            {/* User Field */}
+            <div className="space-y-2 mt-2">
+               <Label htmlFor="phoneNumber" className="text-blue-700 font-medium text-sm">
+                  Số điện thoại <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="phoneNumber"
+                  type="phoneNumber"
+                  placeholder="Nhập số điện thoại của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('phoneNumber')}
+               />
+               {errors.phoneNumber && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.phoneNumber.message}</p>
+               )}
+            </div>
          </div>
 
-         {/* Full Name Field */}
-         <div className="space-y-1">
-            <Label htmlFor="fullName" className="text-blue-700 font-medium text-sm">
-               Họ và tên <span className="text-red-500">*</span>
-            </Label>
-            <Input
-               id="fullName"
-               type="text"
-               placeholder="Nhập họ và tên của bạn"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
-                  errors.fullName ? 'border-red-500' : 'border-blue-500'
-               }`}
-               {...register('fullName')}
-            />
-            {errors.fullName && (
-               <p className="text-red-500 text-xs mt-0.5">{errors.fullName.message}</p>
-            )}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {/* Username Field */}
+            <div className="space-y-2 mt-2">
+                  <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
+                     Tên tài khoản <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                     id="username"
+                     type="username"
+                     placeholder="Nhập tên tài khoản của bạn"
+                     className={`w-full h-10 rounded-md text-sm ${
+                        errors.username ? 'border-red-500' : 'border-blue-500'
+                     }`}
+                     {...register('username')}
+                  />
+                  {errors.username && (
+                     <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
+                  )}
+               </div>
+
+            {/* Full Name Field */}
+            <div className="space-y-2 mt-2">
+               <Label htmlFor="fullName" className="text-blue-700 font-medium text-sm">
+                  Họ và tên <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Nhập họ và tên của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.fullName ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('fullName')}
+               />
+               {errors.fullName && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.fullName.message}</p>
+               )}
+            </div>
          </div>
 
          {/* Birth Date and Gender in a row */}
-         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+         <div className="flex flex-col sm:flex-row gap-2">
             {/* Birth Date Field */}
-            <div className="space-y-1">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="birthDate" className="text-blue-700 font-medium text-sm">
                   Ngày sinh <span className="text-red-500">*</span>
                </Label>
                <Input
                   id="birthDate"
                   type="date"
-                  className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+                  className={`w-full h-10 rounded-md text-sm ${
                      errors.birthDate ? 'border-red-500' : 'border-blue-500'
                   }`}
                   {...register('birthDate')}
@@ -172,7 +216,7 @@ export default function SignUpForm() {
             </div>
 
             {/* Gender Field */}
-            <div className="space-y-1">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="gender" className="text-blue-700 font-medium text-sm">
                   Giới tính <span className="text-red-500">*</span>
                </Label>
@@ -195,7 +239,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Password Field */}
-         <div className="space-y-1">
+         <div className="space-y-2 mt-2">
             <Label htmlFor="password" className="text-blue-700 font-medium text-sm">
                Mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -203,7 +247,7 @@ export default function SignUpForm() {
                id="password"
                type="password"
                placeholder="Nhập mật khẩu"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+               className={`w-full h-10 rounded-md text-sm border ${
                   errors.password ? 'border-red-500' : 'border-blue-500'
                }`}
                {...register('password')}
@@ -214,7 +258,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Confirm Password Field */}
-         <div className="space-y-1">
+         <div className="space-y-2 mt-2">
             <Label htmlFor="confirmPassword" className="text-blue-700 font-medium text-sm">
                Xác nhận mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -222,7 +266,7 @@ export default function SignUpForm() {
                id="confirmPassword"
                type="password"
                placeholder="Nhập lại mật khẩu"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+               className={`w-full h-10 rounded-md text-sm border ${
                   errors.confirmPassword ? 'border-red-500' : 'border-blue-500'
                }`}
                {...register('confirmPassword')}
@@ -233,7 +277,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Terms and Conditions */}
-         <div className="flex items-center justify-center text-xs pt-1">
+         <div className="flex items-start gap-2 text-sm">
             <Checkbox
                id="agreeTerms"
                checked={agreeTerms}

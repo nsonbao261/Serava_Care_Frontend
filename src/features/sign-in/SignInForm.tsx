@@ -83,12 +83,12 @@ export default function LoginForm() {
 
          <div className="space-y-1">
             <Label htmlFor="username" className="text-blue-700 font-medium text-base">
-               Email
+               Tài khoản
             </Label>
             <Input
                id="username"
-               type="username"
-               placeholder="Nhập email để tiếp tục"
+               type="text"
+               placeholder="Nhập email hoặc tên tài khoản"
                className={`rounded-md focus:border-blue-700 h-12 text-base ${
                   errors.username ? 'border-red-500' : 'border-blue-500'
                }`}
