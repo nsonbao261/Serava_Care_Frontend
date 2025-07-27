@@ -1,5 +1,3 @@
-import { Question } from '@/types'
-
 // Mock question data
 export const mockQuestions: Question[] = [
    {

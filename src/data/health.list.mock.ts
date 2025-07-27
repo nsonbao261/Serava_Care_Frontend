@@ -1,5 +1,3 @@
-import { VitalSign, MedicalRecord } from '@/types'
-
 export const mockVitalSigns: VitalSign[] = [
    {
       id: '1',

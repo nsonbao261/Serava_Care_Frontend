@@ -1,5 +1,3 @@
-import { UserProfile } from '@/types'
-
 export const mockUserProfile: UserProfile[] = [
    {
       id: '1',

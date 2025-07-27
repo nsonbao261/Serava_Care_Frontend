@@ -1,5 +1,3 @@
-import { BookingOrder } from '@/types'
-
 export const mockBookingOrders: BookingOrder[] = [
    {
       id: '1',
