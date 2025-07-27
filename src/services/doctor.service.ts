@@ -1,4 +1,3 @@
-import { Doctor, DoctorDetail, DoctorSearchParams, ApiResponse, PaginationInfo } from '@/types'
 import { filterDoctors, searchDoctors as searchDoctorsUtils, sortDoctors } from '@/lib'
 import { mockDoctors, mockDoctorDetails } from '@/data'
 
@@ -39,9 +38,7 @@ export async function getDoctorBySlug(slug: string): Promise<DoctorDetail | null
    return convertedDetail
 }
 
-export async function searchDoctors(
-   params: DoctorSearchParams
-): Promise<ApiResponse<Doctor[]>> {
+export async function searchDoctors(params: DoctorSearchParams): Promise<ApiResponse<Doctor[]>> {
    await new Promise((resolve) => setTimeout(resolve, 150))
 
    let results = mockDoctors

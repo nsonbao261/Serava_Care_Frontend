@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { BookingOrder, BookingFilters } from '@/types'
 import { getBookings, cancelBooking, rescheduleBooking, getBookingById } from '@/services'
 
 export interface UseBookingDataReturn {
@@ -67,11 +66,7 @@ export const useBookingData = (userId: string): UseBookingDataReturn => {
    }, [])
 
    const rescheduleBookingHandler = useCallback(
-      async (
-         id: string,
-         newDate: string,
-         newTime: string
-      ) => {
+      async (id: string, newDate: string, newTime: string) => {
          try {
             const updatedBooking = await rescheduleBooking(id, newDate, newTime)
             setBookings((prev) =>

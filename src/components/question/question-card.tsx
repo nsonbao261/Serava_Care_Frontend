@@ -1,5 +1,4 @@
 import { formatDate, formatTime } from '@/lib'
-import { Question } from '@/types'
 import { motion } from 'framer-motion'
 import {
    Calendar,

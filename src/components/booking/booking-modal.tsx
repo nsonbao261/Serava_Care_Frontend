@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback, memo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BookingModalProps, DateOption, BookingForm } from './types'
 import { timeSlots, initialFormState, modalVariants, backdropVariants } from './constants'
 import { BookingModelFooter } from './booking-modal-footer'
 import { BookingModelHeader } from './booking-modal-header'

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { MorphingButton } from '@/components/forms/morphing-button'
 import { Star, Clock, MapPin, GraduationCap } from 'lucide-react'
-import { Doctor } from '@/types'
 
 interface DoctorCardProps {
    doctor: Doctor

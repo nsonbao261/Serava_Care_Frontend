@@ -1,5 +1,4 @@
 // Mock data for auth service
-import { Gender, User } from '@/types'
 
 // Helper functions for generating mock data
 export const generateMockTokens = () => {

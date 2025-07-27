@@ -3,7 +3,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Star, Users } from 'lucide-react'
-import { SpecialtyWithCategory } from '@/types'
 import Link from 'next/link'
 
 export type ViewMode = 'grid' | 'list'

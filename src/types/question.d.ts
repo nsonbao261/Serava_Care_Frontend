@@ -1,4 +1,4 @@
-export interface Question {
+interface Question {
    id: string
    createdAt: Date
    updatedAt: Date
@@ -20,7 +20,7 @@ export interface Question {
    attachments?: QuestionAttachment[]
 }
 
-export interface QuestionAttachment {
+interface QuestionAttachment {
    id: string
    name: string
    filename?: string
@@ -29,7 +29,7 @@ export interface QuestionAttachment {
    type: string
 }
 
-export interface QuestionSpecialty {
+interface QuestionSpecialty {
    id: string
    name: string
    value: string

@@ -1,10 +1,3 @@
-import {
-   SpecialtyPageData,
-   SpecialtyWithCategory,
-   SpecialtyFilters,
-   SpecialtySearchResult,
-   SpecialtyStats
-} from '@/types'
 import {} from '@/data/specialty-category.list.mock'
 import { mockSpecialtiesWithCategory, mockTreatments, mockProceduresMap, mockFAQs } from '@/data'
 

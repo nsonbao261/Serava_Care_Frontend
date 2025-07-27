@@ -1,6 +1,5 @@
 import { Button } from '@/components'
 import Link from 'next/link'
-import { SpecialtyCard } from '@/types'
 import { homepageSpecialties } from '@/data'
 import { ChevronRight } from 'lucide-react'
 

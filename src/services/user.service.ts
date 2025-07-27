@@ -1,4 +1,3 @@
-import { UserProfile, User } from '@/types'
 import { mockUserProfile } from '@/data'
 
 export async function getUserByEmail(email: string): Promise<UserProfile | null> {

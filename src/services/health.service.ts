@@ -1,4 +1,3 @@
-import { VitalSign, MedicalRecord } from '@/types'
 import { mockVitalSigns, mockMedicalRecords } from '@/data'
 
 export async function getVitalSigns(): Promise<VitalSign[]> {

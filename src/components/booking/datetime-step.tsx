@@ -2,7 +2,6 @@
 
 import { memo } from 'react'
 import { Calendar, Clock } from 'lucide-react'
-import { DateTimeStepProps } from './types'
 
 export const DateTimeStep = memo(
    ({

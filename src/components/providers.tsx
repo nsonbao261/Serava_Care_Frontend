@@ -1,9 +1,5 @@
-'use client'
-
-import { ReactNode } from 'react'
-
 interface ProvidersProps {
-   children: ReactNode
+   children: React.ReactNode
 }
 
 export function Providers({ children }: ProvidersProps) {

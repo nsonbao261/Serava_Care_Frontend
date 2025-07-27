@@ -1,7 +1,6 @@
 'use client'
 
 import { memo } from 'react'
-import { FooterSectionProps } from './types'
 
 export const BookingModelFooter = memo(
    ({

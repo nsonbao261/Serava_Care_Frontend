@@ -10,7 +10,6 @@ import { Button, DoctorCard, LoadingSpinner } from '@/components'
 
 // Deps
 import { mockDoctors } from '@/data'
-import { Doctor } from '@/types'
 
 const specialties = [
    'Tất cả chuyên khoa',

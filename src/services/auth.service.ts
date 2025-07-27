@@ -2,7 +2,6 @@ import api, { setAuthTokens, clearAuthTokens, getUserData } from '@/lib'
 import { LoginInput, SignupInput, ResetPasswordInput } from '@/schemas'
 import { getUserByEmail, createUser, toAuthUser, fromAuthUser } from '@/services/user.service'
 import { generateMockTokens, generateMockUser } from '@/data'
-import { AuthResponse, User } from '@/types'
 
 // Login method
 export async function signIn(credentials: LoginInput): Promise<AuthResponse> {

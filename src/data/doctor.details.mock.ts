@@ -1,5 +1,3 @@
-import { LegacyDoctorDetail } from '@/types'
-
 export const mockDoctorDetails: { [key: string]: LegacyDoctorDetail } = {
    'bs-ckii-nguyen-van-minh': {
       id: '1',

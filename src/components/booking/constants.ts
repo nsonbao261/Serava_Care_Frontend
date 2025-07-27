@@ -1,5 +1,3 @@
-import { TimeSlot, BookingForm } from './types'
-
 // Memoized time slots to prevent recreation on every render
 export const timeSlots: TimeSlot[] = [
    { time: '08:00', available: true },

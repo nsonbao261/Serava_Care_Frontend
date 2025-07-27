@@ -1,4 +1,3 @@
-import { Question } from '@/types'
 import { mockQuestions } from '@/data'
 
 export async function getUserQuestions(userId?: string): Promise<Question[]> {

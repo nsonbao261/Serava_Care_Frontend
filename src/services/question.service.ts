@@ -1,5 +1,4 @@
 import { QuestionFormData } from '@/schemas'
-import { Question } from '@/types'
 import { mockQuestions } from '@/data'
 
 export async function submitQuestion(data: QuestionFormData): Promise<Question> {

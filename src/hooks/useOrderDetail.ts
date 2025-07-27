@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { BookingOrder } from '@/types'
-import { getOrderById, cancelOrder, rescheduleOrder, downloadInvoice, printInvoice } from '@/services'
+import {
+   getOrderById,
+   cancelOrder,
+   rescheduleOrder,
+   downloadInvoice,
+   printInvoice
+} from '@/services'
 
 interface UseOrderDetailReturn {
    order: BookingOrder | null

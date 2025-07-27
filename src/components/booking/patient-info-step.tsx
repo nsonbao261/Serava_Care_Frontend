@@ -2,7 +2,6 @@
 
 import { memo } from 'react'
 import { User } from 'lucide-react'
-import { PatientInfoStepProps } from './types'
 
 export const PatientInfoStep = memo(({ bookingForm, onFormUpdate }: PatientInfoStepProps) => (
    <div className="space-y-6">

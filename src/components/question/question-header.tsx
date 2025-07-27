@@ -3,7 +3,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ChevronRight } from 'lucide-react'
-import { Question } from '@/types'
 import { statusConfig } from '@/components'
 
 interface QuestionHeaderProps {

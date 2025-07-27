@@ -1,4 +1,3 @@
-import { SpecialtyPageData, SpecialtyCard } from '@/types'
 import {
    Heart,
    Eye,

@@ -21,7 +21,6 @@ import {
    ThumbsUp
 } from 'lucide-react'
 import { mockDoctorDetails } from '@/data'
-import { Doctor, Article } from '@/types'
 
 export default function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
    const { slug } = use(params)

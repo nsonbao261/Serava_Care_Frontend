@@ -1,11 +1,6 @@
-export type VitalSignType =
-   | 'blood_pressure'
-   | 'heart_rate'
-   | 'temperature'
-   | 'weight'
-   | 'blood_sugar'
+type VitalSignType = 'blood_pressure' | 'heart_rate' | 'temperature' | 'weight' | 'blood_sugar'
 
-export interface VitalSign {
+interface VitalSign {
    id: string
    type: VitalSignType
    value: string
@@ -15,7 +10,7 @@ export interface VitalSign {
    note?: string
 }
 
-export interface MedicalRecord {
+interface MedicalRecord {
    id: string
    date: string
    type: 'checkup' | 'consultation' | 'lab_result' | 'prescription' | 'vaccination'

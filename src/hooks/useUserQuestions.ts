@@ -1,6 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { Question } from '@/types'
-import { getUserQuestions, deleteQuestion, getQuestionById, rateQuestion, filterQuestions } from '@/services'
+import {
+   getUserQuestions,
+   deleteQuestion,
+   getQuestionById,
+   rateQuestion,
+   filterQuestions
+} from '@/services'
 
 interface UseUserQuestionsOptions {
    initialStatus?: Question['status']

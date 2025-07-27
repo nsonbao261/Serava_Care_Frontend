@@ -4,7 +4,6 @@ import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Calendar, Eye, Share2, FileText, Download, Image as ImageIcon } from 'lucide-react'
-import { Question } from '@/types'
 
 interface QuestionContentProps {
    question: Question

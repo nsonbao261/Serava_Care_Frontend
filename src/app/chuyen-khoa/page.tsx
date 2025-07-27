@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Filter, Grid, List, ChevronDown } from 'lucide-react'
-import { SpecialtyWithCategory, SpecialtyFilters } from '@/types'
 import { useSpecialties } from '@/hooks'
 import { LoadingSpinner, SpecialtyCard, type ViewMode } from '@/components'
 

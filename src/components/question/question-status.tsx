@@ -4,7 +4,6 @@ import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Clock, XCircle } from 'lucide-react'
-import { Question } from '@/types'
 
 interface QuestionStatusProps {
    question: Question
