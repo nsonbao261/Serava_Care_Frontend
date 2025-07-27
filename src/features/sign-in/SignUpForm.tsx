@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 // Components
 import { Button, Checkbox, Input, Label } from '@/components'
@@ -42,7 +41,6 @@ export default function SignUpForm() {
    const onSubmit = async (data: SignupInput) => {
       // Check terms agreement
       if (!agreeTerms) {
-         toast.error('Vui lòng đồng ý với điều khoản sử dụng')
          return
       }
 
@@ -57,8 +55,6 @@ export default function SignUpForm() {
             (response.statusCode >= 200 && response.statusCode < 300) ||
             response.data?.accessToken
          ) {
-            toast.success('Đăng ký thành công!')
-
             // Redirect to return URL or dashboard
             const returnUrl = searchParams.get('returnUrl')
             if (returnUrl) {
@@ -89,9 +85,6 @@ export default function SignUpForm() {
                errorMessage = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.'
             } else if (response.statusCode === 500) {
                errorMessage = 'Lỗi máy chủ. Dữ liệu có thể đã được lưu, vui lòng thử đăng nhập.'
-               toast.info('Nếu tài khoản đã được tạo, vui lòng thử đăng nhập', {
-                  autoClose: 8000
-               })
             }
 
             setError('root', {

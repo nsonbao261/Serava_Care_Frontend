@@ -1,16 +1,15 @@
+import {
+   AnimatedPageTitle,
+   BackToTop,
+   FloatingActionButton,
+   Footer,
+   Header,
+   Providers
+} from '@/components'
+import { Toaster } from '@/components/ui/sonner'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import {
-   Header,
-   Footer,
-   AnimatedPageTitle,
-   FloatingActionButton,
-   BackToTop,
-   Providers
-} from '@/components'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -63,19 +62,8 @@ export default function RootLayout({
                {children}
                <Footer />
                <FloatingActionButton />
+               <Toaster />
                <BackToTop threshold={300} />
-               <ToastContainer
-                  position="top-right"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="light"
-               />
             </Providers>
          </body>
       </html>
