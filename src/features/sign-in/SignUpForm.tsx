@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 // Components
 import { Button, Checkbox, Input, Label } from '@/components'
@@ -30,6 +29,8 @@ export default function SignUpForm() {
    } = useForm<SignupInput>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
+         email: '',
+         phoneNumber: '',
          username: '',
          fullName: '',
          birthDate: '',
@@ -42,7 +43,6 @@ export default function SignUpForm() {
    const onSubmit = async (data: SignupInput) => {
       // Check terms agreement
       if (!agreeTerms) {
-         toast.error('Vui lòng đồng ý với điều khoản sử dụng')
          return
       }
 
@@ -57,8 +57,6 @@ export default function SignUpForm() {
             (response.statusCode >= 200 && response.statusCode < 300) ||
             response.data?.accessToken
          ) {
-            toast.success('Đăng ký thành công!')
-
             // Redirect to return URL or dashboard
             const returnUrl = searchParams.get('returnUrl')
             if (returnUrl) {
@@ -89,9 +87,6 @@ export default function SignUpForm() {
                errorMessage = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.'
             } else if (response.statusCode === 500) {
                errorMessage = 'Lỗi máy chủ. Dữ liệu có thể đã được lưu, vui lòng thử đăng nhập.'
-               toast.info('Nếu tài khoản đã được tạo, vui lòng thử đăng nhập', {
-                  autoClose: 8000
-               })
             }
 
             setError('root', {
@@ -115,60 +110,102 @@ export default function SignUpForm() {
          {/* General Error Message */}
          {errors.root && (
             <div className="bg-red-50 border border-red-200 rounded-md p-2.5 flex items-center space-x-2">
-               <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-               <p className="text-red-700 text-xs">{errors.root.message}</p>
+               <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+               <p className="text-red-700 text-sm">{errors.root.message}</p>
             </div>
          )}
 
-         {/* Email Field */}
-         <div className="space-y-1">
-            <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
-               Tên tài khoản <span className="text-red-500">*</span>
-            </Label>
-            <Input
-               id="username"
-               type="username"
-               placeholder="Nhập tên tài khoản đăng nhập của bạn"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
-                  errors.username ? 'border-red-500' : 'border-blue-500'
-               }`}
-               {...register('username')}
-            />
-            {errors.username && (
-               <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
-            )}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {/* Email Field */}
+            <div className="space-y-2 mt-2">
+               <Label htmlFor="email" className="text-blue-700 font-medium text-sm">
+                  Email <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="email"
+                  type="email"
+                  placeholder="Nhập email của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('email')}
+               />
+               {errors.email && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.email.message}</p>
+               )}
+            </div>
+
+            {/* User Field */}
+            <div className="w-full space-y-2 mt-2">
+               <Label htmlFor="phoneNumber" className="text-blue-700 font-medium text-sm">
+                  Số điện thoại <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="phoneNumber"
+                  type="phoneNumber"
+                  placeholder="Nhập số điện thoại của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('phoneNumber')}
+               />
+               {errors.phoneNumber && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.phoneNumber.message}</p>
+               )}
+            </div>
          </div>
 
-         {/* Full Name Field */}
-         <div className="space-y-1">
-            <Label htmlFor="fullName" className="text-blue-700 font-medium text-sm">
-               Họ và tên <span className="text-red-500">*</span>
-            </Label>
-            <Input
-               id="fullName"
-               type="text"
-               placeholder="Nhập họ và tên của bạn"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
-                  errors.fullName ? 'border-red-500' : 'border-blue-500'
-               }`}
-               {...register('fullName')}
-            />
-            {errors.fullName && (
-               <p className="text-red-500 text-xs mt-0.5">{errors.fullName.message}</p>
-            )}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {/* Username Field */}
+            <div className="space-y-2 mt-2">
+                  <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
+                     Tên tài khoản <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                     id="username"
+                     type="username"
+                     placeholder="Nhập tên tài khoản của bạn"
+                     className={`w-full h-10 rounded-md text-sm ${
+                        errors.username ? 'border-red-500' : 'border-blue-500'
+                     }`}
+                     {...register('username')}
+                  />
+                  {errors.username && (
+                     <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
+                  )}
+               </div>
+
+            {/* Full Name Field */}
+            <div className="w-full space-y-2 mt-2">
+               <Label htmlFor="fullName" className="text-blue-700 font-medium text-sm">
+                  Họ và tên <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Nhập họ và tên của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.fullName ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('fullName')}
+               />
+               {errors.fullName && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.fullName.message}</p>
+               )}
+            </div>
          </div>
 
          {/* Birth Date and Gender in a row */}
-         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+         <div className="flex flex-col sm:flex-row gap-2">
             {/* Birth Date Field */}
-            <div className="space-y-1">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="birthDate" className="text-blue-700 font-medium text-sm">
                   Ngày sinh <span className="text-red-500">*</span>
                </Label>
                <Input
                   id="birthDate"
                   type="date"
-                  className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+                  className={`w-full h-10 rounded-md text-sm ${
                      errors.birthDate ? 'border-red-500' : 'border-blue-500'
                   }`}
                   {...register('birthDate')}
@@ -179,7 +216,7 @@ export default function SignUpForm() {
             </div>
 
             {/* Gender Field */}
-            <div className="space-y-1">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="gender" className="text-blue-700 font-medium text-sm">
                   Giới tính <span className="text-red-500">*</span>
                </Label>
@@ -202,7 +239,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Password Field */}
-         <div className="space-y-1">
+         <div className="space-y-2 mt-5">
             <Label htmlFor="password" className="text-blue-700 font-medium text-sm">
                Mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -221,7 +258,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Confirm Password Field */}
-         <div className="space-y-1">
+         <div className="space-y-2 mt-5">
             <Label htmlFor="confirmPassword" className="text-blue-700 font-medium text-sm">
                Xác nhận mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -240,7 +277,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Terms and Conditions */}
-         <div className="flex items-center justify-center text-xs pt-1">
+         <div className="flex items-start gap-x-2 text-sm mt-5">
             <Checkbox
                id="agreeTerms"
                checked={agreeTerms}
@@ -249,7 +286,7 @@ export default function SignUpForm() {
             />
             <Label
                htmlFor="agreeTerms"
-               className="text-[11px] leading-tight cursor-pointer flex items-center gap-x-1 whitespace-nowrap ml-2"
+               className="text-[11px] leading-tight cursor-pointer flex items-center gap-x-1 whitespace-nowrap"
                style={{ lineHeight: '1.2' }}
             >
                Tôi đồng ý với

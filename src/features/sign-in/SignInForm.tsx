@@ -25,6 +25,7 @@ export default function LoginForm() {
       resolver: zodResolver(loginSchema),
       defaultValues: {
          username: '',
+         email: '',
          password: '',
          rememberMe: false
       }
@@ -71,7 +72,7 @@ export default function LoginForm() {
          animate={{ opacity: 1, x: 0 }}
          transition={{ duration: 0.3 }}
          onSubmit={handleSubmit(onSubmit)}
-         className="space-y-3"
+         className="space-y-3 max-w-md mx-auto"
       >
          {/* General Error Message */}
          {errors.root && (
@@ -82,17 +83,17 @@ export default function LoginForm() {
          )}
 
          <div className="space-y-1">
-            <Label htmlFor="username" className="text-blue-700 font-medium text-base">
+            <Label htmlFor="email" className="text-blue-700 font-medium text-base">
                Email
             </Label>
             <Input
-               id="username"
-               type="username"
-               placeholder="Nhập email để tiếp tục"
+               id="email"
+               type="email"
+               placeholder="Nhập email hoặc tên tài khoản"
                className={`rounded-md focus:border-blue-700 h-12 text-base ${
-                  errors.username ? 'border-red-500' : 'border-blue-500'
+                  errors.email ? 'border-red-500' : 'border-blue-500'
                }`}
-               {...register('username')}
+               {...register('email')}
             />
             {errors.username && (
                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>

@@ -23,6 +23,7 @@ import {
    Lock,
    LogOut
 } from 'lucide-react'
+import LoginPanel from './loginpanel'
 
 const Header = () => {
    const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -39,6 +40,7 @@ const Header = () => {
 
    // Create auth URLs with current page as returnUrl (client-side only)
    const [loginUrl, setLoginUrl] = useState('/sign-in')
+   const [showLoginPanel, setShowLoginPanel] = useState(false)
 
    useEffect(() => {
       // Update sign-in URL with returnUrl on client side
@@ -354,15 +356,14 @@ const Header = () => {
                         </div>
                      ) : (
                         /* Login Button */
-                        <Link href={loginUrl}>
-                           <Button
-                              variant="ghost"
-                              className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-                           >
-                              <User className="h-4 w-4" />
-                              <span>Đăng nhập</span>
-                           </Button>
-                        </Link>
+                        <Button
+                           variant="ghost"
+                           className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+                           onClick={() => setShowLoginPanel(true)}
+                        >
+                           <User className="h-4 w-4" />
+                           <span>Đăng nhập</span>
+                        </Button>
                      )}
                   </div>
 
@@ -481,6 +482,7 @@ const Header = () => {
                </div>
             </div>
          )}
+         <LoginPanel isOpen={showLoginPanel} onClose={() => setShowLoginPanel(false)} />
       </header>
    )
 }
