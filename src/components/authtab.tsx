@@ -25,7 +25,9 @@ const AuthTabs = () => {
                <button
                   onClick={() => setActiveTab('sign-in')}
                   className={`flex-1 py-2 text-center transition-all ${
-                     activeTab === 'sign-in' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+                     activeTab === 'sign-in'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-gray-500'
                   }`}
                >
                   Đăng nhập
@@ -33,7 +35,9 @@ const AuthTabs = () => {
                <button
                   onClick={() => setActiveTab('sign-up')}
                   className={`flex-1 py-2 text-center transition-all ${
-                     activeTab === 'sign-up' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+                     activeTab === 'sign-up'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-gray-500'
                   }`}
                >
                   Đăng ký

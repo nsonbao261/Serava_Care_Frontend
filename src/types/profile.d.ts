@@ -1,17 +1,17 @@
-type Gender = 'male' | 'female' | 'other'
+type Gender = 'MALE' | 'FEMALE' | 'OTHER'
 
 interface User {
+   userId: string
    email: string
    fullName: string
-   birthDate?: string
-   gender?: Gender
+   birthDate: string
+   gender: Gender
    avatar?: string
-   phone?: string
+   phoneNumber: string
    address?: string
 }
 
 interface UserProfile extends User {
-   id: string
    emergencyContact?: EmergencyContact
    medicalInfo?: MedicalInfo
    insurance?: InsuranceInfo
@@ -34,13 +34,4 @@ interface InsuranceInfo {
    provider: string
    policyNumber: string
    expiryDate: string
-}
-
-interface ProfileFormData {
-   fullName: string
-   email: string
-   phone: string
-   birthDate: string
-   gender: 'male' | 'female' | 'other'
-   address: string
 }

@@ -24,7 +24,8 @@ const eslintConfig = [
                ignoreRegExpLiterals: true,
                ignoreComments: true
             }
-         ]
+         ],
+         'react-hooks/exhaustive-deps': 'off'
       }
    }
 ]
