@@ -356,15 +356,6 @@ const Header = () => {
                         </div>
                      ) : (
                         /* Login Button */
-                        // <Link href={loginUrl}>
-                        //    <Button
-                        //       variant="ghost"
-                        //       className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-                        //    >
-                        //       <User className="h-4 w-4" />
-                        //       <span>Đăng nhập</span>
-                        //    </Button>
-                        // </Link>
                         <Button
                            variant="ghost"
                            className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"

@@ -110,8 +110,8 @@ export default function SignUpForm() {
          {/* General Error Message */}
          {errors.root && (
             <div className="bg-red-50 border border-red-200 rounded-md p-2.5 flex items-center space-x-2">
-               <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-               <p className="text-red-700 text-xs">{errors.root.message}</p>
+               <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+               <p className="text-red-700 text-sm">{errors.root.message}</p>
             </div>
          )}
 
@@ -136,7 +136,7 @@ export default function SignUpForm() {
             </div>
 
             {/* User Field */}
-            <div className="space-y-2 mt-2">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="phoneNumber" className="text-blue-700 font-medium text-sm">
                   Số điện thoại <span className="text-red-500">*</span>
                </Label>
@@ -158,25 +158,25 @@ export default function SignUpForm() {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {/* Username Field */}
             <div className="space-y-2 mt-2">
-                  <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
-                     Tên tài khoản <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                     id="username"
-                     type="username"
-                     placeholder="Nhập tên tài khoản của bạn"
-                     className={`w-full h-10 rounded-md text-sm ${
-                        errors.username ? 'border-red-500' : 'border-blue-500'
-                     }`}
-                     {...register('username')}
-                  />
-                  {errors.username && (
-                     <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
-                  )}
-               </div>
+               <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
+                  Tên tài khoản <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="username"
+                  type="username"
+                  placeholder="Nhập tên tài khoản của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('username')}
+               />
+               {errors.username && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
+               )}
+            </div>
 
             {/* Full Name Field */}
-            <div className="space-y-2 mt-2">
+            <div className="w-full space-y-2 mt-2">
                <Label htmlFor="fullName" className="text-blue-700 font-medium text-sm">
                   Họ và tên <span className="text-red-500">*</span>
                </Label>
@@ -239,7 +239,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Password Field */}
-         <div className="space-y-2 mt-2">
+         <div className="space-y-2 mt-5">
             <Label htmlFor="password" className="text-blue-700 font-medium text-sm">
                Mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -258,7 +258,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Confirm Password Field */}
-         <div className="space-y-2 mt-2">
+         <div className="space-y-2 mt-5">
             <Label htmlFor="confirmPassword" className="text-blue-700 font-medium text-sm">
                Xác nhận mật khẩu <span className="text-red-500">*</span>
             </Label>
@@ -277,7 +277,7 @@ export default function SignUpForm() {
          </div>
 
          {/* Terms and Conditions */}
-         <div className="flex items-start gap-2 text-sm">
+         <div className="flex items-start gap-x-2 text-sm mt-5">
             <Checkbox
                id="agreeTerms"
                checked={agreeTerms}
@@ -286,7 +286,7 @@ export default function SignUpForm() {
             />
             <Label
                htmlFor="agreeTerms"
-               className="text-[11px] leading-tight cursor-pointer flex items-center gap-x-1 whitespace-nowrap ml-2"
+               className="text-[11px] leading-tight cursor-pointer flex items-center gap-x-1 whitespace-nowrap"
                style={{ lineHeight: '1.2' }}
             >
                Tôi đồng ý với
