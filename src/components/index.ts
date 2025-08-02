@@ -15,10 +15,6 @@ export { AnimatedSection } from './animations/animated-section'
 export { ParticleBackground } from './animations/particle-background'
 export { TypewriterText } from './animations/typewriter-text'
 
-// Booking
-export { BookingCard, StatusBadge } from './booking/booking-card'
-export { BookingModal } from './booking/booking-modal'
-
 // Cards
 export { DoctorCard } from './cards/doctor-card'
 export { GlowCard } from './cards/glow-card'

@@ -12,12 +12,12 @@ export const BookingModelFooter = memo(
       onInfoNext,
       onBookingSubmit
    }: FooterSectionProps) => (
-      <div className="border-t bg-gray-50 p-6">
-         <div className="flex justify-between">
+      <div className="bg-white border-t border-gray-200 p-6">
+         <div className="flex justify-between items-center">
             {step !== 'datetime' && (
                <button
                   onClick={onStepBack}
-                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                >
                   Quay lại
                </button>
@@ -29,7 +29,7 @@ export const BookingModelFooter = memo(
                <button
                   onClick={onDateTimeNext}
                   disabled={!isDateTimeValid}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
                >
                   Tiếp tục
                </button>
@@ -39,7 +39,7 @@ export const BookingModelFooter = memo(
                <button
                   onClick={onInfoNext}
                   disabled={!isInfoValid}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
                >
                   Tiếp tục
                </button>
@@ -48,7 +48,7 @@ export const BookingModelFooter = memo(
             {step === 'confirm' && (
                <button
                   onClick={onBookingSubmit}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                >
                   Xác nhận đặt khám
                </button>
