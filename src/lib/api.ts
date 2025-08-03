@@ -6,7 +6,7 @@ import { ACCESS_TOKEN, COOKIE_USER_DATA, REFRESH_TOKEN } from '@/constants'
 
 // Create axios instance with default configuration
 const api = axios.create({
-   baseURL: process.env.NEXT_API_URL || '/api',
+   baseURL: '/api',
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'

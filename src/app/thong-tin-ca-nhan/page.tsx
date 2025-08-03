@@ -1,11 +1,11 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { motion } from 'framer-motion'
-import { CheckCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import useSWR from 'swr'
 
 // Components
 import { Form, LoadingSpinner } from '@/components'
@@ -17,15 +17,13 @@ import Overview from '@/features/personal-info/overview'
 
 // Deps
 import { usePersonalInfoStore } from '@/features/personal-info/store/personal-info'
-import { useAuth } from '@/hooks'
 import { type ProfileFormData, profileFormSchema } from '@/schemas'
-import { updateUserProfile } from '@/services'
+import { getUserProfile, updateUserProfile } from '@/services/server/users'
 
 export default function PersonalInfoPage() {
    const router = useRouter()
-   const { isAuthenticated, isLoading: authLoading, user } = useAuth()
    const { setEditing, setLoading } = usePersonalInfoStore()
-   const [saveSuccess, setSaveSuccess] = useState(false)
+   const { data: user, isValidating } = useSWR('user', getUserProfile)
 
    const userProfile: ProfileFormData = {
       userId: user?.userId || '',
@@ -45,26 +43,26 @@ export default function PersonalInfoPage() {
 
    const onSubmit = async (data: ProfileFormData) => {
       setLoading(true)
-      try {
-         if (user && isAuthenticated) {
-            await updateUserProfile(user.userId, {
-               fullName: data.fullName,
-               email: data.email,
-               phoneNumber: data.phoneNumber,
-               birthDate: data.birthDate,
-               gender: data.gender,
-               address: data.address
-            })
+      if (user) {
+         const res = await updateUserProfile(user.userId, {
+            fullName: data.fullName,
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+            birthDate: data.birthDate,
+            gender: data.gender,
+            address: data.address
+         })
+
+         if (res.data) {
+            toast.success(res.message)
+         } else {
+            toast.error(res.message)
          }
 
-         console.log('Profile updated:', data)
-         setSaveSuccess(true)
-         setEditing(false)
-
-         setTimeout(() => setSaveSuccess(false), 3000)
-      } catch (error) {
-         console.error('Error updating profile:', error)
+         router.refresh()
       }
+
+      setEditing(false)
       setLoading(false)
    }
 
@@ -72,13 +70,8 @@ export default function PersonalInfoPage() {
       if (user) form.reset(userProfile)
    }, [user])
 
-   if (authLoading) {
+   if (isValidating) {
       return <LoadingSpinner size="lg" text="Đang tải thông tin cá nhân..." />
-   }
-
-   if (!isAuthenticated) {
-      router.push('/sign-in?returnUrl=/thong-tin-ca-nhan')
-      return null
    }
 
    return (
@@ -91,16 +84,6 @@ export default function PersonalInfoPage() {
                      <h1 className="text-3xl font-bold text-gray-900 mb-2">Thông tin cá nhân</h1>
                      <p className="text-gray-600">Quản lý và cập nhật thông tin cá nhân của bạn</p>
                   </div>
-                  {saveSuccess && (
-                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-lg"
-                     >
-                        <CheckCircle className="h-5 w-5" />
-                        <span>Đã lưu thành công!</span>
-                     </motion.div>
-                  )}
                </div>
 
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
