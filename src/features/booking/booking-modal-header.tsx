@@ -2,7 +2,6 @@
 
 import { memo } from 'react'
 import { X } from 'lucide-react'
-import { HeaderSectionProps } from './types'
 
 export const BookingModelHeader = memo(({ doctor, step, onClose }: HeaderSectionProps) => (
    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">

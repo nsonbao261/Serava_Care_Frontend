@@ -3,7 +3,6 @@ import { useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { questionFormSchema, QuestionFormData } from '@/schemas'
 import { submitQuestion } from '@/services'
-import { Question } from '@/types'
 
 export interface UseQuestionFormReturn {
    // Form control

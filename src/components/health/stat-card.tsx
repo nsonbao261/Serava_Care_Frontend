@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 
 export interface StatCardProps {
@@ -9,7 +8,7 @@ export interface StatCardProps {
    trend?: 'up' | 'down' | 'stable'
 }
 
-export const StatCard = React.memo(({ icon: Icon, label, value, unit, trend }: StatCardProps) => (
+export const StatCard = ({ icon: Icon, label, value, unit, trend }: StatCardProps) => (
    <motion.div
       whileHover={{ y: -2 }}
       className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200"
@@ -41,6 +40,6 @@ export const StatCard = React.memo(({ icon: Icon, label, value, unit, trend }: S
          )}
       </div>
    </motion.div>
-))
+)
 
 StatCard.displayName = 'StatCard'

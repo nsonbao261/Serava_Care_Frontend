@@ -1,12 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
+
 import {
-   SpecialtyWithCategory,
-   SpecialtyPageData,
-   SpecialtyFilters,
-   SpecialtySearchResult,
-   SpecialtyStats
-} from '@/types'
-import { 
    getAllSpecialties,
    getPopularSpecialties,
    getSpecialtiesByCategory,
@@ -63,14 +57,17 @@ export function useSpecialties(options: UseSpecialtiesOptions = {}): UseSpecialt
       }
    }, [category, popularOnly])
 
-   const searchSpecialtiesHandler = useCallback(async (query: string, filters?: SpecialtyFilters) => {
-      try {
-         return await searchSpecialties(query, filters)
-      } catch (err) {
-         console.error('Error searching specialties:', err)
-         return []
-      }
-   }, [])
+   const searchSpecialtiesHandler = useCallback(
+      async (query: string, filters?: SpecialtyFilters) => {
+         try {
+            return await searchSpecialties(query, filters)
+         } catch (err) {
+            console.error('Error searching specialties:', err)
+            return []
+         }
+      },
+      []
+   )
 
    useEffect(() => {
       if (autoFetch) {

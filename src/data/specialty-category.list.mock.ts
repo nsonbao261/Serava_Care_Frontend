@@ -1,4 +1,3 @@
-import { SpecialtyWithCategory } from '@/types'
 import {
    Heart,
    Eye,

@@ -1,6 +1,4 @@
-import { ContactInfo, SocialLinks, Article, Review, ImageInfo, Status, Language, Gender } from '.'
-
-export interface Doctor {
+interface Doctor {
    id: string
    slug: string
    name: string
@@ -24,7 +22,7 @@ export interface Doctor {
    social?: SocialLinks
 }
 
-export interface DoctorDetail extends Doctor {
+interface DoctorDetail extends Doctor {
    about: string
    education: string[]
    certifications?: string[]
@@ -51,7 +49,7 @@ export interface DoctorDetail extends Doctor {
    isAcceptingNewPatients?: boolean
 }
 
-export interface AvailabilitySlot {
+interface AvailabilitySlot {
    id: string
    doctorId: string
    date: string
@@ -62,10 +60,10 @@ export interface AvailabilitySlot {
 }
 
 // Utility types for doctor operations
-export type DoctorSortBy = 'name' | 'rating' | 'experience' | 'consultationFee' | 'reviewCount'
-export type SortOrder = 'asc' | 'desc'
+type DoctorSortBy = 'name' | 'rating' | 'experience' | 'consultationFee' | 'reviewCount'
+type SortOrder = 'asc' | 'desc'
 
-export interface DoctorFilters {
+interface DoctorFilters {
    specialty?: string
    subSpecialty?: string
    hospital?: string
@@ -79,7 +77,7 @@ export interface DoctorFilters {
    gender?: Gender
 }
 
-export interface DoctorSearchParams {
+interface DoctorSearchParams {
    query?: string
    filters?: DoctorFilters
    sortBy?: DoctorSortBy
@@ -89,7 +87,7 @@ export interface DoctorSearchParams {
 }
 
 // Legacy type for backward compatibility - omit conflicting fields and redefine them
-export interface LegacyDoctorDetail extends Omit<Doctor, 'languages'> {
+interface LegacyDoctorDetail extends Omit<Doctor, 'languages'> {
    about: string
    education: string[]
    achievements: string[]

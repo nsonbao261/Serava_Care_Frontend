@@ -1,4 +1,3 @@
-import { BookingOrder } from '@/types'
 import { mockOrderDetails } from '@/data'
 
 export async function getOrderById(id: string): Promise<BookingOrder | null> {

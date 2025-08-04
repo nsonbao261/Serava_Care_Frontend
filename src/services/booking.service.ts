@@ -1,4 +1,3 @@
-import { BookingOrder, BookingFilters } from '@/types'
 import { mockBookingOrders } from '@/data'
 
 export async function getBookings(

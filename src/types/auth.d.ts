@@ -1,6 +1,4 @@
-import { User } from '.'
-
-export interface AuthResponse {
+interface AuthResponse {
    statusCode: number
    message: string
    error?: string

@@ -3,7 +3,6 @@
 import { memo } from 'react'
 import Image from 'next/image'
 import { CreditCard, MapPin } from 'lucide-react'
-import { ConfirmationStepProps } from './types'
 
 export const ConfirmationStep = memo(({ doctor, bookingForm }: ConfirmationStepProps) => (
    <div className="space-y-6">

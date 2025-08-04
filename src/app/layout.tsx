@@ -1,16 +1,15 @@
+import {
+   AnimatedPageTitle,
+   BackToTop,
+   FloatingActionButton,
+   Footer,
+   Header,
+   Providers
+} from '@/components'
+import { Toaster } from '@/components/ui/sonner'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import {
-   Header,
-   Footer,
-   AnimatedPageTitle,
-   FloatingActionButton,
-   BackToTop,
-   Providers
-} from '@/components'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import ClientLoginPanel from '@/components/layout/AuthWrapper'
 
 const geistSans = Geist({
@@ -55,10 +54,7 @@ export default function RootLayout({
    
    return (
       <html lang="en">
-         <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
-            suppressHydrationWarning={true}
-         >
+         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
             <Providers>
                <AnimatedPageTitle />
                <Header />
@@ -66,19 +62,8 @@ export default function RootLayout({
                <ClientLoginPanel />
                <Footer />
                <FloatingActionButton />
+               <Toaster />
                <BackToTop threshold={300} />
-               <ToastContainer
-                  position="top-right"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="light"
-               />
             </Providers>
          </body>
       </html>

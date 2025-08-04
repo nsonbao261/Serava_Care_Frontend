@@ -1,5 +1,3 @@
-import { Doctor, DoctorFilters, DoctorSortBy, SortOrder } from '@/types'
-
 /**
  * Filter doctors based on the provided criteria
  */

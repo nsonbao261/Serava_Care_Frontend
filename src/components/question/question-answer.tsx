@@ -3,7 +3,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { User, Star, ThumbsUp, ThumbsDown, Flag } from 'lucide-react'
-import { Question } from '@/types'
 
 interface QuestionAnswerProps {
    question: Question

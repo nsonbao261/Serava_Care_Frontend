@@ -1,4 +1,4 @@
-export interface BookingOrder {
+interface BookingOrder {
    id: string
    createdAt: Date
    updatedAt: Date
@@ -32,7 +32,7 @@ export interface BookingOrder {
    followUpDate?: string
 }
 
-export interface BookingFilters {
+interface BookingFilters {
    status: BookingOrder['status'] | 'all'
    searchQuery: string
    dateRange?: {

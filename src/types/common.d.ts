@@ -1,18 +1,18 @@
-export interface ApiResponse<T> {
-   data: T
-   message?: string
-   status: 'success' | 'error'
-   pagination?: PaginationInfo
+type ApiResponse<T> = {
+   statusCode: number
+   message: string
+   error?: string
+   data?: T
 }
 
-export interface PaginationInfo {
+interface PaginationInfo {
    page: number
    limit: number
    total: number
    totalPages: number
 }
 
-export interface SearchFilters {
+interface SearchFilters {
    query?: string
    specialty?: string
    location?: string
@@ -21,28 +21,28 @@ export interface SearchFilters {
    limit?: number
 }
 
-export interface ContactInfo {
+interface ContactInfo {
    phone?: string
    email?: string
    address?: string
    website?: string
 }
 
-export interface SocialLinks {
+interface SocialLinks {
    facebook?: string
    twitter?: string
    linkedin?: string
    instagram?: string
 }
 
-export interface ImageInfo {
+interface ImageInfo {
    url: string
    alt: string
    width?: number
    height?: number
 }
 
-export interface Article {
+interface Article {
    id: string
    title: string
    excerpt?: string
@@ -54,7 +54,7 @@ export interface Article {
    image?: ImageInfo
 }
 
-export interface Review {
+interface Review {
    id: string
    rating: number
    comment: string
@@ -64,16 +64,16 @@ export interface Review {
 }
 
 // Utility types
-export type Status = 'active' | 'inactive' | 'pending' | 'suspended'
-export type Language = 'vi' | 'en' | 'ja' | 'ko' | 'zh'
+type Status = 'active' | 'inactive' | 'pending' | 'suspended'
+type Language = 'vi' | 'en' | 'ja' | 'ko' | 'zh'
 
 // Form validation types
-export interface ValidationError {
+interface ValidationError {
    field: string
    message: string
 }
 
-export interface FormState {
+interface FormState {
    isSubmitting: boolean
    errors: ValidationError[]
    touched: Record<string, boolean>

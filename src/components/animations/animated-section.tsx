@@ -1,10 +1,10 @@
 'use client'
 
 import { useInView } from '@/hooks'
-import { ReactNode, memo } from 'react'
+import { memo } from 'react'
 
 interface AnimatedSectionProps {
-   children: ReactNode
+   children: React.ReactNode
    className?: string
    animation?:
       | 'fade-up'

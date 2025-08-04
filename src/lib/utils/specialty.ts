@@ -1,5 +1,3 @@
-import { SpecialtyWithCategory, SpecialtyCategory } from '@/types'
-
 /**
  * Group specialties by their category
  */

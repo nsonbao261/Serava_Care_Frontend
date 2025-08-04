@@ -1,6 +1,4 @@
-import { ImageInfo, Doctor } from '.'
-
-export interface SpecialtyCard {
+interface SpecialtyCard {
    id: string
    name: string
    slug: string
@@ -14,20 +12,15 @@ export interface SpecialtyCard {
    order?: number
 }
 
-export type SpecialtyCategory =
-   | 'noi-khoa'
-   | 'ngoai-khoa'
-   | 'can-lam-sang'
-   | 'phuc-hoi'
-   | 'chuyen-khoa'
+type SpecialtyCategory = 'noi-khoa' | 'ngoai-khoa' | 'can-lam-sang' | 'phuc-hoi' | 'chuyen-khoa'
 
-export interface SpecialtyWithCategory extends SpecialtyCard {
+interface SpecialtyWithCategory extends SpecialtyCard {
    category: SpecialtyCategory
    subCategories?: string[]
    relatedSpecialties?: string[]
 }
 
-export interface SpecialtyPageData {
+interface SpecialtyPageData {
    id: string
    name: string
    description: string
@@ -41,7 +34,7 @@ export interface SpecialtyPageData {
    relatedArticles?: string[]
 }
 
-export interface SpecialtyStats {
+interface SpecialtyStats {
    doctorCount: number
    averageRating: number
    totalConsultations: number
@@ -52,7 +45,7 @@ export interface SpecialtyStats {
    }>
 }
 
-export interface SpecialtyFAQ {
+interface SpecialtyFAQ {
    id: string
    question: string
    answer: string
@@ -61,19 +54,19 @@ export interface SpecialtyFAQ {
 }
 
 // Utility types
-export interface SpecialtySearchResult extends SpecialtyWithCategory {
+interface SpecialtySearchResult extends SpecialtyWithCategory {
    matchScore?: number
    relevantDoctors?: Doctor[]
 }
 
-export interface SpecialtyFilters {
+interface SpecialtyFilters {
    category?: SpecialtyCategory
    minDoctorCount?: number
    popularOnly?: boolean
    hasAvailableDoctors?: boolean
 }
 
-export interface Specialty {
+interface Specialty {
    value: string
    label: string
    description?: string

@@ -105,7 +105,7 @@ export default function SignUpForm() {
          animate={{ opacity: 1, x: 0 }}
          transition={{ duration: 0.3 }}
          onSubmit={handleSubmit(onSubmit)}
-         className="space-y-2.5 max-w-md mx-auto"
+         className="w-full max-w-xl px-4 mx-auto"
       >
          {/* General Error Message */}
          {errors.root && (
@@ -158,22 +158,22 @@ export default function SignUpForm() {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {/* Username Field */}
             <div className="space-y-2 mt-2">
-                  <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
-                     Tên tài khoản <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                     id="username"
-                     type="username"
-                     placeholder="Nhập tên tài khoản của bạn"
-                     className={`w-full h-10 rounded-md text-sm ${
-                        errors.username ? 'border-red-500' : 'border-blue-500'
-                     }`}
-                     {...register('username')}
-                  />
-                  {errors.username && (
-                     <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
-                  )}
-               </div>
+               <Label htmlFor="username" className="text-blue-700 font-medium text-sm">
+                  Tên tài khoản <span className="text-red-500">*</span>
+               </Label>
+               <Input
+                  id="username"
+                  type="username"
+                  placeholder="Nhập tên tài khoản của bạn"
+                  className={`w-full h-10 rounded-md text-sm ${
+                     errors.username ? 'border-red-500' : 'border-blue-500'
+                  }`}
+                  {...register('username')}
+               />
+               {errors.username && (
+                  <p className="text-red-500 text-xs mt-0.5">{errors.username.message}</p>
+               )}
+            </div>
 
             {/* Full Name Field */}
             <div className="w-full space-y-2 mt-2">
@@ -247,7 +247,7 @@ export default function SignUpForm() {
                id="password"
                type="password"
                placeholder="Nhập mật khẩu"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+               className={`w-full h-10 rounded-md text-sm border ${
                   errors.password ? 'border-red-500' : 'border-blue-500'
                }`}
                {...register('password')}
@@ -266,7 +266,7 @@ export default function SignUpForm() {
                id="confirmPassword"
                type="password"
                placeholder="Nhập lại mật khẩu"
-               className={`rounded-md focus:border-blue-700 h-10 text-sm ${
+               className={`w-full h-10 rounded-md text-sm border ${
                   errors.confirmPassword ? 'border-red-500' : 'border-blue-500'
                }`}
                {...register('confirmPassword')}

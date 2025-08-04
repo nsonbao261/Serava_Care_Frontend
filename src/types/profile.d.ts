@@ -1,46 +1,37 @@
-export type Gender = 'male' | 'female' | 'other'
+type Gender = 'MALE' | 'FEMALE' | 'OTHER'
 
-export interface User {
+interface User {
+   userId: string
    email: string
    fullName: string
-   birthDate?: string
-   gender?: Gender
+   birthDate: string
+   gender: Gender
    avatar?: string
-   phone?: string
+   phoneNumber: string
    address?: string
 }
 
-export interface UserProfile extends User {
-   id: string
+interface UserProfile extends User {
    emergencyContact?: EmergencyContact
    medicalInfo?: MedicalInfo
    insurance?: InsuranceInfo
 }
 
-export interface EmergencyContact {
+interface EmergencyContact {
    name: string
    phone: string
    relationship: string
 }
 
-export interface MedicalInfo {
+interface MedicalInfo {
    bloodType?: string
    allergies?: string[]
    chronicConditions?: string[]
    medications?: string[]
 }
 
-export interface InsuranceInfo {
+interface InsuranceInfo {
    provider: string
    policyNumber: string
    expiryDate: string
-}
-
-export interface ProfileFormData {
-   fullName: string
-   email: string
-   phone: string
-   birthDate: string
-   gender: 'male' | 'female' | 'other'
-   address: string
 }

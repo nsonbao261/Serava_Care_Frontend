@@ -1,5 +1,3 @@
-import { QuestionSpecialty } from '@/types'
-
 export const questionSpecialties: QuestionSpecialty[] = [
    {
       id: 'default',

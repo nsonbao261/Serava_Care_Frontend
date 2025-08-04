@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback, memo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BookingModalProps, DateOption, BookingForm } from './types'
 import { timeSlots, initialFormState, modalVariants, backdropVariants } from './constants'
 import { BookingModelFooter } from './booking-modal-footer'
 import { BookingModelHeader } from './booking-modal-header'
@@ -133,11 +132,11 @@ export const BookingModal = memo(({ doctor, isOpen, onClose }: BookingModalProps
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+                  className="fixed inset-0 w-screen h-screen bg-black/70 backdrop-blur-sm z-50"
                   onClick={handleBackdropClick}
                />
 
-               {/* Modal */}
+               {/* Modal Container */}
                <motion.div
                   ref={modalRef}
                   variants={modalVariants}
@@ -145,14 +144,17 @@ export const BookingModal = memo(({ doctor, isOpen, onClose }: BookingModalProps
                   animate="visible"
                   exit="exit"
                   transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                  className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                  className="fixed inset-0 w-screen h-screen z-50 flex items-center justify-center p-4 md:p-6"
                >
-                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-                     {/* Header */}
-                     <BookingModelHeader doctor={doctor} step={step} onClose={handleClose} />
+                  {/* Modal Content */}
+                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] min-h-[450px] flex flex-col overflow-hidden">
+                     {/* Header - Fixed height */}
+                     <div className="flex-shrink-0">
+                        <BookingModelHeader doctor={doctor} step={step} onClose={handleClose} />
+                     </div>
 
                      {/* Content */}
-                     <div className="p-6 max-h-[60vh] overflow-y-auto">
+                     <div className="flex-1 overflow-y-auto p-6">
                         {step === 'datetime' && (
                            <DateTimeStep
                               dates={dates}
@@ -177,15 +179,17 @@ export const BookingModal = memo(({ doctor, isOpen, onClose }: BookingModalProps
                      </div>
 
                      {/* Footer */}
-                     <BookingModelFooter
-                        step={step}
-                        isDateTimeValid={isDateTimeValid}
-                        isInfoValid={isInfoValid}
-                        onStepBack={handleStepBack}
-                        onDateTimeNext={handleDateTimeNext}
-                        onInfoNext={handleInfoNext}
-                        onBookingSubmit={handleBookingSubmit}
-                     />
+                     <div className="flex-shrink-0 border-t border-gray-200">
+                        <BookingModelFooter
+                           step={step}
+                           isDateTimeValid={isDateTimeValid}
+                           isInfoValid={isInfoValid}
+                           onStepBack={handleStepBack}
+                           onDateTimeNext={handleDateTimeNext}
+                           onInfoNext={handleInfoNext}
+                           onBookingSubmit={handleBookingSubmit}
+                        />
+                     </div>
                   </div>
                </motion.div>
             </>

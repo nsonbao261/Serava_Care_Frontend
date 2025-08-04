@@ -1,5 +1,3 @@
-import { Doctor } from '@/types'
-
 // Enhanced mock data with better structure and more comprehensive information
 export const mockDoctors: Doctor[] = [
    {

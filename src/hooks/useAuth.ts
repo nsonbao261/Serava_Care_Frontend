@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
-import { 
-   signIn, 
-   signUp, 
-   logout, 
-   getCurrentUser, 
-   mockLogin, 
-   mockSignup 
+import {
+   signIn,
+   signUp,
+   logout,
+   getCurrentUser,
+   mockLogin,
+   mockSignup
 } from '@/services/auth.service'
-import { type User, type AuthResponse } from '@/types'
 import { type LoginInput, type SignupInput } from '@/schemas'
 
 export interface UseAuthReturn {

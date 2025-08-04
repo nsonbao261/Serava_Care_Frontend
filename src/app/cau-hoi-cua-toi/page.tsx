@@ -15,7 +15,6 @@ import {
    MessageSquare
 } from 'lucide-react'
 import Link from 'next/link'
-import { Question } from '@/types'
 import { LoadingSpinner, EmptyState, ErrorBoundaryFallback, QuestionCard } from '@/components'
 
 export default function MyQuestionsPage() {

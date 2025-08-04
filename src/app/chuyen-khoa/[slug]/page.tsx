@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { Button, DoctorCard } from '@/components'
 import { ChevronRight, Search, Users, Filter } from 'lucide-react'
 import { useState, useMemo } from 'react'
-import { Doctor } from '@/types'
 import { specialtyData } from '@/data'
 
 export default function SpecialtyDetailPage({ params }: { params: Promise<{ slug: string }> }) {

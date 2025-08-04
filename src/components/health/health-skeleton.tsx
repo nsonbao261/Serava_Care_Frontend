@@ -1,10 +1,10 @@
-import React from 'react'
+import { memo } from 'react'
 
 export interface StatCardSkeletonProps {
    index?: number
 }
 
-export const StatCardSkeleton = React.memo(({ index = 0 }: StatCardSkeletonProps) => (
+export const StatCardSkeleton = memo(({ index = 0 }: StatCardSkeletonProps) => (
    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
       <div className="flex items-center justify-between">
          <div className="flex items-center space-x-3">
@@ -35,7 +35,7 @@ export const StatCardSkeleton = React.memo(({ index = 0 }: StatCardSkeletonProps
 
 StatCardSkeleton.displayName = 'StatCardSkeleton'
 
-export const HealthSectionSkeleton = React.memo(() => (
+export const HealthSectionSkeleton = memo(() => (
    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
       <div className="p-6 border-b border-gray-200">
          <div className="flex items-center space-x-2">
@@ -65,7 +65,7 @@ export const HealthSectionSkeleton = React.memo(() => (
 
 HealthSectionSkeleton.displayName = 'HealthSectionSkeleton'
 
-export const RecentRecordsSkeleton = React.memo(() => (
+export const RecentRecordsSkeleton = memo(() => (
    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
       <div className="p-6 border-b border-gray-200">
          <div className="flex items-center space-x-2">
@@ -104,7 +104,7 @@ export const RecentRecordsSkeleton = React.memo(() => (
 
 RecentRecordsSkeleton.displayName = 'RecentRecordsSkeleton'
 
-export const HealthProfileSkeleton = React.memo(() => (
+export const HealthProfileSkeleton = memo(() => (
    <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb Skeleton */}
       <div className="bg-white border-b">

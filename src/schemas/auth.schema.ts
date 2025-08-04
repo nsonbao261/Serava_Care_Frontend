@@ -2,10 +2,10 @@ import { z } from 'zod'
 
 export const loginSchema = z.object({
    username: z.string().min(1, 'Vui lòng nhập tên đăng nhập'),
-   email: z
-         .string()
-         .min(8, 'Email phải có ít nhất 8 ký tự')
-         .regex(/^[\w-_\.]+\@[\w&&[^0-9]]+\.com/, 'Email phải là chuỗi hợp lệ'),
+   // email: z
+   //    .string()
+   //    .min(8, 'Email phải có ít nhất 8 ký tự')
+   //    .regex(/^[\w-_\.]+\@[\w&&[^0-9]]+\.com/, 'Email phải là chuỗi hợp lệ'),
    password: z
       .string()
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
@@ -25,11 +25,9 @@ export const signupSchema = z
          .min(3, 'Tên tài khoản phải có ít nhất 3 ký tự')
          .max(20, 'Tên tài khoản phải ít hơn 20 ký tự')
          .regex(/^[A-Za-z0-9_]+$/, 'Chỉ được chứa chữ, số và dấu gạch dưới'),
-      email: z
+      email: z.string().min(8, 'Email phải có ít nhất 8 ký tự').email(),
+      phoneNumber: z
          .string()
-         .min(8, 'Email phải có ít nhất 8 ký tự')
-         .regex(/^[\w-_\.]+\@[\w&&[^0-9]]+\.com/, 'Email phải là chuỗi hợp lệ'),
-      phoneNumber: z.string()
          .length(10, 'Số điện thoại phải có đúng 10 chữ số')
          .regex(/^\d+$/, 'Số điện thoại chỉ được chứa chỉ số'),
       birthDate: z

@@ -25,7 +25,7 @@ export default function LoginForm() {
       resolver: zodResolver(loginSchema),
       defaultValues: {
          username: '',
-         email: '',
+         // email: '',
          password: '',
          rememberMe: false
       }
@@ -88,12 +88,12 @@ export default function LoginForm() {
             </Label>
             <Input
                id="email"
-               type="email"
+               // type="email"
                placeholder="Nhập email hoặc tên tài khoản"
                className={`rounded-md focus:border-blue-700 h-12 text-base ${
-                  errors.email ? 'border-red-500' : 'border-blue-500'
+                  errors.username ? 'border-red-500' : 'border-blue-500'
                }`}
-               {...register('email')}
+               {...register('username')}
             />
             {errors.username && (
                <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>

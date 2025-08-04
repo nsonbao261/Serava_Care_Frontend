@@ -1,13 +1,12 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
-import { toast } from 'react-toastify'
 
 // Deps
 import { ACCESS_TOKEN, COOKIE_USER_DATA, REFRESH_TOKEN } from '@/constants'
 
 // Create axios instance with default configuration
 const api = axios.create({
-   baseURL: process.env.NEXT_API_URL || '/api',
+   baseURL: '/api',
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'
@@ -71,19 +70,14 @@ api.interceptors.response.use(
       if (!suppressToast) {
          const status = error.response?.status
          if (status === 403) {
-            toast.error('Access denied. You do not have permission to perform this action.')
          } else if (status === 404) {
-            toast.error('Resource not found.')
          } else if (status && status >= 500) {
-            toast.error('Server error. Please try again later.')
          } else if (
             error.response?.data &&
             typeof error.response.data === 'object' &&
             'message' in error.response.data
          ) {
-            toast.error(error.response.data.message as string)
          } else {
-            toast.error('An unexpected error occurred.')
          }
       }
 
