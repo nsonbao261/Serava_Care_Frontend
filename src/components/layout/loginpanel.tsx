@@ -1,10 +1,18 @@
 'user client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import SignInPage from '@/app/(auth)/sign-in/page'
+import SignInPage from '@/features/sign-in/AuthPage'
 import { BackgroundMotion } from '@/components'
+import { usePathname, useRouter } from 'next/navigation'
 
-const LoginPanel = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const LoginPanel = () => {
+   const pathname = usePathname()
+   const router = useRouter()
+   const isOpen = pathname ==='/sign-in'
+   const handleClose = () => {
+      router.push('/')
+   }
+
    return (
       <AnimatePresence>
          {isOpen && (
@@ -21,7 +29,7 @@ const LoginPanel = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
 
                   <div className="relative z-10 bg-white rounded-2xl shadow-xl w-full max-w-md">
                      {/* Form đăng nhập/đăng ký ở đây */}
-                     <SignInPage onClose={onClose}/>
+                     <SignInPage onClose={handleClose}/>
                   </div>
                </motion.div>
          )}

@@ -11,6 +11,7 @@ import {
 } from '@/components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ClientLoginPanel from '@/components/layout/AuthWrapper'
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -48,9 +49,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
    children
-}: Readonly<{
+}: {
    children: React.ReactNode
-}>) {
+}) {
+   
    return (
       <html lang="en">
          <body
@@ -61,6 +63,7 @@ export default function RootLayout({
                <AnimatedPageTitle />
                <Header />
                {children}
+               <ClientLoginPanel />
                <Footer />
                <FloatingActionButton />
                <BackToTop threshold={300} />

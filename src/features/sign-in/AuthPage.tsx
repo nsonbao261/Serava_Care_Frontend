@@ -8,7 +8,7 @@ import LoginForm from '@/features/sign-in/SignInForm'
 import SignUpForm from '@/features/sign-in/SignUpForm'
 
 interface SignInPageProps {
-   onClose: () => void
+   onClose?: () => void
 }
 
 

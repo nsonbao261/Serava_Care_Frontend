@@ -24,6 +24,7 @@ import {
    LogOut
 } from 'lucide-react'
 import LoginPanel from './loginpanel'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
    const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -33,6 +34,7 @@ const Header = () => {
    const userDropdownRef = useRef<HTMLDivElement>(null)
    const pathname = usePathname()
    const { user, isAuthenticated, logout } = useAuth()
+   const router = useRouter()
 
    const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
    const toggleBookingDropdown = () => setIsBookingDropdownOpen(!isBookingDropdownOpen)
@@ -359,7 +361,7 @@ const Header = () => {
                         <Button
                            variant="ghost"
                            className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-                           onClick={() => setShowLoginPanel(true)}
+                           onClick={() => router.push('/sign-in')}
                         >
                            <User className="h-4 w-4" />
                            <span>Đăng nhập</span>
@@ -482,7 +484,6 @@ const Header = () => {
                </div>
             </div>
          )}
-         <LoginPanel isOpen={showLoginPanel} onClose={() => setShowLoginPanel(false)} />
       </header>
    )
 }
