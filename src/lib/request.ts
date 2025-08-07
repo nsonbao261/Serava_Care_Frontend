@@ -45,8 +45,6 @@ export const request = async <T, B = undefined>(
       const defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' }
       const allHeaders = { ...defaultHeaders, ...mergedHeader }
 
-      // console.log(allHeaders)
-
       const response = await fetch(url, {
          method,
          cache,
@@ -54,8 +52,6 @@ export const request = async <T, B = undefined>(
          body: body ? JSON.stringify(body) : undefined,
          next
       })
-
-      console.log(response)
 
       const data: ApiResponse<T> = await response.json()
 
