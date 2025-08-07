@@ -1,19 +1,17 @@
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
 
 // Deps
-import { ACCESS_TOKEN, COOKIE_USER_DATA, REFRESH_TOKEN } from '@/constants'
+import { ACCESS_TOKEN } from '@/constants'
 
-// Create axios instance with default configuration
 const api = axios.create({
-   baseURL: '/api',
+   baseURL: '/backend',
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'
    }
 })
 
-// Request interceptor to add auth token
 api.interceptors.request.use(
    (config: InternalAxiosRequestConfig) => {
       const token = Cookies.get(ACCESS_TOKEN)
@@ -28,114 +26,5 @@ api.interceptors.request.use(
       return Promise.reject(error)
    }
 )
-
-// Response interceptor to handle token refresh and errors
-api.interceptors.response.use(
-   (response: AxiosResponse) => {
-      return response
-   },
-   async (error: AxiosError) => {
-      const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
-
-      // Handle 401 errors (token expired)
-      if (error.response?.status === 401 && !originalRequest._retry) {
-         originalRequest._retry = true
-
-         try {
-            const refreshToken = Cookies.get(REFRESH_TOKEN)
-            if (refreshToken) {
-               const response = await refreshAuthToken(refreshToken)
-
-               if (response.success) {
-                  // Update tokens
-                  Cookies.set(ACCESS_TOKEN, response.data.accessToken, { expires: 1 })
-                  Cookies.set(REFRESH_TOKEN, response.data.refreshToken, { expires: 7 })
-
-                  // Retry original request with new token
-                  originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
-                  return api(originalRequest)
-               }
-            }
-         } catch {
-            // Refresh failed, redirect to sign-in
-            clearAuthTokens()
-            window.location.href = '/sign-in'
-         }
-      }
-
-      // Handle other errors with toast notifications
-      // Check if toast should be suppressed for this request
-      const suppressToast = error.config?.headers?.['X-Suppress-Toast'] === 'true'
-
-      if (!suppressToast) {
-         const status = error.response?.status
-         if (status === 403) {
-         } else if (status === 404) {
-         } else if (status && status >= 500) {
-         } else if (
-            error.response?.data &&
-            typeof error.response.data === 'object' &&
-            'message' in error.response.data
-         ) {
-         } else {
-         }
-      }
-
-      return Promise.reject(error)
-   }
-)
-
-// Refresh token function
-async function refreshAuthToken(refreshToken: string) {
-   try {
-      const response = await axios.post(`${process.env.NEXT_API_URL || '/api'}/refresh-token`, {
-         refreshToken
-      })
-      return response.data
-   } catch {
-      throw new Error('Failed to refresh token')
-   }
-}
-
-// Helper function to clear auth tokens
-export function clearAuthTokens() {
-   Cookies.remove(ACCESS_TOKEN)
-   Cookies.remove(REFRESH_TOKEN)
-   Cookies.remove(COOKIE_USER_DATA)
-
-   // Trigger custom event to notify components of user data change
-   if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('userUpdate'))
-   }
-}
-
-// Helper function to set auth tokens
-export function setAuthTokens(
-   accessToken: string,
-   refreshToken: string,
-   userData: Record<string, unknown>
-) {
-   Cookies.set(ACCESS_TOKEN, accessToken, { expires: 1 }) // 1 day
-   Cookies.set(REFRESH_TOKEN, refreshToken, { expires: 7 }) // 7 days
-   Cookies.set(COOKIE_USER_DATA, JSON.stringify(userData), { expires: 7 })
-
-   // Trigger custom event to notify components of user data change
-   if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('userUpdate'))
-   }
-}
-
-// Helper function to get user data
-export function getUserData() {
-   const userData = Cookies.get(COOKIE_USER_DATA)
-   return userData ? JSON.parse(userData) : null
-}
-
-// Utility function to create API requests that suppress toast errors
-export function createSuppressedToastConfig() {
-   return {
-      headers: { 'X-Suppress-Toast': 'true' }
-   }
-}
 
 export default api

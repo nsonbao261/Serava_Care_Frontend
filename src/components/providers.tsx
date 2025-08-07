@@ -1,3 +1,6 @@
+'use client'
+
+import { SessionProvider } from 'next-auth/react'
 import { SWRConfig } from 'swr'
 
 interface ProvidersProps {
@@ -6,14 +9,16 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
    return (
-      <SWRConfig
-         value={{
-            revalidateOnFocus: false,
-            revalidateOnReconnect: true,
-            dedupingInterval: 5000
-         }}
-      >
-         {children}
-      </SWRConfig>
+      <SessionProvider>
+         <SWRConfig
+            value={{
+               revalidateOnFocus: false,
+               revalidateOnReconnect: true,
+               dedupingInterval: 5000
+            }}
+         >
+            {children}
+         </SWRConfig>
+      </SessionProvider>
    )
 }

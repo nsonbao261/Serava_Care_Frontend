@@ -1,31 +1,27 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { AlertCircle } from 'lucide-react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 
 // Components
 import { Button, Checkbox, Input, Label } from '@/components'
 
 // Deps
-import { useAuth } from '@/hooks'
 import { signupSchema, type SignupInput } from '@/schemas'
 
 export default function SignUpForm() {
    const router = useRouter()
-   const searchParams = useSearchParams()
-   const { signUp, mockSignup, isLoading } = useAuth()
    const [agreeTerms, setAgreeTerms] = useState(false)
-   const [useMock, setUseMock] = useState(true) // Toggle between real and mock API
+   const [isLoading, startTransition] = useTransition()
 
    const {
       register,
       handleSubmit,
-      formState: { errors },
-      setError
+      formState: { errors }
    } = useForm<SignupInput>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
@@ -40,63 +36,12 @@ export default function SignUpForm() {
       }
    })
 
-   const onSubmit = async (data: SignupInput) => {
-      // Check terms agreement
+   const onSubmit = (data: SignupInput) => {
       if (!agreeTerms) {
          return
       }
 
-      try {
-         console.log('Submitting sign-up form with data:', data)
-         // Choose between mock and real authentication
-         const response = useMock ? await mockSignup(data) : await signUp(data)
-         console.log('Signup response in form:', response)
-
-         // Check for success conditions
-         if (
-            (response.statusCode >= 200 && response.statusCode < 300) ||
-            response.data?.accessToken
-         ) {
-            // Redirect to return URL or dashboard
-            const returnUrl = searchParams.get('returnUrl')
-            if (returnUrl) {
-               try {
-                  // Decode and validate the return URL
-                  const decodedUrl = decodeURIComponent(returnUrl)
-                  // For security, only allow relative URLs
-                  if (decodedUrl.startsWith('/') && !decodedUrl.startsWith('//')) {
-                     router.push(decodedUrl)
-                  } else {
-                     router.push('/')
-                  }
-               } catch {
-                  router.push('/')
-               }
-            } else {
-               router.push('/')
-            }
-         } else {
-            // Handle error response
-            console.log('Signup failed with response:', response)
-
-            // Show more specific error message based on status code
-            let errorMessage =
-               response.message || response.error || 'Đăng ký thất bại. Vui lòng thử lại.'
-
-            if (response.statusCode === 0) {
-               errorMessage = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.'
-            } else if (response.statusCode === 500) {
-               errorMessage = 'Lỗi máy chủ. Dữ liệu có thể đã được lưu, vui lòng thử đăng nhập.'
-            }
-
-            setError('root', {
-               message: errorMessage
-            })
-         }
-      } catch (error) {
-         console.error('Signup error:', error)
-         setError('root', { message: 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.' })
-      }
+      startTransition(async () => {})
    }
 
    return (
@@ -309,20 +254,6 @@ export default function SignUpForm() {
          >
             {isLoading ? 'ĐANG ĐĂNG KÝ...' : 'ĐĂNG KÝ'}
          </Button>
-
-         {/* Mock Toggle for Development */}
-         <div className="flex items-center justify-center space-x-2 text-xs text-gray-500 mt-2">
-            <span>Demo mode:</span>
-            <button
-               type="button"
-               onClick={() => setUseMock(!useMock)}
-               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
-                  useMock ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-               }`}
-            >
-               {useMock ? 'Mock API' : 'Real API'}
-            </button>
-         </div>
 
          {/* Login Link */}
          <div className="text-center pt-2">

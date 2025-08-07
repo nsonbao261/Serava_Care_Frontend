@@ -1,69 +1,46 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Checkbox, Label } from '@/components'
-import { Mail, AlertCircle } from 'lucide-react'
-import { useAuth } from '@/hooks'
+import { motion } from 'framer-motion'
+import { AlertCircle, Mail } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
+// Deps
+import { Button, Checkbox, Input, Label } from '@/components'
 import { loginSchema, type LoginInput } from '@/schemas'
 
-export default function LoginForm() {
+export default function SignInForm() {
    const router = useRouter()
-   const searchParams = useSearchParams()
-   const { signIn, mockLogin, isLoading } = useAuth()
-   const [useMock, setUseMock] = useState(true) // Toggle between real and mock API
+   const [isPending, startTransition] = useTransition()
 
    const {
       register,
       handleSubmit,
-      formState: { errors },
-      setError
+      formState: { errors }
    } = useForm<LoginInput>({
       resolver: zodResolver(loginSchema),
       defaultValues: {
          username: '',
-         // email: '',
          password: '',
          rememberMe: false
       }
    })
 
-   const onSubmit = async (data: LoginInput) => {
-      try {
-         // Choose between mock and real authentication
-         const response = useMock ? await mockLogin(data) : await signIn(data)
+   const onSubmit = (data: LoginInput) => {
+      startTransition(async () => {
+         const response = await signIn('credentials', { ...data, redirect: false })
 
-         if (response.statusCode === 200) {
-            // Redirect to return URL or dashboard
-            const returnUrl = searchParams.get('returnUrl')
-            if (returnUrl) {
-               try {
-                  // Decode and validate the return URL
-                  const decodedUrl = decodeURIComponent(returnUrl)
-                  // For security, only allow relative URLs
-                  if (decodedUrl.startsWith('/') && !decodedUrl.startsWith('//')) {
-                     router.push(decodedUrl)
-                  } else {
-                     router.push('/')
-                  }
-               } catch {
-                  router.push('/')
-               }
-            } else {
-               router.push('/')
-            }
+         if (response?.ok) {
+            toast.success('Đăng nhập thành công')
+            router.replace('/')
          } else {
-            // Handle error response
-            setError('root', {
-               message: response.message || response.error || 'Đăng nhập thất bại'
-            })
+            toast.error('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.')
          }
-      } catch {
-         setError('root', { message: 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.' })
-      }
+      })
    }
 
    return (
@@ -138,24 +115,10 @@ export default function LoginForm() {
          <Button
             type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 h-12 text-base font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading}
+            disabled={isPending}
          >
-            {isLoading ? 'ĐANG ĐĂNG NHẬP...' : 'ĐĂNG NHẬP'}
+            {isPending ? 'ĐANG ĐĂNG NHẬP...' : 'ĐĂNG NHẬP'}
          </Button>
-
-         {/* Mock Toggle for Development */}
-         <div className="flex items-center justify-center space-x-2 text-xs text-gray-500">
-            <span>Demo mode:</span>
-            <button
-               type="button"
-               onClick={() => setUseMock(!useMock)}
-               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
-                  useMock ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-               }`}
-            >
-               {useMock ? 'Mock API' : 'Real API'}
-            </button>
-         </div>
 
          <div className="relative my-2">
             <div className="absolute inset-0 flex items-center">

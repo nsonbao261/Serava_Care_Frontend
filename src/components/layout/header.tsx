@@ -1,57 +1,45 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Button } from '@/components'
-import { useAuth } from '@/hooks'
 import {
-   Menu,
-   X,
-   User,
    Bell,
-   Phone,
-   MapPin,
-   ChevronDown,
-   Calendar,
    Building2,
-   Stethoscope,
-   UserCircle,
+   Calendar,
+   ChevronDown,
    FileText,
    HelpCircle,
-   Link as LinkIcon,
+   LinkIcon,
    Lock,
-   LogOut
+   LogOut,
+   MapPin,
+   Menu,
+   Phone,
+   Stethoscope,
+   User,
+   UserCircle,
+   X
 } from 'lucide-react'
-import LoginPanel from './loginpanel'
+import { signOut, useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+
+// Components
+import { Button } from '@/components'
 
 const Header = () => {
+   const router = useRouter()
    const [isMenuOpen, setIsMenuOpen] = useState(false)
    const [isBookingDropdownOpen, setIsBookingDropdownOpen] = useState(false)
    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
    const bookingDropdownRef = useRef<HTMLDivElement>(null)
    const userDropdownRef = useRef<HTMLDivElement>(null)
-   const pathname = usePathname()
-   const { user, isAuthenticated, logout } = useAuth()
-   const router = useRouter()
+
+   const { data: session } = useSession()
+   const user = session?.user
 
    const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
    const toggleBookingDropdown = () => setIsBookingDropdownOpen(!isBookingDropdownOpen)
    const toggleUserDropdown = () => setIsUserDropdownOpen(!isUserDropdownOpen)
-
-   // Create auth URLs with current page as returnUrl (client-side only)
-   const [loginUrl, setLoginUrl] = useState('/sign-in')
-   const [showLoginPanel, setShowLoginPanel] = useState(false)
-
-   useEffect(() => {
-      // Update sign-in URL with returnUrl on client side
-      if (typeof window !== 'undefined' && pathname !== '/sign-in') {
-         // Use pathname + search instead of full URL for better security
-         const currentPath = encodeURIComponent(`${pathname}${window.location.search}`)
-         setLoginUrl(`/sign-in?returnUrl=${currentPath}`)
-      }
-   }, [pathname])
 
    // Close dropdown when clicking outside
    useEffect(() => {
@@ -142,7 +130,8 @@ const Header = () => {
 
    const handleLogout = async () => {
       try {
-         await logout()
+         await signOut()
+         router.replace('/')
          setIsUserDropdownOpen(false)
       } catch (error) {
          // Logout should always succeed locally even if server call fails
@@ -277,7 +266,7 @@ const Header = () => {
 
                   {/* Login/Profile */}
                   <div className="flex items-center space-x-2">
-                     {isAuthenticated && user ? (
+                     {user ? (
                         /* User Dropdown */
                         <div className="relative" ref={userDropdownRef}>
                            <button
@@ -357,15 +346,15 @@ const Header = () => {
                            )}
                         </div>
                      ) : (
-                        /* Login Button */
-                        <Button
-                           variant="ghost"
-                           className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-                           onClick={() => router.push('/sign-in')}
-                        >
-                           <User className="h-4 w-4" />
-                           <span>Đăng nhập</span>
-                        </Button>
+                        <Link href="/auth" scroll={false}>
+                           <Button
+                              variant="ghost"
+                              className="hidden md:flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+                           >
+                              <User className="h-4 w-4" />
+                              Đăng nhập
+                           </Button>
+                        </Link>
                      )}
                   </div>
 
@@ -429,7 +418,7 @@ const Header = () => {
 
                   {/* Mobile Actions */}
                   <div className="mt-6 pt-4 border-t border-gray-200 space-y-3">
-                     {isAuthenticated && user ? (
+                     {user ? (
                         <div className="space-y-3">
                            {/* User Info */}
                            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
@@ -473,7 +462,7 @@ const Header = () => {
                            </button>
                         </div>
                      ) : (
-                        <Link href={loginUrl} onClick={() => setIsMenuOpen(false)}>
+                        <Link href="/auth" onClick={() => setIsMenuOpen(false)}>
                            <Button variant="outline" className="w-full justify-center">
                               <User className="h-4 w-4 mr-2" />
                               Đăng nhập

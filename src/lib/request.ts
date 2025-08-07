@@ -1,7 +1,7 @@
 'use server'
 
-import { ACCESS_TOKEN } from '@/constants'
-import { getCookie } from '@/services/server/auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -22,9 +22,11 @@ export const request = async <T, B = undefined>(
    let mergedHeader = { ...headers }
 
    if (requireAuth) {
-      const token = await getCookie(ACCESS_TOKEN)
+      const session = await getServerSession(authOptions)
 
-      if (!token) {
+      const accessToken = session?.user?.accessToken
+
+      if (!accessToken) {
          return {
             statusCode: 401,
             message: 'Không đủ thẩm quyền',
@@ -32,7 +34,7 @@ export const request = async <T, B = undefined>(
          }
       }
 
-      mergedHeader = { ...headers, Authorization: `Bearer ${token}` }
+      mergedHeader = { ...headers, Authorization: `Bearer ${accessToken}` }
    }
 
    const baseURL = process.env.NEXT_API_URL
@@ -43,6 +45,8 @@ export const request = async <T, B = undefined>(
       const defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' }
       const allHeaders = { ...defaultHeaders, ...mergedHeader }
 
+      // console.log(allHeaders)
+
       const response = await fetch(url, {
          method,
          cache,
@@ -50,6 +54,8 @@ export const request = async <T, B = undefined>(
          body: body ? JSON.stringify(body) : undefined,
          next
       })
+
+      console.log(response)
 
       const data: ApiResponse<T> = await response.json()
 

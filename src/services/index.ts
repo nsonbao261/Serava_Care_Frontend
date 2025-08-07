@@ -35,25 +35,8 @@ export {
    invalidateByTag
 } from './cache.service'
 
-// Auth service functions
-export {
-   signIn,
-   signUp,
-   logout,
-   getCurrentUser,
-   isAuthenticated,
-   verifyEmail,
-   forgotPassword,
-   resetPassword,
-   mockLogin,
-   mockSignup
-} from './auth.service'
-
 // Question service functions
-export {
-   submitQuestion,
-   getQuestionById
-} from './question.service'
+export { submitQuestion, getQuestionById } from './question.service'
 
 // Health service functions
 export {
@@ -65,12 +48,7 @@ export {
 } from './health.service'
 
 // Booking service functions
-export {
-   getBookings,
-   getBookingById,
-   cancelBooking,
-   rescheduleBooking
-} from './booking.service'
+export { getBookings, getBookingById, cancelBooking, rescheduleBooking } from './booking.service'
 
 // User question service functions
 export {

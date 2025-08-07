@@ -1,5 +1,3 @@
-// Main hooks exports
-export { useAuth } from './useAuth'
 export { useBookingData } from './useBookingData'
 export { useForm } from './useForm'
 export { useHealthData } from './useHealthData'
