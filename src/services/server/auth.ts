@@ -14,8 +14,6 @@ export const oauthWithGoogle = async (account: Account) => {
       body: { idToken }
    })
 
-   console.log(res)
-
    return res.data?.accessToken
 }
 

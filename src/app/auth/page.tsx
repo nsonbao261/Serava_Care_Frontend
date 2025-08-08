@@ -2,13 +2,20 @@
 
 import { BackgroundMotion } from '@/components'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { use, useState } from 'react'
 
 // Components
 import SignInForm from '@/features/sign-in/SignInForm'
 import SignUpForm from '@/features/sign-in/SignUpForm'
 
-export default function SignInPage() {
+// Types
+type Props = {
+   searchParams: Promise<{ callbackUrl?: string }>
+}
+
+export default function SignInPage({ searchParams }: Props) {
+   const { callbackUrl } = use(searchParams)
+
    const router = useRouter()
    const [activeTab, setActiveTab] = useState<'sign-in' | 'sign-up'>('sign-in')
 
@@ -56,7 +63,7 @@ export default function SignInPage() {
                   </button>
                </div>
 
-               {activeTab === 'sign-in' && <SignInForm />}
+               {activeTab === 'sign-in' && <SignInForm callbackUrl={callbackUrl} />}
                {activeTab === 'sign-up' && <SignUpForm />}
             </div>
          </div>

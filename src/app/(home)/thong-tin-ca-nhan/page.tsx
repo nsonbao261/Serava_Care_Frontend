@@ -9,6 +9,7 @@ import useSWR from 'swr'
 
 // Components
 import { Form, LoadingSpinner } from '@/components'
+import ProtectedRoute from '@/components/protected-route'
 import BasicInfo from '@/features/personal-info/basic-info'
 import EmergencyContact from '@/features/personal-info/emergency-contact'
 import InsuranceInfomation from '@/features/personal-info/insurance-info'
@@ -70,46 +71,52 @@ export default function PersonalInfoPage() {
       if (user) form.reset(userProfile)
    }, [user])
 
-   if (isValidating) {
-      return <LoadingSpinner size="lg" text="Đang tải thông tin cá nhân..." />
-   }
-
    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-         <div className="container mx-auto px-4 py-8">
-            <div className="max-w-7xl mx-auto">
-               {/* Header */}
-               <div className="flex items-center justify-between mb-8">
-                  <div>
-                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Thông tin cá nhân</h1>
-                     <p className="text-gray-600">Quản lý và cập nhật thông tin cá nhân của bạn</p>
-                  </div>
-               </div>
+      <ProtectedRoute allowedRoles={['GUEST']}>
+         {isValidating ? (
+            <LoadingSpinner size="lg" text="Đang tải thông tin cá nhân..." />
+         ) : (
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+               <div className="container mx-auto px-4 py-8">
+                  <div className="max-w-7xl mx-auto">
+                     {/* Header */}
+                     <div className="flex items-center justify-between mb-8">
+                        <div>
+                           <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                              Thông tin cá nhân
+                           </h1>
+                           <p className="text-gray-600">
+                              Quản lý và cập nhật thông tin cá nhân của bạn
+                           </p>
+                        </div>
+                     </div>
 
-               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Left Column - Profile Overview */}
-                  <div className="lg:col-span-1">
-                     <Overview personalInfo={profileValues} />
-                  </div>
+                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Left Column - Profile Overview */}
+                        <div className="lg:col-span-1">
+                           <Overview personalInfo={profileValues} />
+                        </div>
 
-                  {/* Right Column - Forms Section */}
-                  <div className="lg:col-span-2">
-                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                           <BasicInfo userProfile={userProfile} />
+                        {/* Right Column - Forms Section */}
+                        <div className="lg:col-span-2">
+                           <Form {...form}>
+                              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                 <BasicInfo userProfile={userProfile} />
 
-                           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                              <EmergencyContact />
-                              <MedicalInfomation />
-                           </div>
+                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                                    <EmergencyContact />
+                                    <MedicalInfomation />
+                                 </div>
 
-                           <InsuranceInfomation />
-                        </form>
-                     </Form>
+                                 <InsuranceInfomation />
+                              </form>
+                           </Form>
+                        </div>
+                     </div>
                   </div>
                </div>
             </div>
-         </div>
-      </div>
+         )}
+      </ProtectedRoute>
    )
 }

@@ -4,10 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 // Components
 import {
@@ -25,8 +23,11 @@ import {
 // Deps
 import { signInSchema, type SignInInput } from '@/schemas'
 
-export default function SignInForm() {
-   const router = useRouter()
+// Types
+type Props = {
+   callbackUrl?: string
+}
+export default function SignInForm({ callbackUrl = '/' }: Props) {
    const [isPending, startTransition] = useTransition()
 
    const form = useForm<SignInInput>({
@@ -40,15 +41,7 @@ export default function SignInForm() {
 
    const onSubmit = (data: SignInInput) => {
       startTransition(async () => {
-         const response = await signIn('credentials', { ...data, redirect: false })
-         if (response?.ok) {
-            toast.success('Đăng nhập thành công')
-            console.log(response)
-
-            router.replace('/')
-         } else {
-            toast.error('Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.')
-         }
+         await signIn('credentials', { ...data, callbackUrl })
       })
    }
 
@@ -160,7 +153,7 @@ export default function SignInForm() {
                   <Button
                      type="button"
                      variant="outline"
-                     onClick={() => signIn('google')}
+                     onClick={() => signIn('google', { callbackUrl })}
                      className="w-full border-blue-700 text-blue-700 hover:bg-blue-100 h-12 text-base"
                   >
                      <Mail className="mr-2 h-5 w-5" />

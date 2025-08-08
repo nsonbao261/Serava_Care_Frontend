@@ -52,7 +52,6 @@ export const request = async <T, B = undefined>(
          body: body ? JSON.stringify(body) : undefined,
          next
       })
-      console.log(response)
 
       const data: ApiResponse<T> = await response.json()
 
