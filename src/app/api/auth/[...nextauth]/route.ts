@@ -1,9 +1,10 @@
 import { jwtDecode } from 'jwt-decode'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 
 // Deps
-import { request } from '@/lib/request'
+import { oauthWithCredentials, oauthWithGoogle } from '@/services/server/auth'
 
 export const authOptions: NextAuthOptions = {
    secret: process.env.NEXTAUTH_SECRET,
@@ -15,39 +16,44 @@ export const authOptions: NextAuthOptions = {
             password: {}
          },
          async authorize(credentials) {
-            try {
-               if (!credentials) return null
+            if (!credentials) return null
+            const accessToken = await oauthWithCredentials(credentials)
+            if (!accessToken) return null
 
-               const res = await request<{ accessToken: string }, SignInRequest>('auth/sign-in', {
-                  method: 'POST',
-                  body: credentials
-               })
+            const userInfo = jwtDecode<JwtPayload>(accessToken)
 
-               if (res.data) {
-                  const userInfo = jwtDecode<JwtPayload>(res.data.accessToken)
-
-                  return {
-                     id: userInfo.userId,
-                     ...userInfo,
-                     accessToken: res.data.accessToken
-                  }
-               }
-
-               return null
-            } catch (err) {
-               console.error('Authorize failed:', err)
-               return null
+            return {
+               id: userInfo.userId,
+               ...userInfo,
+               accessToken: accessToken
             }
          }
+      }),
+      GoogleProvider({
+         clientId: process.env.GOOGLE_CLIENT_ID!,
+         clientSecret: process.env.GOOGLE_CLIENT_SECRET!
       })
    ],
    callbacks: {
+      async signIn({ user, account }) {
+         if (account?.provider === 'google') {
+            const accessToken = await oauthWithGoogle(account)
+            if (!accessToken) return false
+
+            const userInfo = jwtDecode<JwtPayload>(accessToken)
+
+            user.userId = userInfo.userId
+            user.fullName = userInfo.fullName
+            user.roles = userInfo.roles
+            user.accessToken = accessToken
+         }
+
+         return true
+      },
       async jwt({ token, user }) {
          if (user) {
-            token.id = user.id
             token.userId = user.userId
             token.fullName = user.fullName
-            token.email = user.email
             token.roles = user.roles
             token.accessToken = user.accessToken
          }
@@ -59,6 +65,7 @@ export const authOptions: NextAuthOptions = {
             id: token.id,
             userId: token.userId,
             fullName: token.fullName,
+            picture: token.picture,
             roles: token.roles,
             email: token.email,
             accessToken: token.accessToken

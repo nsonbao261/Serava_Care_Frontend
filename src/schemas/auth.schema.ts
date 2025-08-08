@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const loginSchema = z.object({
+export const signInSchema = z.object({
    username: z.string().min(1, 'Vui lòng nhập tên đăng nhập'),
    password: z
       .string()
@@ -9,7 +9,7 @@ export const loginSchema = z.object({
    rememberMe: z.boolean().optional()
 })
 
-export const signupSchema = z
+export const signUpSchema = z
    .object({
       fullName: z
          .string()
@@ -26,27 +26,8 @@ export const signupSchema = z
          .string()
          .length(10, 'Số điện thoại phải có đúng 10 chữ số')
          .regex(/^\d+$/, 'Số điện thoại chỉ được chứa chỉ số'),
-      birthDate: z
-         .string()
-         .min(1, 'Ngày sinh là bắt buộc')
-         .refine((date) => {
-            const regex = /^\d{4}-\d{2}-\d{2}$/
-            if (!regex.test(date)) return false
-            const [year, month, day] = date.split('-').map(Number)
-            const birthDate = new Date(year, month - 1, day)
-            const today = new Date()
-            let age = today.getFullYear() - birthDate.getFullYear()
-            const m = today.getMonth() - birthDate.getMonth()
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-               age--
-            }
-            return age >= 13 && age <= 120
-         }, 'Ngày sinh phải theo định dạng yyyy-MM-dd và tuổi từ 13 đến 120')
-         .transform((dateStr) => {
-            // Chuyển "yyyy-MM-dd" → "yyyy-MM-ddT00:00:00Z"
-            return new Date(`${dateStr}T00:00:00Z`).toISOString()
-         }),
-      gender: z.enum(['male', 'female', 'other'], {
+      birthDate: z.string(),
+      gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
          required_error: 'Vui lòng chọn giới tính'
       }),
       password: z
@@ -105,8 +86,8 @@ export const changePasswordSchema = z
    })
 
 // Type exports
-export type LoginInput = z.infer<typeof loginSchema>
-export type SignupInput = z.infer<typeof signupSchema>
-export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
-export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
+export type SignInInput = z.input<typeof signInSchema>
+export type SignupInput = z.input<typeof signUpSchema>
+export type ForgotPasswordInput = z.input<typeof forgotPasswordSchema>
+export type ResetPasswordInput = z.input<typeof resetPasswordSchema>
+export type ChangePasswordInput = z.input<typeof changePasswordSchema>
