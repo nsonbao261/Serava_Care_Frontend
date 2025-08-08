@@ -1,4 +1,4 @@
-import { mockVitalSigns, mockMedicalRecords } from '@/data'
+import { mockMedicalRecords, mockVitalSigns } from '@/data'
 
 export async function getVitalSigns(): Promise<VitalSign[]> {
    // Simulate API call
@@ -20,12 +20,10 @@ export async function addVitalSign(data: Omit<VitalSign, 'id'>): Promise<VitalSi
    // Simulate API call
    await new Promise((resolve) => setTimeout(resolve, 500))
 
-   const newVitalSign: VitalSign = {
+   return {
       ...data,
       id: Math.random().toString(36).substr(2, 9)
    }
-
-   return newVitalSign
 }
 
 export async function updateVitalSign(id: string, data: Partial<VitalSign>): Promise<VitalSign> {

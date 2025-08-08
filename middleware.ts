@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// Deps
 import { ACCESS_TOKEN, COOKIE_USER_DATA } from '@/constants'
 
 export function middleware(request: NextRequest) {
