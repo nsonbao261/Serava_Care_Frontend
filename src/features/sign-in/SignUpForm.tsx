@@ -6,11 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-
-// Components
 import { Button, Checkbox, Input, Label } from '@/components'
-
-// Deps
 import { useAuth } from '@/hooks'
 import { signupSchema, type SignupInput } from '@/schemas'
 

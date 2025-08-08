@@ -1,13 +1,3 @@
-// Doctor service functions
-export {
-   getAllDoctors,
-   getDoctorById,
-   getDoctorBySlug,
-   searchDoctors,
-   getDoctorsBySpecialty,
-   getFeaturedDoctors
-} from './doctor.service'
-
 // Specialty service functions
 export {
    getAllSpecialties,
@@ -17,23 +7,6 @@ export {
    searchSpecialties,
    getSpecialtyStats
 } from './specialty.service'
-
-// Cache service functions
-export {
-   set,
-   get,
-   clear,
-   has,
-   deleteKey,
-   size,
-   keys,
-   getOrSet,
-   clearExpired,
-   getStats,
-   createKey,
-   setWithTags,
-   invalidateByTag
-} from './cache.service'
 
 // Auth service functions
 export {
@@ -75,7 +48,6 @@ export {
 // User question service functions
 export {
    getUserQuestions,
-   getQuestionById as getUserQuestionById,
    rateQuestion,
    deleteQuestion,
    filterQuestions
@@ -93,11 +65,7 @@ export {
 // User service functions
 export {
    getUserByEmail,
-   getUserById,
    createUser,
    updateUser,
-   deleteUser,
-   updateUserProfile,
    toAuthUser,
-   fromAuthUser
 } from './user.service'

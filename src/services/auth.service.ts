@@ -257,7 +257,7 @@ export async function mockSignup(userData: SignupInput): Promise<AuthResponse> {
          userData.username,
          userData.fullName,
          userData.birthDate,
-         userData.gender
+         userData.gender,
       ) as User
 
       // Save user to data manager

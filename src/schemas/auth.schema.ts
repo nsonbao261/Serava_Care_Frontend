@@ -50,7 +50,7 @@ export const signupSchema = z
             // Chuyển "yyyy-MM-dd" → "yyyy-MM-ddT00:00:00Z"
             return new Date(`${dateStr}T00:00:00Z`).toISOString()
          }),
-      gender: z.enum(['male', 'female', 'other'], {
+      gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
          required_error: 'Vui lòng chọn giới tính'
       }),
       password: z

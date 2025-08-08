@@ -10,6 +10,7 @@ import { Toaster } from '@/components/ui/sonner'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import ClientLoginPanel from '@/components/layout/AuthWrapper'
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -47,9 +48,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
    children
-}: Readonly<{
+}: {
    children: React.ReactNode
-}>) {
+}) {
+   
    return (
       <html lang="en">
          <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
@@ -57,6 +59,7 @@ export default function RootLayout({
                <AnimatedPageTitle />
                <Header />
                {children}
+               <ClientLoginPanel />
                <Footer />
                <FloatingActionButton />
                <Toaster />

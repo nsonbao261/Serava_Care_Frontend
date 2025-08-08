@@ -2,20 +2,15 @@
 
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-
-// Components
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@/components'
-
-// Deps
 import { DATE_FORMAT } from '@/constants'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib'
 
-// Types
 type Props = {
-   value?: Date | string
-   onChange?: (date: Date | undefined) => void
-   disabled?: boolean
    className?: string
+   disabled?: boolean
+   onChange?: (date: Date | undefined) => void
+   value?: Date | string
 }
 
 export function DatePicker({ value, onChange, disabled, className }: Props) {

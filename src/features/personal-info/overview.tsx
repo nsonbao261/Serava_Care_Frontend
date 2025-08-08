@@ -1,12 +1,9 @@
 import { differenceInYears, format, isValid, parseISO } from 'date-fns'
 import { Calendar, Camera, ChevronRight, Key, Mail, MapPin, Phone, Shield } from 'lucide-react'
-
-// Deps
 import { DATE_FORMAT } from '@/constants'
 import { ProfileFormData } from '@/schemas'
 import { usePersonalInfoStore } from './store/personal-info'
 
-// Types
 type Props = {
    personalInfo: ProfileFormData
 }

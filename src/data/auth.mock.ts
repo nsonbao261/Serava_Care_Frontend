@@ -23,8 +23,9 @@ export const generateMockUser = (
       email,
       fullName: name,
       birthDate: birthDate || '1990-01-01',
-      gender: gender || 'other',
+      gender: gender || 'OTHER',
       avatar: avatarUrl,
-      phone: '+84 123 456 789'
+      phoneNumber: '+84 123 456 789',
+      userId: '',
    }
 }

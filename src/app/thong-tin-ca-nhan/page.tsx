@@ -14,8 +14,6 @@ import EmergencyContact from '@/features/personal-info/emergency-contact'
 import InsuranceInfomation from '@/features/personal-info/insurance-info'
 import MedicalInfomation from '@/features/personal-info/medical-info'
 import Overview from '@/features/personal-info/overview'
-
-// Deps
 import { usePersonalInfoStore } from '@/features/personal-info/store/personal-info'
 import { type ProfileFormData, profileFormSchema } from '@/schemas'
 import { getUserProfile, updateUserProfile } from '@/services/server/users'

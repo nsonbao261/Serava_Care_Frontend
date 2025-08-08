@@ -1,11 +1,11 @@
 export const mockUserProfile: UserProfile[] = [
    {
-      id: '1',
+      userId: '1',
       fullName: 'Nguyễn Văn An',
       email: 'nguyen.van.an@email.com',
-      phone: '0901234567',
+      phoneNumber: '0901234567',
       birthDate: '1990-05-15',
-      gender: 'male',
+      gender: 'MALE',
       address: '123 Đường ABC, Quận 1, TP.HCM',
       avatar: '/images/avatar-placeholder.jpg',
       emergencyContact: {
@@ -26,12 +26,12 @@ export const mockUserProfile: UserProfile[] = [
       }
    },
    {
-      id: '2',
+      userId: '2',
       fullName: 'Trần Thị Bích',
       email: 'tran.thi.bich@email.com',
-      phone: '0909876543',
+      phoneNumber: '0909876543',
       birthDate: '1995-10-20',
-      gender: 'female',
+      gender: 'FEMALE',
       address: '456 Đường DEF, Quận 2, TP.HCM',
       avatar: '/images/avatar-placeholder.jpg',
       emergencyContact: {
