@@ -1,4 +1,4 @@
-type Gender = 'MALE' | 'FEMALE' | 'OTHER'
+type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN'
 
 interface User {
    userId: string

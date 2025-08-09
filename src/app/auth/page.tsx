@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { use, useState } from 'react'
 
 // Components
-import SignInForm from '@/features/sign-in/SignInForm'
-import SignUpForm from '@/features/sign-in/SignUpForm'
+import SignInForm from '@/features/sign-in/sign-in-form'
+import SignUpForm from '@/features/sign-in/sign-up-form'
 
 // Types
 type Props = {

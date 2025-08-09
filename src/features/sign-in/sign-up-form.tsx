@@ -178,7 +178,7 @@ export default function SignUpForm() {
                            <FormLabel className="text-blue-700 font-medium text-sm">
                               Giới tính <span className="text-red-500">*</span>
                            </FormLabel>
-                           <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <Select value={field.value} onValueChange={field.onChange}>
                               <FormControl>
                                  <SelectTrigger className="w-full rounded-md focus:border-blue-700 h-10 text-sm px-2 border focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
                                     <SelectValue placeholder="Chọn" />
@@ -187,7 +187,7 @@ export default function SignUpForm() {
                               <SelectContent>
                                  <SelectItem value="MALE">Nam</SelectItem>
                                  <SelectItem value="FEMALE">Nữ</SelectItem>
-                                 <SelectItem value="OTHER">Khác</SelectItem>
+                                 <SelectItem value="UNKNOWN">Khác</SelectItem>
                               </SelectContent>
                            </Select>
                         </FormItem>

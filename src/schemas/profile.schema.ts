@@ -12,7 +12,7 @@ export const profileFormSchema = z.object({
       .regex(/^[0-9]{10,11}$/, 'Số điện thoại phải có 10-11 chữ số')
       .optional(),
    birthDate: z.string(),
-   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+   gender: z.enum(['MALE', 'FEMALE', 'UNKNOWN']),
    address: z
       .string()
       .min(10, 'Địa chỉ phải có ít nhất 10 ký tự')

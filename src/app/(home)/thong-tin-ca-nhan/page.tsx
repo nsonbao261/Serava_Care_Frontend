@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -18,13 +17,13 @@ import Overview from '@/features/personal-info/overview'
 
 // Deps
 import { usePersonalInfoStore } from '@/features/personal-info/store/personal-info'
+import { getChangedFields } from '@/lib'
 import { type ProfileFormData, profileFormSchema } from '@/schemas'
 import { getUserProfile, updateUserProfile } from '@/services/server/users'
 
 export default function PersonalInfoPage() {
-   const router = useRouter()
    const { setEditing, setLoading } = usePersonalInfoStore()
-   const { data: user, isValidating } = useSWR('user', getUserProfile)
+   const { data: user, isValidating, mutate } = useSWR('user', getUserProfile)
 
    const userProfile: ProfileFormData = {
       userId: user?.userId || '',
@@ -32,7 +31,7 @@ export default function PersonalInfoPage() {
       email: user?.email || '',
       phoneNumber: user?.phoneNumber || '',
       birthDate: user?.birthDate ? user.birthDate : new Date().toISOString(),
-      gender: user?.gender || 'OTHER'
+      gender: user?.gender || 'UNKNOWN'
    }
 
    const form = useForm<ProfileFormData>({
@@ -43,26 +42,25 @@ export default function PersonalInfoPage() {
    const profileValues = form.watch()
 
    const onSubmit = async (data: ProfileFormData) => {
+      if (!user) return
+
       setLoading(true)
-      if (user) {
-         const res = await updateUserProfile(user.userId, {
-            fullName: data.fullName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-            birthDate: data.birthDate,
-            gender: data.gender,
-            address: data.address
-         })
-
-         if (res.data) {
-            toast.success(res.message)
-         } else {
-            toast.error(res.message)
-         }
-
-         router.refresh()
+      const updatedFields = getChangedFields(user, data)
+      if (!updatedFields) {
+         toast.info('Không có thông tin nào thay đổi')
+         setEditing(false)
+         return
       }
 
+      const res = await updateUserProfile(user.userId, updatedFields)
+
+      if (res.error) {
+         toast.error(res.message)
+      } else {
+         toast.success(res.message)
+      }
+
+      mutate()
       setEditing(false)
       setLoading(false)
    }

@@ -176,19 +176,23 @@ export default function BasicInfo({ userProfile }: Props) {
                         Giới tính <span className="text-red-500">*</span>
                      </FormLabel>
                      <FormControl>
-                        <Select {...field} disabled={!isEditing}>
+                        <Select
+                           value={field.value}
+                           onValueChange={field.onChange}
+                           disabled={!isEditing}
+                        >
                            <SelectTrigger
                               className={cn(
                                  'w-full py-5 transition-colors',
                                  !isEditing && 'bg-gray-100'
                               )}
                            >
-                              <SelectValue defaultValue="OTHER" />
+                              <SelectValue placeholder="Chọn giới tính" />
                            </SelectTrigger>
                            <SelectContent>
                               <SelectItem value="MALE">Nam</SelectItem>
                               <SelectItem value="FEMALE">Nữ</SelectItem>
-                              <SelectItem value="OTHER">Khác</SelectItem>
+                              <SelectItem value="UNKNOWN">Khác</SelectItem>
                            </SelectContent>
                         </Select>
                      </FormControl>

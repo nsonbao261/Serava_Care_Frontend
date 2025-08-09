@@ -62,6 +62,18 @@ export const pick = <T extends Record<string, unknown>, K extends keyof T>(
    return result
 }
 
+export const getChangedFields = <T extends Record<string, unknown>>(original: T, updated: T) => {
+   const changed: Partial<T> = {}
+
+   for (const key in updated) {
+      if (updated[key] !== original[key]) {
+         changed[key] = updated[key]
+      }
+   }
+
+   return Object.keys(changed).length > 0 ? changed : undefined
+}
+
 /**
  * URL and query utilities
  */

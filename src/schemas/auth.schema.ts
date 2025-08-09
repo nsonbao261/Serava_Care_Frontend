@@ -27,7 +27,7 @@ export const signUpSchema = z
          .length(10, 'Số điện thoại phải có đúng 10 chữ số')
          .regex(/^\d+$/, 'Số điện thoại chỉ được chứa chỉ số'),
       birthDate: z.string(),
-      gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
+      gender: z.enum(['MALE', 'FEMALE', 'UNKNOWN'], {
          required_error: 'Vui lòng chọn giới tính'
       }),
       password: z
