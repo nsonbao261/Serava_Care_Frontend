@@ -1,31 +1,45 @@
 import { mockUserProfile } from '@/data'
 
 export async function getUserByEmail(email: string): Promise<UserProfile | null> {
-   const users = mockUserProfile.filter((user) => user.email === email)
-   return users[0] || null
+   try {
+      const users = mockUserProfile.filter((user) => user.email === email)
+      return users[0] || null
+   } catch  {
+      throw new Error('Không thể tải thông tin người dùng từ server')
+   }
 }
 
 export async function createUser(
    userData: Omit<UserProfile, 'userId' | 'createdAt' | 'updatedAt'>
 ): Promise<UserProfile> {
-   const userWithTimestamps: UserProfile = {
-      userId: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
-      ...userData
+   try {
+      const userWithTimestamps: UserProfile = {
+         userId: crypto.randomUUID 
+            ? crypto.randomUUID() 
+            : Math.random().toString(36).substring(2, 11),
+         ...userData
+      }
+      mockUserProfile.push(userWithTimestamps)
+      return userWithTimestamps
+   } catch  {
+      throw new Error('Không thể tạo tài khoản người dùng')
    }
-   mockUserProfile.push(userWithTimestamps)
-   return userWithTimestamps
 }
 
 export async function updateUser(
    userId: string,
    updates: Partial<UserProfile>
 ): Promise<UserProfile | null> {
-   const user = mockUserProfile.find((user) => user.userId === userId)
-   if (user) {
-      Object.assign(user, updates)
-      return user
+   try {
+      const user = mockUserProfile.find((user) => user.userId === userId)
+      if (user) {
+         Object.assign(user, updates)
+         return user
+      }
+      return null
+   } catch  {
+      throw new Error('Không thể cập nhật thông tin người dùng')
    }
-   return null
 }
 
 export function toAuthUser(userData: UserProfile): User {

@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth, useHealthData } from '@/hooks'
+import useSWR from 'swr'
+import { getVitalSigns, getMedicalRecords } from '@/services'
 import {
    User,
    Activity,
@@ -25,23 +26,68 @@ import {
 } from '@/components'
 import { formatDate } from '@/lib'
 
+// Fetcher functions for SWR
+const vitalSignsFetcher = async (): Promise<VitalSign[]> => {
+   return await getVitalSigns()
+}
+
+const medicalRecordsFetcher = async (): Promise<MedicalRecord[]> => {
+   return await getMedicalRecords()
+}
+
 export default function HealthProfilePage() {
-   const { isAuthenticated, isLoading: authLoading } = useAuth()
    const router = useRouter()
 
+   // Auth state
+   const [isAuthenticated, setIsAuthenticated] = useState(false)
+   const [authLoading, setAuthLoading] = useState(true)
+
+   // SWR for vital signs
    const {
-      vitalSigns,
-      medicalRecords,
-      isLoadingVitals,
-      isLoadingRecords,
-      vitalsError,
-      recordsError,
-      refreshVitalSigns,
-      refreshMedicalRecords
-   } = useHealthData() // In real app, get from auth context
+      data: vitalSigns = [],
+      error: vitalsError,
+      isLoading: isLoadingVitals,
+      mutate: mutateVitalSigns
+   } = useSWR(isAuthenticated ? '/api/health/vital-signs' : null, vitalSignsFetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000, // 1 minute
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
+
+   // SWR for medical records
+   const {
+      data: medicalRecords = [],
+      error: recordsError,
+      isLoading: isLoadingRecords,
+      mutate: mutateMedicalRecords
+   } = useSWR(isAuthenticated ? '/api/health/medical-records' : null, medicalRecordsFetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 300000, // 5 minutes
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
 
    const isDataLoading = isLoadingVitals || isLoadingRecords
    const error = vitalsError || recordsError
+
+   // Simulate auth check
+   useEffect(() => {
+      const checkAuth = () => {
+         // Simulate auth check
+         setTimeout(() => {
+            setIsAuthenticated(true) // In real app, check actual auth state
+            setAuthLoading(false)
+         }, 100)
+      }
+      checkAuth()
+   }, [])
+
+   // Refresh all health data
+   const refreshAllData = () => {
+      mutateVitalSigns()
+      mutateMedicalRecords()
+   }
 
    // Only redirect if we're sure the user is not authenticated and not loading
    useEffect(() => {
@@ -67,17 +113,9 @@ export default function HealthProfilePage() {
       return null
    }
 
-   // Show error state
+   // Show error state with retry functionality
    if (error) {
-      return (
-         <ErrorBoundaryFallback
-            error={new Error(error)}
-            resetErrorBoundary={() => {
-               refreshVitalSigns()
-               refreshMedicalRecords()
-            }}
-         />
-      )
+      return <ErrorBoundaryFallback error={error} resetErrorBoundary={refreshAllData} />
    }
 
    // Show loading skeleton while fetching data
@@ -127,6 +165,13 @@ export default function HealthProfilePage() {
                   <p className="text-gray-600 mt-1">Theo dõi và quản lý thông tin sức khỏe</p>
                </div>
                <div className="flex space-x-3">
+                  <button
+                     onClick={refreshAllData}
+                     className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:bg-gray-50 transition-colors"
+                  >
+                     <Activity className="h-4 w-4" />
+                     <span>Làm mới</span>
+                  </button>
                   <Link
                      href="/thong-tin-ca-nhan"
                      className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:bg-gray-50 transition-colors"
@@ -200,16 +245,30 @@ export default function HealthProfilePage() {
                         <span className="text-gray-600">Trạng thái:</span>
                         <span className="font-medium">Hoạt động</span>
                      </div>
+                     <div className="flex justify-between">
+                        <span className="text-gray-600">Cập nhật gần nhất:</span>
+                        <span className="font-medium text-sm text-gray-500">
+                           {vitalSigns.length > 0 ? 'Vừa xong' : 'Chưa có dữ liệu'}
+                        </span>
+                     </div>
                   </div>
                </div>
 
                {/* Recent Records */}
                <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-                  <div className="p-6 border-b border-gray-200">
+                  <div className="p-6 border-b border-gray-200 flex items-center justify-between">
                      <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                         <FileText className="h-5 w-5 mr-2" />
                         Hồ sơ gần đây
                      </h3>
+                     {medicalRecords.length > 5 && (
+                        <Link
+                           href="/ho-so-y-te"
+                           className="text-sm text-blue-600 hover:text-blue-700"
+                        >
+                           Xem tất cả
+                        </Link>
+                     )}
                   </div>
                   <div className="p-6">
                      {medicalRecords && medicalRecords.length > 0 ? (
@@ -232,7 +291,15 @@ export default function HealthProfilePage() {
                            ))}
                         </div>
                      ) : (
-                        <p className="text-gray-500 text-center py-8">Chưa có hồ sơ nào</p>
+                        <div className="text-center py-8">
+                           <p className="text-gray-500 mb-4">Chưa có hồ sơ nào</p>
+                           <button
+                              onClick={() => mutateMedicalRecords()}
+                              className="text-blue-600 hover:text-blue-700 text-sm"
+                           >
+                              Làm mới dữ liệu
+                           </button>
+                        </div>
                      )}
                   </div>
                </div>

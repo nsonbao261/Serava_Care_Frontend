@@ -2,103 +2,127 @@ import {} from '@/data/specialty-category.list.mock'
 import { mockSpecialtiesWithCategory, mockTreatments, mockProceduresMap, mockFAQs } from '@/data'
 
 export async function getAllSpecialties(): Promise<SpecialtyWithCategory[]> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 800))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 800))
 
-   return mockSpecialtiesWithCategory
+      return mockSpecialtiesWithCategory
+   } catch  {
+      throw new Error('Không thể tải danh sách chuyên khoa từ server')
+   }
 }
 
 export async function getSpecialtyBySlug(slug: string): Promise<SpecialtyPageData | null> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 500))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
-   const specialty = mockSpecialtiesWithCategory.find((s) => s.slug === slug)
-   if (!specialty) return null
+      const specialty = mockSpecialtiesWithCategory.find((s) => s.slug === slug)
+      if (!specialty) return null
 
-   // Convert to page data format
-   return {
-      id: specialty.id,
-      name: specialty.name,
-      description: specialty.description,
-      overview: specialty.description,
-      commonConditions: getCommonConditions(specialty.id),
-      treatments: getTreatments(),
-      procedures: getProcedures(specialty.id),
-      doctors: [],
-      stats: getStats(),
-      faqs: getFAQs(),
-      relatedArticles: []
+      // Convert to page data format
+      return {
+         id: specialty.id,
+         name: specialty.name,
+         description: specialty.description,
+         overview: specialty.description,
+         commonConditions: getCommonConditions(specialty.id),
+         treatments: getTreatments(),
+         procedures: getProcedures(specialty.id),
+         doctors: [],
+         stats: getStats(),
+         faqs: getFAQs(),
+         relatedArticles: []
+      }
+   } catch  {
+      throw new Error('Không thể tải thông tin chuyên khoa từ server')
    }
 }
 
 export async function getPopularSpecialties(limit: number = 8): Promise<SpecialtyWithCategory[]> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 400))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 400))
 
-   const popular = mockSpecialtiesWithCategory
-      .filter((specialty) => specialty.isPopular)
-      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      const popular = mockSpecialtiesWithCategory
+         .filter((specialty) => specialty.isPopular)
+         .sort((a, b) => (a.order || 0) - (b.order || 0))
 
-   return limit ? popular.slice(0, limit) : popular
+      return limit ? popular.slice(0, limit) : popular
+   } catch  {
+      throw new Error('Không thể tải danh sách chuyên khoa phổ biến từ server')
+   }
 }
 
 export async function getSpecialtiesByCategory(category: string): Promise<SpecialtyWithCategory[]> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 600))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 600))
 
-   return mockSpecialtiesWithCategory.filter((specialty) => specialty.category === category)
+      return mockSpecialtiesWithCategory.filter((specialty) => specialty.category === category)
+   } catch  {
+      throw new Error('Không thể tải danh sách chuyên khoa theo danh mục từ server')
+   }
 }
 
 export async function searchSpecialties(
    query: string,
    filters?: SpecialtyFilters
 ): Promise<SpecialtySearchResult[]> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 700))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 700))
 
-   let results = mockSpecialtiesWithCategory
+      let results = mockSpecialtiesWithCategory
 
-   // Filter by category
-   if (filters?.category) {
-      results = results.filter((s) => s.category === filters.category)
-   }
+      // Filter by category
+      if (filters?.category) {
+         results = results.filter((s) => s.category === filters.category)
+      }
 
-   // Filter by popular only
-   if (filters?.popularOnly) {
-      results = results.filter((s) => s.isPopular)
-   }
+      // Filter by popular only
+      if (filters?.popularOnly) {
+         results = results.filter((s) => s.isPopular)
+      }
 
-   // Text search
-   if (query.trim()) {
-      const searchTerms = query
-         .toLowerCase()
-         .split(' ')
-         .filter((term) => term.length > 0)
-      results = results.filter((specialty) => {
-         const searchableText = [
-            specialty.name,
-            specialty.description,
-            specialty.shortDescription || ''
-         ]
-            .join(' ')
+      // Text search
+      if (query.trim()) {
+         const searchTerms = query
             .toLowerCase()
+            .split(' ')
+            .filter((term) => term.length > 0)
+         results = results.filter((specialty) => {
+            const searchableText = [
+               specialty.name,
+               specialty.description,
+               specialty.shortDescription || ''
+            ]
+               .join(' ')
+               .toLowerCase()
 
-         return searchTerms.every((term) => searchableText.includes(term))
-      })
+            return searchTerms.every((term) => searchableText.includes(term))
+         })
+      }
+
+      return results.map((specialty) => ({
+         ...specialty,
+         matchScore: calculateMatchScore(specialty, query),
+         relevantDoctors: []
+      }))
+   } catch  {
+      throw new Error('Không thể tìm kiếm chuyên khoa')
    }
-
-   return results.map((specialty) => ({
-      ...specialty,
-      matchScore: calculateMatchScore(specialty, query),
-      relevantDoctors: []
-   }))
 }
 
 export async function getSpecialtyStats(): Promise<SpecialtyStats> {
-   // Simulate API call
-   await new Promise((resolve) => setTimeout(resolve, 300))
+   try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 300))
 
-   return getStats()
+      return getStats()
+   } catch  {
+      throw new Error('Không thể tải thống kê chuyên khoa từ server')
+   }
 }
 
 function calculateMatchScore(specialty: SpecialtyWithCategory, query: string): number {

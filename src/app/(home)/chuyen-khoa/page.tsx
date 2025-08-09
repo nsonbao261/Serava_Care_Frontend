@@ -1,10 +1,16 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Filter, Grid, List, ChevronDown } from 'lucide-react'
-import { useSpecialties } from '@/hooks'
+import useSWR from 'swr'
 import { LoadingSpinner, SpecialtyCard, type ViewMode } from '@/components'
+import {
+   getAllSpecialties,
+   getPopularSpecialties,
+   getSpecialtiesByCategory,
+   searchSpecialties
+} from '@/services'
 
 type CategoryFilter =
    | 'all'
@@ -23,53 +29,87 @@ const categoryLabels = {
    'chuyen-khoa': 'Chuyên khoa'
 }
 
+// SWR fetcher
+const fetcher = async (key: string): Promise<SpecialtyWithCategory[]> => {
+   const [, type, category] = key.split('/')
+
+   switch (type) {
+      case 'popular':
+         return await getPopularSpecialties()
+      case 'category':
+         return await getSpecialtiesByCategory(category)
+      case 'all':
+      default:
+         return await getAllSpecialties()
+   }
+}
+
+// Search fetcher
+const searchFetcher = async (key: string): Promise<SpecialtyWithCategory[]> => {
+   const url = new URL(key, 'http://localhost')
+   const query = url.searchParams.get('q') || ''
+   const category = url.searchParams.get('category') as CategoryFilter
+   const popular = url.searchParams.get('popular') === 'true'
+
+   const filters: SpecialtyFilters = {
+      category: category !== 'all' ? category : undefined,
+      popularOnly: popular
+   }
+
+   const results = await searchSpecialties(query, filters)
+   return results as SpecialtyWithCategory[]
+}
+
 export default function SpecialtiesPage() {
-   const { specialties, isLoading, searchSpecialties } = useSpecialties()
-   const [filteredSpecialties, setFilteredSpecialties] = useState<SpecialtyWithCategory[]>([])
+   // UI state
    const [searchQuery, setSearchQuery] = useState('')
    const [viewMode, setViewMode] = useState<ViewMode>('grid')
    const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
    const [isFilterOpen, setIsFilterOpen] = useState(false)
    const [popularOnly, setPopularOnly] = useState(false)
 
-   const filterSpecialties = useCallback(async () => {
-      try {
-         if (searchQuery.trim()) {
-            // Use search API when there's a query
-            const filters: SpecialtyFilters = {
-               category: categoryFilter !== 'all' ? categoryFilter : undefined,
-               popularOnly
-            }
-            const results = await searchSpecialties(searchQuery, filters)
-            // Cast search results to SpecialtyWithCategory since SpecialtySearchResult extends it
-            setFilteredSpecialties(results as SpecialtyWithCategory[])
-         } else {
-            // Filter locally when no search query
-            let filtered = specialties
-
-            if (categoryFilter !== 'all') {
-               filtered = filtered.filter((specialty) => specialty.category === categoryFilter)
-            }
-
-            if (popularOnly) {
-               filtered = filtered.filter((specialty) => specialty.isPopular)
-            }
-
-            setFilteredSpecialties(filtered)
-         }
-      } catch (err) {
-         console.error('Error filtering specialties:', err)
-         setFilteredSpecialties([])
+   // Generate SWR key based on current filters
+   const swrKey = useMemo(() => {
+      if (searchQuery.trim()) {
+         const params = new URLSearchParams({
+            q: searchQuery.trim(),
+            category: categoryFilter,
+            popular: popularOnly.toString()
+         })
+         return `/api/specialties/search?${params.toString()}`
       }
-   }, [specialties, searchQuery, categoryFilter, popularOnly, searchSpecialties])
 
-   useEffect(() => {
-      filterSpecialties()
-   }, [filterSpecialties])
+      if (popularOnly) {
+         return '/api/specialties/popular'
+      }
+
+      if (categoryFilter !== 'all') {
+         return `/api/specialties/category/${categoryFilter}`
+      }
+
+      return '/api/specialties/all'
+   }, [searchQuery, categoryFilter, popularOnly])
+
+   // SWR for data fetching
+   const {
+      data: specialties = [],
+      error,
+      isLoading,
+      mutate: mutateSpecialties
+   } = useSWR(swrKey, swrKey.includes('/search') ? searchFetcher : fetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 30000,
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
 
    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value)
    }
+
+   const handleRetry = useCallback(() => {
+      mutateSpecialties()
+   }, [mutateSpecialties])
 
    return (
       <div className="min-h-screen bg-gray-50">
@@ -176,18 +216,42 @@ export default function SpecialtiesPage() {
                </div>
             )}
 
+            {/* Error state */}
+            {error && !isLoading && (
+               <div className="text-center py-12">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                     <h3 className="text-lg font-medium text-red-900 mb-2">Có lỗi xảy ra</h3>
+                     <p className="text-red-700 mb-4">
+                        {error.message || 'Không thể tải danh sách chuyên khoa. Vui lòng thử lại.'}
+                     </p>
+                     <button
+                        onClick={handleRetry}
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                     >
+                        Thử lại
+                     </button>
+                  </div>
+               </div>
+            )}
+
             {/* Results Count */}
-            {!isLoading && (
+            {!isLoading && !error && (
                <div className="flex items-center justify-between mb-6">
                   <p className="text-gray-600">
-                     Tìm thấy <span className="font-semibold">{filteredSpecialties.length}</span>{' '}
-                     chuyên khoa
+                     Tìm thấy <span className="font-semibold">{specialties.length}</span> chuyên
+                     khoa
                   </p>
+                  <button
+                     onClick={() => mutateSpecialties()}
+                     className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                     Làm mới
+                  </button>
                </div>
             )}
 
             {/* Specialties Grid/List */}
-            {!isLoading && filteredSpecialties.length > 0 ? (
+            {!isLoading && !error && specialties.length > 0 ? (
                <div
                   className={
                      viewMode === 'grid'
@@ -195,7 +259,7 @@ export default function SpecialtiesPage() {
                         : 'space-y-4'
                   }
                >
-                  {filteredSpecialties.map((specialty, index) => (
+                  {specialties.map((specialty, index) => (
                      <motion.div
                         key={specialty.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -207,7 +271,8 @@ export default function SpecialtiesPage() {
                   ))}
                </div>
             ) : (
-               !isLoading && (
+               !isLoading &&
+               !error && (
                   <div className="text-center py-12">
                      <div className="mx-auto h-24 w-24 text-gray-400 mb-4">
                         <Search className="h-full w-full" />
@@ -215,7 +280,15 @@ export default function SpecialtiesPage() {
                      <h3 className="text-lg font-medium text-gray-900 mb-2">
                         Không tìm thấy chuyên khoa nào
                      </h3>
-                     <p className="text-gray-600">Vui lòng thử lại với từ khóa hoặc bộ lọc khác</p>
+                     <p className="text-gray-600 mb-4">
+                        Vui lòng thử lại với từ khóa hoặc bộ lọc khác
+                     </p>
+                     <button
+                        onClick={handleRetry}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                     >
+                        Thử lại
+                     </button>
                   </div>
                )
             )}

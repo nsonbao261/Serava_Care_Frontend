@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth, useUserQuestions } from '@/hooks'
+import { useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
+import useSWR from 'swr'
 import {
    Search,
    Filter,
@@ -15,25 +16,58 @@ import {
    MessageSquare
 } from 'lucide-react'
 import Link from 'next/link'
-import { LoadingSpinner, EmptyState, ErrorBoundaryFallback, QuestionCard } from '@/components'
+import { LoadingSpinner, EmptyState, QuestionCard } from '@/components'
+import { getUserQuestions, filterQuestions } from '@/services'
+
+// SWR fetcher
+const fetcher = async (): Promise<Question[]> => {
+   return await getUserQuestions()
+}
 
 export default function MyQuestionsPage() {
-   const { isAuthenticated, isLoading } = useAuth()
    const router = useRouter()
+   const { data: session, status } = useSession()
+
+   // Authentication state
+   const isAuthenticated = !!session
+   const isLoading = status === 'loading'
+
+   // SWR for data fetching
+   const {
+      data: questions = [],
+      error,
+      isLoading: isDataLoading,
+      mutate: mutateQuestions
+   } = useSWR(isAuthenticated ? '/api/user/questions' : null, fetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
+
+   // Component state
    const [isFilterOpen, setIsFilterOpen] = React.useState(false)
    const [isFiltering, setIsFiltering] = React.useState(false)
    const filterRef = React.useRef<HTMLDivElement>(null)
 
-   const {
-      filteredQuestions,
-      isLoading: isDataLoading,
-      error,
-      selectedStatus,
-      searchQuery,
-      setSelectedStatus,
-      setSearchQuery,
-      refetch
-   } = useUserQuestions({ initialStatus: 'answered' })
+   // Filter state
+   const [selectedStatus, setSelectedStatus] = useState<Question['status'] | 'all'>('answered')
+   const [searchQuery, setSearchQuery] = useState('')
+
+   // Filter questions based on selected status and search query
+   const filteredQuestions = useMemo(() => {
+      return filterQuestions(questions, {
+         status: selectedStatus === 'all' ? undefined : selectedStatus,
+         searchQuery: searchQuery.trim()
+      })
+   }, [questions, selectedStatus, searchQuery])
+
+   // Fetch data on component mount
+   useEffect(() => {
+      if (isAuthenticated && !isLoading) {
+         // fetchQuestions()
+      }
+   }, [isAuthenticated, isLoading])
 
    // Close filter dropdown when clicking outside
    React.useEffect(() => {
@@ -97,9 +131,28 @@ export default function MyQuestionsPage() {
       return null
    }
 
-   // Show error state
+   // Show error state with retry functionality
    if (error) {
-      return <ErrorBoundaryFallback error={new Error(error)} resetErrorBoundary={refetch} />
+      return (
+         <div className="min-h-screen bg-gray-50">
+            <div className="py-16">
+               <div className="text-center">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                     Không thể tải danh sách câu hỏi
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                     Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.
+                  </p>
+                  <button
+                     onClick={() => mutateQuestions()}
+                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                     Thử lại
+                  </button>
+               </div>
+            </div>
+         </div>
+      )
    }
 
    // Show loading state while fetching data

@@ -1,4 +1,4 @@
-import { SearchAndFilter } from '@/features'
+import { SearchAndFilter } from '@/features/doctors/search-filter'
 
 interface DoctorsSearchSectionProps {
    searchQuery: string

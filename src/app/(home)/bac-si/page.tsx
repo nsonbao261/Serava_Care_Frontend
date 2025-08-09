@@ -7,7 +7,7 @@ import {
    DoctorsFilter,
    DOCTOR_SPECIALTIES,
    DOCTORS_PER_PAGE
-} from '@/features'
+} from '@/features/doctors'
 
 // Data
 import { mockDoctors } from '@/data'

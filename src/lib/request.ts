@@ -53,9 +53,7 @@ export const request = async <T, B = undefined>(
          next
       })
 
-      const data: ApiResponse<T> = await response.json()
-
-      return data
+      return await response.json()
    } catch (error: unknown) {
       const isErr = error instanceof Error
 

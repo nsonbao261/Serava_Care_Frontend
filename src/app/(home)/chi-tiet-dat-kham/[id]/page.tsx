@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, use } from 'react'
+import { useEffect, use, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { useAuth, useOrderDetail } from '@/hooks'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
+import { getOrderById, cancelOrder, downloadInvoice, printInvoice } from '@/services'
 import {
    ArrowLeft,
    Calendar,
@@ -59,11 +61,93 @@ const serviceIcons = {
    emergency: Heart
 }
 
+// SWR fetcher
+const fetcher = async (url: string): Promise<BookingOrder> => {
+   const orderId = url.split('/').pop()
+   if (!orderId) throw new Error('Order ID is required')
+   const order = await getOrderById(orderId)
+   if (!order) throw new Error('Order not found')
+   return order
+}
+
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params)
-   const { isAuthenticated, isLoading: authLoading } = useAuth()
+   const { data: session, status } = useSession()
    const router = useRouter()
-   const { order, isLoading, error, refetch } = useOrderDetail(id)
+
+   const isAuthenticated = !!session
+   const authLoading = status === 'loading'
+
+   // SWR for data fetching
+   const {
+      data: order,
+      error,
+      isLoading,
+      mutate: mutateOrder
+   } = useSWR(isAuthenticated && id ? `/api/orders/${id}` : null, fetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
+
+   // Handle order cancellation with optimistic updates
+   const handleCancelOrder = useCallback(async () => {
+      if (!order) return
+
+      try {
+         // Optimistically update the UI
+         const updatedOrder = {
+            ...order,
+            status: 'cancelled' as const,
+            paymentStatus: 'refunded' as const
+         }
+         await mutate(`/api/orders/${id}`, updatedOrder, false)
+
+         // Make the actual API call
+         await cancelOrder(order.id)
+
+         // Revalidate to ensure consistency
+         mutateOrder()
+      } catch (err) {
+         console.error('Error cancelling order:', err)
+         // Revert the optimistic update on error
+         mutateOrder()
+         // Could show error toast here
+      }
+   }, [order, id, mutateOrder])
+
+   // Handle invoice download
+   const handleDownloadInvoice = useCallback(async () => {
+      if (!order) return
+
+      try {
+         const url = await downloadInvoice(order.id)
+         // Create a temporary link and trigger download
+         const link = document.createElement('a')
+         link.href = url
+         link.download = `invoice-${order.orderNumber}.pdf`
+         document.body.appendChild(link)
+         link.click()
+         document.body.removeChild(link)
+      } catch (err) {
+         console.error('Error downloading invoice:', err)
+         // Could show error toast here
+      }
+   }, [order])
+
+   // Handle invoice printing
+   const handlePrintInvoice = useCallback(async () => {
+      if (!order) return
+
+      try {
+         await printInvoice(order.id)
+         window.print()
+      } catch (err) {
+         console.error('Error printing invoice:', err)
+         // Could show error toast here
+      }
+   }, [order])
 
    useEffect(() => {
       if (!authLoading && !isAuthenticated) {
@@ -88,25 +172,28 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       return null
    }
 
-   // Show loading while fetching order data
-   if (isLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang tải thông tin đặt khám..." />
-            </div>
-         </div>
-      )
-   }
-
+   // Show error state with retry functionality
    if (error) {
       return (
          <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
                <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
                <h2 className="text-xl font-semibold text-gray-900 mb-2">Có lỗi xảy ra</h2>
-               <p className="text-gray-600 mb-4">{error}</p>
-               <Button onClick={refetch}>Thử lại</Button>
+               <p className="text-gray-600 mb-4">
+                  Không thể tải thông tin đặt khám. Vui lòng thử lại.
+               </p>
+               <Button onClick={() => mutateOrder()}>Thử lại</Button>
+            </div>
+         </div>
+      )
+   }
+
+   // Show loading while fetching order data
+   if (isLoading) {
+      return (
+         <div className="min-h-screen bg-gray-50">
+            <div className="py-16">
+               <LoadingSpinner size="lg" text="Đang tải thông tin đặt khám..." />
             </div>
          </div>
       )
@@ -151,11 +238,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                     <Button variant="outline" size="sm">
+                     <Button variant="outline" size="sm" onClick={handlePrintInvoice}>
                         <Printer className="h-4 w-4 mr-2" />
                         In
                      </Button>
-                     <Button variant="outline" size="sm">
+                     <Button variant="outline" size="sm" onClick={handleDownloadInvoice}>
                         <Download className="h-4 w-4 mr-2" />
                         Tải xuống
                      </Button>
@@ -386,16 +473,36 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      <div className="space-y-3">
                         {order.status === 'pending' && (
                            <>
-                              <Button className="w-full" variant="outline">
+                              <Button
+                                 className="w-full"
+                                 variant="outline"
+                                 onClick={() => {
+                                    // TODO: Implement reschedule modal
+                                    // handleRescheduleOrder('new-date', 'new-time')
+                                    console.log('Reschedule order')
+                                 }}
+                              >
                                  Dời lịch
                               </Button>
-                              <Button className="w-full" variant="outline">
+                              <Button
+                                 className="w-full"
+                                 variant="outline"
+                                 onClick={handleCancelOrder}
+                              >
                                  Hủy lịch
                               </Button>
                            </>
                         )}
                         {order.status === 'confirmed' && (
-                           <Button className="w-full" variant="outline">
+                           <Button
+                              className="w-full"
+                              variant="outline"
+                              onClick={() => {
+                                 // TODO: Implement reschedule modal
+                                 // handleRescheduleOrder('new-date', 'new-time')
+                                 console.log('Reschedule order')
+                              }}
+                           >
                               Dời lịch
                            </Button>
                         )}

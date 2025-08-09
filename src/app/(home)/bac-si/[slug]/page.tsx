@@ -10,7 +10,7 @@ import {
    ArticlesSection,
    LanguagesSection,
    ReviewsSection
-} from '@/features'
+} from '@/features/doctors'
 import { mockDoctorDetails } from '@/data'
 
 interface PageProps {
