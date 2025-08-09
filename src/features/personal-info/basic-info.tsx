@@ -2,8 +2,6 @@
 
 import { Edit, Save, X } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
-
-// Components
 import {
    DatePicker,
    FormControl,
@@ -18,8 +16,6 @@ import {
    SelectTrigger,
    SelectValue
 } from '@/components'
-
-// Deps
 import { cn } from '@/lib'
 import { usePersonalInfoStore } from './store/personal-info'
 

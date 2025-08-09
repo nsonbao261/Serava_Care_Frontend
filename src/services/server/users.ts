@@ -9,11 +9,9 @@ export const getUserProfile = async () => {
 }
 
 export const updateUserProfile = async (id: string, payload: Partial<User>) => {
-   const response = await request(`users/${id}`, {
+   return await request(`users/${id}`, {
       method: 'PATCH',
       body: payload,
       requireAuth: true
    })
-
-   return response
 }

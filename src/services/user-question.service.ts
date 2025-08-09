@@ -14,19 +14,6 @@ export async function getUserQuestions(userId?: string): Promise<Question[]> {
    return questions
 }
 
-export async function getQuestionById(id: string): Promise<Question | null> {
-   // Simulate API delay
-   await new Promise((resolve) => setTimeout(resolve, 600))
-
-   const question = mockQuestions.find((q) => q.id === id)
-   if (question) {
-      // Increment views
-      const updatedQuestion = { ...question, views: (question.views || 0) + 1 }
-      return updatedQuestion
-   }
-   return null
-}
-
 export async function rateQuestion(questionId: string, rating: number): Promise<void> {
    // Simulate API delay
    await new Promise((resolve) => setTimeout(resolve, 500))

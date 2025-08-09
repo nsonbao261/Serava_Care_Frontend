@@ -3,10 +3,11 @@
 import React, { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth, useBookingData } from '@/hooks'
-import { BookingCard, LoadingSpinner, EmptyState } from '@/components'
+import { LoadingSpinner, EmptyState } from '@/components'
 import { BOOKING_STATUS_CONFIG, SERVICE_ICONS } from '@/constants'
 import { Search, Calendar, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { BookingCard } from '@/features/booking/booking-card'
 
 export default function BookingHistoryPage() {
    const router = useRouter()

@@ -55,14 +55,12 @@ export async function cancelBooking(id: string, reason?: string): Promise<Bookin
    }
 
    // Update booking status
-   const cancelledBooking = {
+   return {
       ...booking,
       status: 'cancelled' as const,
       notes: reason ? `Lý do hủy: ${reason}` : booking.notes,
       updatedAt: new Date()
    }
-
-   return cancelledBooking
 }
 
 export async function rescheduleBooking(
@@ -79,13 +77,11 @@ export async function rescheduleBooking(
    }
 
    // Update booking with new date and time
-   const rescheduledBooking = {
+   return {
       ...booking,
       appointmentDate: newDate,
       appointmentTime: newTime,
       status: 'rescheduled' as const,
       updatedAt: new Date()
    }
-
-   return rescheduledBooking
 }

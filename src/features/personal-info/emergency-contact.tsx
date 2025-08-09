@@ -1,6 +1,5 @@
 'use client'
 
-// Deps
 import { usePersonalInfoStore } from './store/personal-info'
 
 export default function EmergencyContact() {

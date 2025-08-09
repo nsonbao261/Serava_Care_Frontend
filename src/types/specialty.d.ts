@@ -12,8 +12,6 @@ interface SpecialtyCard {
    order?: number
 }
 
-type SpecialtyCategory = 'noi-khoa' | 'ngoai-khoa' | 'can-lam-sang' | 'phuc-hoi' | 'chuyen-khoa'
-
 interface SpecialtyWithCategory extends SpecialtyCard {
    category: SpecialtyCategory
    subCategories?: string[]
@@ -64,10 +62,4 @@ interface SpecialtyFilters {
    minDoctorCount?: number
    popularOnly?: boolean
    hasAvailableDoctors?: boolean
-}
-
-interface Specialty {
-   value: string
-   label: string
-   description?: string
 }
