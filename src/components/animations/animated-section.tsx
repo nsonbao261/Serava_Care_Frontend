@@ -1,7 +1,7 @@
 'use client'
 
 import { useInView } from '@/hooks'
-import { memo } from 'react'
+import React, { memo } from 'react'
 
 interface AnimatedSectionProps {
    children: React.ReactNode

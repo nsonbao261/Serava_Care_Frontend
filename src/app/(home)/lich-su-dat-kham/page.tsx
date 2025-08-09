@@ -1,22 +1,89 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth, useBookingData } from '@/hooks'
+import { useSession } from 'next-auth/react'
+import useSWR from 'swr'
+import { getBookings } from '@/services'
 import { LoadingSpinner, EmptyState } from '@/components'
 import { BOOKING_STATUS_CONFIG, SERVICE_ICONS } from '@/constants'
 import { Search, Calendar, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { BookingCard } from '@/features/booking/booking-card'
 
+const bookingsFetcher = async (): Promise<BookingOrder[]> => {
+   return await getBookings({ _userId: 'current-user' })
+}
+
 export default function BookingHistoryPage() {
    const router = useRouter()
-   const { isAuthenticated, isLoading: authLoading } = useAuth()
+   const { data: session, status } = useSession()
+
+   // Authentication state
+   const isAuthenticated = !!session
+   const authLoading = status === 'loading'
+
    const [isFilterOpen, setIsFilterOpen] = React.useState(false)
    const filterRef = useRef<HTMLDivElement>(null)
 
-   const { filteredBookings, isLoading, error, filters, updateFilters, refreshBookings } =
-      useBookingData('current-user') // In real app, get from auth context
+   // SWR for bookings data
+   const {
+      data: bookings = [],
+      error,
+      isLoading: isDataLoading,
+      mutate: mutateBookings
+   } = useSWR(isAuthenticated ? '/api/bookings/user' : null, bookingsFetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000, // 1 minute
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
+
+   // Filter state
+   const [filters, setFilters] = useState<BookingFilters>({
+      status: 'all',
+      searchQuery: ''
+   })
+
+   // Apply filters to bookings using useMemo for better performance
+   const filteredBookings = useMemo(() => {
+      let filtered = [...bookings]
+
+      if (filters.status !== 'all') {
+         filtered = filtered.filter((booking) => booking.status === filters.status)
+      }
+
+      if (filters.searchQuery) {
+         const query = filters.searchQuery.toLowerCase()
+         filtered = filtered.filter(
+            (booking) =>
+               booking.doctorName.toLowerCase().includes(query) ||
+               booking.serviceName.toLowerCase().includes(query) ||
+               booking.orderNumber.toLowerCase().includes(query)
+         )
+      }
+
+      if (filters.dateRange) {
+         filtered = filtered.filter((booking) => {
+            const bookingDate = new Date(booking.appointmentDate)
+            const fromDate = new Date(filters.dateRange!.from)
+            const toDate = new Date(filters.dateRange!.to)
+            return bookingDate >= fromDate && bookingDate <= toDate
+         })
+      }
+
+      return filtered
+   }, [bookings, filters])
+
+   // Update filters
+   const updateFilters = useCallback((newFilters: Partial<BookingFilters>) => {
+      setFilters((prev) => ({ ...prev, ...newFilters }))
+   }, [])
+
+   // Refresh bookings data
+   const refreshBookings = useCallback(() => {
+      mutateBookings()
+   }, [mutateBookings])
 
    // Close filter dropdown when clicking outside
    useEffect(() => {
@@ -73,14 +140,16 @@ export default function BookingHistoryPage() {
       return null
    }
 
-   // Show error state
+   // Show error state with retry functionality
    if (error) {
       return (
          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
             <div className="container mx-auto px-4 py-8">
                <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
                   <div className="text-red-600 text-lg font-medium mb-2">Có lỗi xảy ra</div>
-                  <div className="text-red-500 mb-4">{error}</div>
+                  <div className="text-red-500 mb-4">
+                     {error.message || 'Không thể tải dữ liệu lịch hẹn'}
+                  </div>
                   <button
                      onClick={refreshBookings}
                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -102,8 +171,18 @@ export default function BookingHistoryPage() {
                animate={{ opacity: 1, y: 0 }}
                className="mb-8"
             >
-               <h1 className="text-3xl font-bold text-gray-900 mb-2">Lịch sử đặt khám</h1>
-               <p className="text-gray-600">Quản lý và theo dõi các lịch hẹn của bạn</p>
+               <div className="flex items-center justify-between">
+                  <div>
+                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Lịch sử đặt khám</h1>
+                     <p className="text-gray-600">Quản lý và theo dõi các lịch hẹn của bạn</p>
+                  </div>
+                  <button
+                     onClick={refreshBookings}
+                     className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                  >
+                     Làm mới
+                  </button>
+               </div>
             </motion.div>
 
             {/* Filters */}
@@ -178,17 +257,28 @@ export default function BookingHistoryPage() {
                      )}
                   </div>
                </div>
+
+               {/* Results count */}
+               {!isDataLoading && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                     <p className="text-sm text-gray-600">
+                        Hiển thị <span className="font-semibold">{filteredBookings.length}</span>{' '}
+                        trong tổng số <span className="font-semibold">{bookings.length}</span> lịch
+                        hẹn
+                     </p>
+                  </div>
+               )}
             </motion.div>
 
             {/* Loading state */}
-            {isLoading && (
+            {isDataLoading && (
                <div className="flex justify-center py-12">
                   <LoadingSpinner size="lg" text="Đang tải dữ liệu..." />
                </div>
             )}
 
             {/* Empty state */}
-            {!isLoading && filteredBookings.length === 0 && (
+            {!isDataLoading && filteredBookings.length === 0 && bookings.length === 0 && (
                <EmptyState
                   icon={<Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />}
                   title="Không có lịch hẹn nào"
@@ -204,8 +294,29 @@ export default function BookingHistoryPage() {
                />
             )}
 
+            {/* No filtered results */}
+            {!isDataLoading && filteredBookings.length === 0 && bookings.length > 0 && (
+               <div className="text-center py-12">
+                  <div className="mx-auto h-24 w-24 text-gray-400 mb-4">
+                     <Search className="h-full w-full" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                     Không tìm thấy lịch hẹn nào
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                     Vui lòng thử lại với từ khóa hoặc bộ lọc khác
+                  </p>
+                  <button
+                     onClick={() => setFilters({ status: 'all', searchQuery: '' })}
+                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                     Xóa bộ lọc
+                  </button>
+               </div>
+            )}
+
             {/* Booking Cards */}
-            {!isLoading && filteredBookings.length > 0 && (
+            {!isDataLoading && filteredBookings.length > 0 && (
                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

@@ -2,8 +2,9 @@
 
 import { useState, useEffect, use } from 'react'
 import { motion } from 'framer-motion'
-import { useAuth } from '@/hooks'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
 import {
    ArrowLeft,
@@ -91,12 +92,67 @@ const serviceIcons = {
    emergency: Heart
 }
 
+// Fetcher function for SWR
+const orderFetcher = async (url: string): Promise<OrderDetail> => {
+   const orderId = url.split('/').pop()
+
+   // Simulate API call delay
+   await new Promise((resolve) => setTimeout(resolve, 1000))
+
+   // Mock data - in real app, this would be an actual API call
+   const mockOrder: OrderDetail = {
+      id: orderId as string,
+      orderNumber: 'SC001234',
+      patientName: 'Nguyễn Văn An',
+      patientPhone: '0912345678',
+      patientEmail: 'nguyenvanan@gmail.com',
+      patientAddress: '123 Nguyễn Huệ, Quận 1, TP.HCM',
+      doctorName: 'BS.CKII Trần Thị Hoa',
+      doctorSpecialty: 'Tim mạch',
+      doctorImage: '/placeholder.svg',
+      doctorPhone: '0987654321',
+      doctorEmail: 'dr.tranthihoa@hospital.com',
+      serviceType: 'telemedicine',
+      serviceName: 'Tư vấn trực tuyến',
+      appointmentDate: '2025-07-15',
+      appointmentTime: '09:00',
+      status: 'confirmed',
+      totalAmount: '200.000đ',
+      paymentStatus: 'paid',
+      paymentMethod: 'Thẻ tín dụng',
+      bookingDate: '2025-07-10',
+      hospital: 'Bệnh viện Chợ Rẫy',
+      hospitalAddress: '201B Nguyễn Chí Thanh, Quận 5, TP.HCM',
+      reason: 'Khám tim định kỳ',
+      symptoms: ['Đau ngực', 'Khó thở', 'Tim đập nhanh'],
+      medicalHistory: 'Tiền sử cao huyết áp, đang điều trị',
+      notes: 'Bệnh nhân cần nhịn ăn 8 tiếng trước khi khám'
+   }
+
+   return mockOrder
+}
+
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params)
-   const { isAuthenticated, isLoading: authLoading } = useAuth()
+   const { data: session, status } = useSession()
    const router = useRouter()
-   const [order, setOrder] = useState<OrderDetail | null>(null)
-   const [isLoading, setIsLoading] = useState(true)
+
+   // Authentication state
+   const isAuthenticated = !!session
+   const authLoading = status === 'loading'
+
+   // SWR for order data
+   const {
+      data: order,
+      error,
+      isLoading,
+      mutate: mutateOrder
+   } = useSWR(isAuthenticated && id ? `/api/orders/${id}` : null, orderFetcher, {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000, // 1 minute
+      errorRetryCount: 3,
+      errorRetryInterval: 1000
+   })
 
    // Redirect to sign-in if not authenticated
    useEffect(() => {
@@ -105,46 +161,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
          router.push(`/sign-in?returnUrl=${currentUrl}`)
       }
    }, [isAuthenticated, authLoading, router, id])
-
-   // Mock data - in real app, this would come from API
-   useEffect(() => {
-      if (!authLoading && isAuthenticated) {
-         const mockOrder: OrderDetail = {
-            id: id,
-            orderNumber: 'SC001234',
-            patientName: 'Nguyễn Văn An',
-            patientPhone: '0912345678',
-            patientEmail: 'nguyenvanan@gmail.com',
-            patientAddress: '123 Nguyễn Huệ, Quận 1, TP.HCM',
-            doctorName: 'BS.CKII Trần Thị Hoa',
-            doctorSpecialty: 'Tim mạch',
-            doctorImage: '/placeholder.svg',
-            doctorPhone: '0987654321',
-            doctorEmail: 'dr.tranthihoa@hospital.com',
-            serviceType: 'telemedicine',
-            serviceName: 'Tư vấn trực tuyến',
-            appointmentDate: '2025-07-15',
-            appointmentTime: '09:00',
-            status: 'confirmed',
-            totalAmount: '200.000đ',
-            paymentStatus: 'paid',
-            paymentMethod: 'Thẻ tín dụng',
-            bookingDate: '2025-07-10',
-            hospital: 'Bệnh viện Chợ Rẫy',
-            hospitalAddress: '201B Nguyễn Chí Thanh, Quận 5, TP.HCM',
-            reason: 'Khám tim định kỳ',
-            symptoms: ['Đau ngực', 'Khó thở', 'Tim đập nhanh'],
-            medicalHistory: 'Tiền sử cao huyết áp, đang điều trị',
-            notes: 'Bệnh nhân cần nhịn ăn 8 tiếng trước khi khám'
-         }
-
-         // Simulate API call delay
-         setTimeout(() => {
-            setOrder(mockOrder)
-            setIsLoading(false)
-         }, 1000)
-      }
-   }, [id, authLoading, isAuthenticated])
 
    const handlePrint = () => {
       window.print()
@@ -155,19 +171,61 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       console.log('Download receipt')
    }
 
-   const handleReschedule = () => {
-      // Handle reschedule logic
-      console.log('Reschedule appointment')
+   const handleReschedule = async () => {
+      if (!order) return
+
+      try {
+         // Optimistically update the UI
+         const updatedOrder = { ...order, status: 'rescheduled' as const }
+         await mutate(`/api/orders/${id}`, updatedOrder, false)
+
+         // Make actual API call here
+         // await rescheduleOrderAPI(id, newDate, newTime)
+
+         // Revalidate to ensure consistency
+         mutateOrder()
+
+         console.log('Reschedule appointment')
+      } catch (error) {
+         console.error('Error rescheduling:', error)
+         // Revert optimistic update on error
+         mutateOrder()
+      }
    }
 
-   const handleCancel = () => {
-      // Handle cancel logic
-      console.log('Cancel appointment')
+   const handleCancel = async () => {
+      if (!order) return
+
+      try {
+         // Optimistically update the UI
+         const updatedOrder = {
+            ...order,
+            status: 'cancelled' as const,
+            paymentStatus: 'refunded' as const
+         }
+         await mutate(`/api/orders/${id}`, updatedOrder, false)
+
+         // Make actual API call here
+         // await cancelOrderAPI(id)
+
+         // Revalidate to ensure consistency
+         mutateOrder()
+
+         console.log('Cancel appointment')
+      } catch (error) {
+         console.error('Error cancelling:', error)
+         // Revert optimistic update on error
+         mutateOrder()
+      }
    }
 
    const handleStartConsultation = () => {
       // Handle start video consultation
       console.log('Start consultation')
+   }
+
+   const handleRetry = () => {
+      mutateOrder()
    }
 
    // Show loading while checking authentication
@@ -184,6 +242,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
    // Don't render anything if not authenticated (let redirect handle it)
    if (!isAuthenticated) {
       return null
+   }
+
+   // Show error state with retry functionality
+   if (error) {
+      return (
+         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+               <h2 className="text-2xl font-bold text-gray-900 mb-2">Có lỗi xảy ra</h2>
+               <p className="text-gray-600 mb-4">
+                  {error.message || 'Không thể tải thông tin đặt khám. Vui lòng thử lại.'}
+               </p>
+               <div className="space-x-3">
+                  <Button onClick={handleRetry}>Thử lại</Button>
+                  <Link href="/lich-su-dat-kham">
+                     <Button variant="outline">
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Quay lại danh sách
+                     </Button>
+                  </Link>
+               </div>
+            </div>
+         </div>
+      )
    }
 
    // Show loading while fetching order data
@@ -238,6 +319,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      </div>
                   </div>
                   <div className="flex items-center space-x-2">
+                     <Button
+                        variant="outline"
+                        onClick={() => mutateOrder()}
+                        className="text-gray-500 hover:text-gray-700"
+                     >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Làm mới
+                     </Button>
                      <Button variant="outline" onClick={handlePrint}>
                         <Printer className="h-4 w-4 mr-2" />
                         In
@@ -498,7 +587,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                         </div>
                         <div className="flex justify-between">
                            <span className="text-sm text-gray-600">Phương thức:</span>
-                           <span className="text-sm text-gray-900">{order.paymentMethod}</span>
+                           <span className="text-sm font-medium text-gray-900">
+                              {order.paymentMethod}
+                           </span>
                         </div>
                         <div className="flex justify-between">
                            <span className="text-sm text-gray-600">Trạng thái:</span>

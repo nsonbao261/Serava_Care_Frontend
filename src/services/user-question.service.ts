@@ -1,44 +1,56 @@
 import { mockQuestions } from '@/data'
 
 export async function getUserQuestions(userId?: string): Promise<Question[]> {
-   // Simulate API delay
-   await new Promise((resolve) => setTimeout(resolve, 800))
+   try {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 800))
 
-   let questions = mockQuestions
+      let questions = mockQuestions
 
-   // Filter by user if userId is provided
-   if (userId) {
-      questions = questions.filter((q) => q.authorId === userId)
+      // Filter by user if userId is provided
+      if (userId) {
+         questions = questions.filter((q) => q.authorId === userId)
+      }
+
+      return questions
+   } catch {
+      throw new Error('Không thể tải danh sách câu hỏi từ server')
    }
-
-   return questions
 }
 
 export async function rateQuestion(questionId: string, rating: number): Promise<void> {
-   // Simulate API delay
-   await new Promise((resolve) => setTimeout(resolve, 500))
+   try {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
-   const question = mockQuestions.find((q) => q.id === questionId)
-   if (question) {
-      const updatedQuestion = {
-         ...question,
-         rating,
-         hasRated: true
+      const question = mockQuestions.find((q) => q.id === questionId)
+      if (question) {
+         const updatedQuestion = {
+            ...question,
+            rating,
+            hasRated: true
+         }
+         const index = mockQuestions.findIndex((q) => q.id === questionId)
+         if (index !== -1) {
+            mockQuestions[index] = updatedQuestion
+         }
       }
-      const index = mockQuestions.findIndex((q) => q.id === questionId)
-      if (index !== -1) {
-         mockQuestions[index] = updatedQuestion
-      }
+   } catch {
+      throw new Error('Không thể đánh giá câu hỏi')
    }
 }
 
 export async function deleteQuestion(questionId: string): Promise<void> {
-   // Simulate API delay
-   await new Promise((resolve) => setTimeout(resolve, 500))
+   try {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
-   const index = mockQuestions.findIndex((q) => q.id === questionId)
-   if (index !== -1) {
-      mockQuestions.splice(index, 1)
+      const index = mockQuestions.findIndex((q) => q.id === questionId)
+      if (index !== -1) {
+         mockQuestions.splice(index, 1)
+      }
+   } catch {
+      throw new Error('Không thể xóa câu hỏi')
    }
 }
 

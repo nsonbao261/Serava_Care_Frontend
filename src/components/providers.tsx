@@ -2,6 +2,7 @@
 
 import { SessionProvider } from 'next-auth/react'
 import { SWRConfig } from 'swr'
+import React from 'react'
 
 interface ProvidersProps {
    children: React.ReactNode

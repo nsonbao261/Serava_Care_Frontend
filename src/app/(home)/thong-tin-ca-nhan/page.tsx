@@ -60,7 +60,7 @@ export default function PersonalInfoPage() {
          toast.success(res.message)
       }
 
-      mutate()
+      await mutate()
       setEditing(false)
       setLoading(false)
    }
