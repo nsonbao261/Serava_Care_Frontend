@@ -63,3 +63,5 @@ interface SpecialtyFilters {
    popularOnly?: boolean
    hasAvailableDoctors?: boolean
 }
+
+type SpecialtyCategory = 'all' | 'noi-khoa' | 'ngoai-khoa' | 'can-lam-sang' | 'phuc-hoi' | 'chuyen-khoa';

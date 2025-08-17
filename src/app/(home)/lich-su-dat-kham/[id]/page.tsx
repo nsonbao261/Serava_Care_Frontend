@@ -1,61 +1,30 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { use, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
 import {
-   ArrowLeft,
-   Calendar,
-   Clock,
-   Phone,
-   Mail,
-   Download,
-   Printer,
-   CheckCircle,
-   XCircle,
    AlertCircle,
+   ArrowLeft,
+   Building2,
+   Calendar,
+   CheckCircle,
+   Clock,
+   Download,
+   Heart,
+   Mail,
+   Phone,
+   Printer,
+   RefreshCw,
    Stethoscope,
    Video,
-   Building2,
-   Heart,
-   RefreshCw
+   XCircle
 } from 'lucide-react'
 import { Button, LoadingSpinner } from '@/components'
-
-interface OrderDetail {
-   id: string
-   orderNumber: string
-   patientName: string
-   patientPhone: string
-   patientEmail: string
-   patientAddress: string
-   doctorName: string
-   doctorSpecialty: string
-   doctorImage: string
-   doctorPhone: string
-   doctorEmail: string
-   serviceType: 'telemedicine' | 'clinic' | 'home' | 'emergency'
-   serviceName: string
-   appointmentDate: string
-   appointmentTime: string
-   status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'rescheduled'
-   totalAmount: string
-   paymentStatus: 'pending' | 'paid' | 'refunded'
-   paymentMethod: string
-   bookingDate: string
-   hospital: string
-   hospitalAddress: string
-   reason?: string
-   notes?: string
-   symptoms?: string[]
-   medicalHistory?: string
-   prescription?: string
-   diagnosis?: string
-   followUpDate?: string
-}
+import { OrderDetail } from '@/types/order'
 
 const statusConfig = {
    pending: {
@@ -99,8 +68,7 @@ const orderFetcher = async (url: string): Promise<OrderDetail> => {
    // Simulate API call delay
    await new Promise((resolve) => setTimeout(resolve, 1000))
 
-   // Mock data - in real app, this would be an actual API call
-   const mockOrder: OrderDetail = {
+   return {
       id: orderId as string,
       orderNumber: 'SC001234',
       patientName: 'Nguyễn Văn An',
@@ -128,8 +96,6 @@ const orderFetcher = async (url: string): Promise<OrderDetail> => {
       medicalHistory: 'Tiền sử cao huyết áp, đang điều trị',
       notes: 'Bệnh nhân cần nhịn ăn 8 tiếng trước khi khám'
    }
-
-   return mockOrder
 }
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -183,13 +149,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
          // await rescheduleOrderAPI(id, newDate, newTime)
 
          // Revalidate to ensure consistency
-         mutateOrder()
+         await mutateOrder()
 
          console.log('Reschedule appointment')
       } catch (error) {
          console.error('Error rescheduling:', error)
          // Revert optimistic update on error
-         mutateOrder()
+         await mutateOrder()
       }
    }
 
@@ -209,13 +175,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
          // await cancelOrderAPI(id)
 
          // Revalidate to ensure consistency
-         mutateOrder()
+         await mutateOrder()
 
          console.log('Cancel appointment')
       } catch (error) {
          console.error('Error cancelling:', error)
          // Revert optimistic update on error
-         mutateOrder()
+         await mutateOrder()
       }
    }
 

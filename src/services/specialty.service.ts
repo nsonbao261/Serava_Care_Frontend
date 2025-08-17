@@ -1,4 +1,3 @@
-import {} from '@/data/specialty-category.list.mock'
 import { mockSpecialtiesWithCategory, mockTreatments, mockProceduresMap, mockFAQs } from '@/data'
 
 export async function getAllSpecialties(): Promise<SpecialtyWithCategory[]> {

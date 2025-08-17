@@ -5,6 +5,9 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
+import { ToInstant, ISODateOnlyToInstant } from '@/utils/date'
+import { signIn } from 'next-auth/react'
+import api from '@/lib'
 
 // Components
 import {
@@ -43,7 +46,56 @@ export default function SignUpForm() {
    const onSubmit = (data: SignupInput) => {
       if (!agreeTerms) return
 
-      startTransition(async () => {})
+      startTransition(async () => {
+         try {
+            const submitData = data;
+
+            // Convert ngày sinh sang Instant (backend dùng Instant)
+            let birthInstant: string;
+            if (/^\d{2}-\d{2}-\d{4}$/.test(submitData.birthDate)) {
+            birthInstant = ToInstant(submitData.birthDate);          
+            } 
+            else {
+            birthInstant = ISODateOnlyToInstant(submitData.birthDate);
+            }
+
+            // TẠO PAYLOAD (đổi key nếu backend cần `dateOfBirth`)
+            const payload = {
+            email: submitData.email,
+            phoneNumber: submitData.phoneNumber,
+            username: submitData.username,
+            fullName: submitData.fullName,
+            birthDate: birthInstant,              
+            gender: submitData.gender,            
+            password: submitData.password,
+            confirmPassword: submitData.confirmPassword, 
+            };
+
+            // Gọi sign-up
+            await api.post('/auth/sign-up', payload);
+
+            // Đăng nhập ngay bằng NextAuth Credentials
+            const res = await signIn('credentials', {
+            redirect: false,
+            username: data.username,
+            password: data.password,
+            });
+
+            if (res?.ok) {
+            router.replace('/');
+            router.refresh();
+            } else {
+            alert(res?.error || 'Đăng nhập tự động thất bại');
+            }
+         } catch (error: any) {
+            const message =
+            error?.response?.data?.errors?.map((e: any) => e.message).join('\n') ||
+            error?.response?.data?.message ||
+            error?.message ||
+            'Có lỗi xảy ra vui lòng thử lại';
+            alert(`Chi tiết lỗi: ${message}`);
+         }
+      })
    }
 
    return (
@@ -187,7 +239,7 @@ export default function SignUpForm() {
                               <SelectContent>
                                  <SelectItem value="MALE">Nam</SelectItem>
                                  <SelectItem value="FEMALE">Nữ</SelectItem>
-                                 <SelectItem value="UNKNOWN">Khác</SelectItem>
+                                 <SelectItem value="OTHER">Khác</SelectItem>
                               </SelectContent>
                            </Select>
                         </FormItem>

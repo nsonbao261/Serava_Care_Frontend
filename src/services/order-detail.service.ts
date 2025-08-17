@@ -21,7 +21,7 @@ export async function cancelOrder(id: string): Promise<void> {
          mockOrderDetails[orderIndex].status = 'cancelled'
          mockOrderDetails[orderIndex].paymentStatus = 'refunded'
       }
-   } catch  {
+   } catch {
       throw new Error('Không thể hủy đơn hàng')
    }
 }
@@ -37,7 +37,7 @@ export async function rescheduleOrder(id: string, newDate: string, newTime: stri
          mockOrderDetails[orderIndex].appointmentTime = newTime
          mockOrderDetails[orderIndex].status = 'rescheduled'
       }
-   } catch  {
+   } catch {
       throw new Error('Không thể dời lịch đơn hàng')
    }
 }
@@ -49,7 +49,7 @@ export async function downloadInvoice(orderId: string): Promise<string> {
 
       // In a real app, this would return a download URL
       return `/api/invoices/${orderId}.pdf`
-   } catch  {
+   } catch {
       throw new Error('Không thể tải hóa đơn')
    }
 }
@@ -61,7 +61,7 @@ export async function printInvoice(orderId: string): Promise<void> {
 
       // In a real app, this would trigger a print dialog or send to printer
       console.log(`Printing invoice for order ${orderId}`)
-   } catch  {
+   } catch {
       throw new Error('Không thể in hóa đơn')
    }
 }
