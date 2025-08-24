@@ -21,6 +21,7 @@ import { usePersonalInfoStore } from './store/personal-info'
 
 // Types
 import { type ProfileFormData } from '@/schemas'
+
 type Props = {
    userProfile: ProfileFormData
 }
@@ -148,7 +149,7 @@ export default function BasicInfo({ userProfile }: Props) {
                         <FormControl>
                            <DatePicker
                               {...field}
-                              onChange={(date) => {
+                              onChangeAction={(date) => {
                                  const value = date ? date.toISOString() : new Date().toISOString()
                                  field.onChange(value)
                               }}

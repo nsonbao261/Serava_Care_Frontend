@@ -1,4 +1,4 @@
-export const mockBookingOrders: BookingOrder[] = [
+export const mockBookings: Booking[] = [
    {
       id: '1',
       orderNumber: 'SER001',
@@ -16,9 +16,7 @@ export const mockBookingOrders: BookingOrder[] = [
       bookingDate: '2024-01-15',
       hospital: 'Bệnh viện Serava Care',
       reason: 'Đau ngực, khó thở',
-      notes: 'Bệnh nhân có tiền sử cao huyết áp',
-      createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-15')
+      notes: 'Bệnh nhân có tiền sử cao huyết áp'
    },
    {
       id: '2',
@@ -36,9 +34,7 @@ export const mockBookingOrders: BookingOrder[] = [
       paymentStatus: 'paid',
       bookingDate: '2024-01-12',
       hospital: 'Phòng khám Serava Care Quận 1',
-      reason: 'Khám sức khỏe định kỳ',
-      createdAt: new Date('2024-01-12'),
-      updatedAt: new Date('2024-01-18')
+      reason: 'Khám sức khỏe định kỳ'
    },
    {
       id: '3',
@@ -56,9 +52,7 @@ export const mockBookingOrders: BookingOrder[] = [
       paymentStatus: 'pending',
       bookingDate: '2024-01-16',
       hospital: 'Dịch vụ tại nhà Serava Care',
-      reason: 'Phát ban da, ngứa',
-      createdAt: new Date('2024-01-16'),
-      updatedAt: new Date('2024-01-16')
+      reason: 'Phát ban da, ngứa'
    },
    {
       id: '4',
@@ -76,9 +70,7 @@ export const mockBookingOrders: BookingOrder[] = [
       paymentStatus: 'paid',
       bookingDate: '2024-01-10',
       hospital: 'Dịch vụ cấp cứu Serava Care',
-      reason: 'Đau bụng dữ dội',
-      createdAt: new Date('2024-01-10'),
-      updatedAt: new Date('2024-01-10')
+      reason: 'Đau bụng dữ dội'
    },
    {
       id: '5',
@@ -96,8 +88,6 @@ export const mockBookingOrders: BookingOrder[] = [
       paymentStatus: 'refunded',
       bookingDate: '2024-01-05',
       hospital: 'Phòng khám Nhi Serava Care',
-      reason: 'Sốt cao, ho',
-      createdAt: new Date('2024-01-05'),
-      updatedAt: new Date('2024-01-06')
+      reason: 'Sốt cao, ho'
    }
 ]

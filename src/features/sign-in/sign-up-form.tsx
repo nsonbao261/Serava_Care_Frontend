@@ -5,9 +5,8 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { ToInstant, ISODateOnlyToInstant } from '@/utils/date'
 import { signIn } from 'next-auth/react'
-import api from '@/lib'
+import api, { ISODateOnlyToInstant, ToInstant } from '@/lib'
 
 // Components
 import {
@@ -29,7 +28,7 @@ import {
 } from '@/components'
 
 // Deps
-import { signUpSchema, type SignupInput } from '@/schemas'
+import { type SignupInput, signUpSchema } from '@/schemas'
 
 export default function SignUpForm() {
    const router = useRouter()
@@ -48,52 +47,51 @@ export default function SignUpForm() {
 
       startTransition(async () => {
          try {
-            const submitData = data;
+            const submitData = data
 
             // Convert ngày sinh sang Instant (backend dùng Instant)
-            let birthInstant: string;
+            let birthInstant: string
             if (/^\d{2}-\d{2}-\d{4}$/.test(submitData.birthDate)) {
-            birthInstant = ToInstant(submitData.birthDate);          
-            } 
-            else {
-            birthInstant = ISODateOnlyToInstant(submitData.birthDate);
+               birthInstant = ToInstant(submitData.birthDate)
+            } else {
+               birthInstant = ISODateOnlyToInstant(submitData.birthDate)
             }
 
             // TẠO PAYLOAD (đổi key nếu backend cần `dateOfBirth`)
             const payload = {
-            email: submitData.email,
-            phoneNumber: submitData.phoneNumber,
-            username: submitData.username,
-            fullName: submitData.fullName,
-            birthDate: birthInstant,              
-            gender: submitData.gender,            
-            password: submitData.password,
-            confirmPassword: submitData.confirmPassword, 
-            };
+               email: submitData.email,
+               phoneNumber: submitData.phoneNumber,
+               username: submitData.username,
+               fullName: submitData.fullName,
+               birthDate: birthInstant,
+               gender: submitData.gender,
+               password: submitData.password,
+               confirmPassword: submitData.confirmPassword
+            }
 
             // Gọi sign-up
-            await api.post('/auth/sign-up', payload);
+            await api.post('/auth/sign-up', payload)
 
             // Đăng nhập ngay bằng NextAuth Credentials
             const res = await signIn('credentials', {
-            redirect: false,
-            username: data.username,
-            password: data.password,
-            });
+               redirect: false,
+               username: data.username,
+               password: data.password
+            })
 
             if (res?.ok) {
-            router.replace('/');
-            router.refresh();
+               router.replace('/')
+               router.refresh()
             } else {
-            alert(res?.error || 'Đăng nhập tự động thất bại');
+               alert(res?.error || 'Đăng nhập tự động thất bại')
             }
          } catch (error: any) {
             const message =
-            error?.response?.data?.errors?.map((e: any) => e.message).join('\n') ||
-            error?.response?.data?.message ||
-            error?.message ||
-            'Có lỗi xảy ra vui lòng thử lại';
-            alert(`Chi tiết lỗi: ${message}`);
+               error?.response?.data?.errors?.map((e: any) => e.message).join('\n') ||
+               error?.response?.data?.message ||
+               error?.message ||
+               'Có lỗi xảy ra vui lòng thử lại'
+            alert(`Chi tiết lỗi: ${message}`)
          }
       })
    }
@@ -209,7 +207,7 @@ export default function SignUpForm() {
                               <FormControl>
                                  <DatePicker
                                     {...field}
-                                    onChange={(date) => {
+                                    onChangeAction={(date) => {
                                        const value = date
                                           ? date.toISOString()
                                           : new Date().toISOString()

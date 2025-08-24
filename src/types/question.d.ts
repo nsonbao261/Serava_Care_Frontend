@@ -28,12 +28,3 @@ interface QuestionAttachment {
    size?: number
    type: string
 }
-
-interface QuestionSpecialty {
-   id: string
-   name: string
-   value: string
-   label: string
-   description?: string
-   icon: string
-}

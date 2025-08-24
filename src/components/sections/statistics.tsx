@@ -1,8 +1,8 @@
-import { Stethoscope, Building2, Users, Activity, Eye } from 'lucide-react'
+import { Activity, Building2, Eye, Stethoscope, Users } from 'lucide-react'
 import { GlowCard } from '@/components'
 import { formatNumber } from '@/lib'
 
-const StatisticsSection = () => {
+export const Statistics = () => {
    const stats = [
       {
          icon: Activity,
@@ -115,5 +115,3 @@ const StatisticsSection = () => {
       </section>
    )
 }
-
-export default StatisticsSection

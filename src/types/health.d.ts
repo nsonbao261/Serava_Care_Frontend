@@ -1,8 +1,6 @@
-type VitalSignType = 'blood_pressure' | 'heart_rate' | 'temperature' | 'weight' | 'blood_sugar'
-
 interface VitalSign {
    id: string
-   type: VitalSignType
+   type: 'blood_pressure' | 'heart_rate' | 'temperature' | 'weight' | 'blood_sugar'
    value: string
    unit: string
    date: string

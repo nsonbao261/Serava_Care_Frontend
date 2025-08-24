@@ -21,7 +21,7 @@ import {
 } from '@/components'
 
 // Deps
-import { signInSchema, type SignInInput } from '@/schemas'
+import { type SignInInput, signInSchema } from '@/schemas'
 
 // Types
 type Props = {

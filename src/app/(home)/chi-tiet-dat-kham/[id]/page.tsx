@@ -1,227 +1,22 @@
-'use client'
-
-import { useEffect, use, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import useSWR, { mutate } from 'swr'
 import Link from 'next/link'
-import { getOrderById, cancelOrder, downloadInvoice, printInvoice } from '@/services'
-import {
-   ArrowLeft,
-   Calendar,
-   Clock,
-   Phone,
-   Mail,
-   Download,
-   Printer,
-   CheckCircle,
-   XCircle,
-   AlertCircle,
-   Stethoscope,
-   Video,
-   Building2,
-   Heart,
-   RefreshCw
-} from 'lucide-react'
-import { Button, LoadingSpinner } from '@/components'
+import { getBookingById } from '@/services'
+import { ArrowLeft, Building2, Calendar, Clock, Download, Mail, Phone, Printer } from 'lucide-react'
+import { Button } from '@/components'
+import { notFound } from 'next/navigation'
 
-const statusConfig = {
-   pending: {
-      label: 'Chờ xác nhận',
-      color: 'bg-yellow-100 text-yellow-800',
-      icon: AlertCircle
-   },
-   confirmed: {
-      label: 'Đã xác nhận',
-      color: 'bg-blue-100 text-blue-800',
-      icon: CheckCircle
-   },
-   completed: {
-      label: 'Hoàn thành',
-      color: 'bg-green-100 text-green-800',
-      icon: CheckCircle
-   },
-   cancelled: {
-      label: 'Đã hủy',
-      color: 'bg-red-100 text-red-800',
-      icon: XCircle
-   },
-   rescheduled: {
-      label: 'Đã dời lịch',
-      color: 'bg-purple-100 text-purple-800',
-      icon: RefreshCw
-   }
+interface Props {
+   params: Promise<{ id: string }>
 }
 
-const serviceIcons = {
-   telemedicine: Video,
-   clinic: Building2,
-   home: Stethoscope,
-   emergency: Heart
-}
+export default async function BookingDetailPage({ params }: Props) {
+   const { id } = await params
+   const booking = await getBookingById(id)
 
-// SWR fetcher
-const fetcher = async (url: string): Promise<BookingOrder> => {
-   const orderId = url.split('/').pop()
-   if (!orderId) throw new Error('Order ID is required')
-   const order = await getOrderById(orderId)
-   if (!order) throw new Error('Order not found')
-   return order
-}
-
-export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
-   const { id } = use(params)
-   const { data: session, status } = useSession()
-   const router = useRouter()
-
-   const isAuthenticated = !!session
-   const authLoading = status === 'loading'
-
-   // SWR for data fetching
-   const {
-      data: order,
-      error,
-      isLoading,
-      mutate: mutateOrder
-   } = useSWR(isAuthenticated && id ? `/api/orders/${id}` : null, fetcher, {
-      revalidateOnFocus: false,
-      dedupingInterval: 10000,
-      errorRetryCount: 3,
-      errorRetryInterval: 1000
-   })
-
-   // Handle order cancellation with optimistic updates
-   const handleCancelOrder = useCallback(async () => {
-      if (!order) return
-
-      try {
-         // Optimistically update the UI
-         const updatedOrder = {
-            ...order,
-            status: 'cancelled' as const,
-            paymentStatus: 'refunded' as const
-         }
-         await mutate(`/api/orders/${id}`, updatedOrder, false)
-
-         // Make the actual API call
-         await cancelOrder(order.id)
-
-         // Revalidate to ensure consistency
-         mutateOrder()
-      } catch (err) {
-         console.error('Error cancelling order:', err)
-         // Revert the optimistic update on error
-         mutateOrder()
-         // Could show error toast here
-      }
-   }, [order, id, mutateOrder])
-
-   // Handle invoice download
-   const handleDownloadInvoice = useCallback(async () => {
-      if (!order) return
-
-      try {
-         const url = await downloadInvoice(order.id)
-         // Create a temporary link and trigger download
-         const link = document.createElement('a')
-         link.href = url
-         link.download = `invoice-${order.orderNumber}.pdf`
-         document.body.appendChild(link)
-         link.click()
-         document.body.removeChild(link)
-      } catch (err) {
-         console.error('Error downloading invoice:', err)
-         // Could show error toast here
-      }
-   }, [order])
-
-   // Handle invoice printing
-   const handlePrintInvoice = useCallback(async () => {
-      if (!order) return
-
-      try {
-         await printInvoice(order.id)
-         window.print()
-      } catch (err) {
-         console.error('Error printing invoice:', err)
-         // Could show error toast here
-      }
-   }, [order])
-
-   useEffect(() => {
-      if (!authLoading && !isAuthenticated) {
-         const currentUrl = encodeURIComponent(`/chi-tiet-dat-kham/${id}`)
-         router.push(`/sign-in?returnUrl=${currentUrl}`)
-      }
-   }, [isAuthenticated, authLoading, router, id])
-
-   // Show loading while checking authentication
-   if (authLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang kiểm tra thông tin đăng nhập..." />
-            </div>
-         </div>
-      )
-   }
-
-   // Don't render anything if not authenticated (let redirect handle it)
-   if (!isAuthenticated) {
-      return null
-   }
-
-   // Show error state with retry functionality
-   if (error) {
-      return (
-         <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-               <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-               <h2 className="text-xl font-semibold text-gray-900 mb-2">Có lỗi xảy ra</h2>
-               <p className="text-gray-600 mb-4">
-                  Không thể tải thông tin đặt khám. Vui lòng thử lại.
-               </p>
-               <Button onClick={() => mutateOrder()}>Thử lại</Button>
-            </div>
-         </div>
-      )
-   }
-
-   // Show loading while fetching order data
-   if (isLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang tải thông tin đặt khám..." />
-            </div>
-         </div>
-      )
-   }
-
-   if (!order) {
-      return (
-         <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-               <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-               <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  Không tìm thấy thông tin
-               </h2>
-               <p className="text-gray-600 mb-4">Lịch khám này không tồn tại hoặc đã bị xóa.</p>
-               <Link href="/lich-su-dat-kham">
-                  <Button>Quay lại danh sách</Button>
-               </Link>
-            </div>
-         </div>
-      )
-   }
-
-   const StatusIcon = statusConfig[order.status].icon
-   const ServiceIcon = serviceIcons[order.serviceType]
+   if (!booking) notFound()
 
    return (
       <div className="min-h-screen bg-gray-50">
-         {/* Header */}
          <div className="bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                <div className="flex items-center justify-between">
@@ -234,15 +29,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      </Link>
                      <div>
                         <h1 className="text-2xl font-bold text-gray-900">Chi tiết đặt khám</h1>
-                        <p className="text-gray-600">Mã đơn: {order.orderNumber}</p>
+                        <p className="text-gray-600">Mã đơn: {booking.orderNumber}</p>
                      </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                     <Button variant="outline" size="sm" onClick={handlePrintInvoice}>
+                     <Button variant="outline" size="sm" onClick={() => console.log('print')}>
                         <Printer className="h-4 w-4 mr-2" />
                         In
                      </Button>
-                     <Button variant="outline" size="sm" onClick={handleDownloadInvoice}>
+                     <Button variant="outline" size="sm" onClick={() => console.log('download')}>
                         <Download className="h-4 w-4 mr-2" />
                         Tải xuống
                      </Button>
@@ -253,40 +48,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid lg:grid-cols-3 gap-8">
-               {/* Main Content */}
                <div className="lg:col-span-2 space-y-6">
-                  {/* Order Status */}
-                  <motion.div
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
-                  >
-                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold text-gray-900">Trạng thái đơn hàng</h2>
-                        <div
-                           className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusConfig[order.status].color}`}
-                        >
-                           <StatusIcon className="h-4 w-4 mr-2" />
-                           {statusConfig[order.status].label}
-                        </div>
-                     </div>
-                     <div className="text-gray-600">
-                        Đặt lịch ngày: {new Date(order.bookingDate).toLocaleDateString('vi-VN')}
-                     </div>
-                  </motion.div>
-
-                  {/* Doctor Information */}
                   <motion.div
                      initial={{ opacity: 0, y: 20 }}
                      animate={{ opacity: 1, y: 0 }}
                      transition={{ delay: 0.1 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                     className="bg-white rounded-xl shadow-sm bbooking bbooking-gray-100 p-6"
                   >
                      <h2 className="text-xl font-bold text-gray-900 mb-6">Thông tin bác sĩ</h2>
                      <div className="flex items-start space-x-4">
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                            <div className="text-white font-bold text-lg">
-                              {order.doctorName
+                              {booking.doctorName
                                  .split(' ')
                                  .slice(-2)
                                  .map((n) => n[0])
@@ -294,37 +67,35 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                            </div>
                         </div>
                         <div className="flex-1">
-                           <h3 className="text-lg font-bold text-gray-900">{order.doctorName}</h3>
-                           <p className="text-blue-600">{order.doctorSpecialty}</p>
+                           <h3 className="text-lg font-bold text-gray-900">{booking.doctorName}</h3>
+                           <p className="text-blue-600">{booking.doctorSpecialty}</p>
                            <div className="mt-4 grid md:grid-cols-2 gap-4">
                               <div className="flex items-center text-gray-600">
                                  <Phone className="h-4 w-4 mr-2" />
-                                 <span>{order.doctorPhone}</span>
+                                 <span>{booking.doctorPhone}</span>
                               </div>
                               <div className="flex items-center text-gray-600">
                                  <Mail className="h-4 w-4 mr-2" />
-                                 <span>{order.doctorEmail}</span>
+                                 <span>{booking.doctorEmail}</span>
                               </div>
                            </div>
                         </div>
                      </div>
                   </motion.div>
 
-                  {/* Appointment Details */}
                   <motion.div
                      initial={{ opacity: 0, y: 20 }}
                      animate={{ opacity: 1, y: 0 }}
                      transition={{ delay: 0.2 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                     className="bg-white rounded-xl shadow-sm bbooking bbooking-gray-100 p-6"
                   >
                      <h2 className="text-xl font-bold text-gray-900 mb-6">Chi tiết cuộc hẹn</h2>
                      <div className="grid md:grid-cols-2 gap-6">
                         <div>
                            <div className="flex items-center mb-4">
-                              <ServiceIcon className="h-5 w-5 text-blue-600 mr-3" />
                               <div>
                                  <div className="font-medium text-gray-900">
-                                    {order.serviceName}
+                                    {booking.serviceName}
                                  </div>
                                  <div className="text-sm text-gray-600">Loại dịch vụ</div>
                               </div>
@@ -333,7 +104,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                               <Calendar className="h-5 w-5 text-blue-600 mr-3" />
                               <div>
                                  <div className="font-medium text-gray-900">
-                                    {new Date(order.appointmentDate).toLocaleDateString('vi-VN')}
+                                    {new Date(booking.appointmentDate).toLocaleDateString('vi-VN')}
                                  </div>
                                  <div className="text-sm text-gray-600">Ngày khám</div>
                               </div>
@@ -342,7 +113,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                               <Clock className="h-5 w-5 text-blue-600 mr-3" />
                               <div>
                                  <div className="font-medium text-gray-900">
-                                    {order.appointmentTime}
+                                    {booking.appointmentTime}
                                  </div>
                                  <div className="text-sm text-gray-600">Giờ khám</div>
                               </div>
@@ -352,27 +123,27 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                            <div className="flex items-start mb-4">
                               <Building2 className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
                               <div>
-                                 <div className="font-medium text-gray-900">{order.hospital}</div>
+                                 <div className="font-medium text-gray-900">{booking.hospital}</div>
                                  <div className="text-sm text-gray-600">
-                                    {order.hospitalAddress}
+                                    {booking.hospitalAddress}
                                  </div>
                               </div>
                            </div>
                         </div>
                      </div>
 
-                     {order.reason && (
-                        <div className="mt-6 pt-6 border-t border-gray-100">
+                     {booking.reason && (
+                        <div className="mt-6 pt-6 bbooking-t bbooking-gray-100">
                            <h3 className="font-medium text-gray-900 mb-2">Lý do khám</h3>
-                           <p className="text-gray-600">{order.reason}</p>
+                           <p className="text-gray-600">{booking.reason}</p>
                         </div>
                      )}
 
-                     {order.symptoms && order.symptoms.length > 0 && (
+                     {booking.symptoms && booking.symptoms.length > 0 && (
                         <div className="mt-4">
                            <h3 className="font-medium text-gray-900 mb-2">Triệu chứng</h3>
                            <div className="flex flex-wrap gap-2">
-                              {order.symptoms.map((symptom, index) => (
+                              {booking.symptoms.map((symptom, index) => (
                                  <span
                                     key={index}
                                     className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -385,33 +156,36 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      )}
                   </motion.div>
 
-                  {/* Patient Information */}
                   <motion.div
                      initial={{ opacity: 0, y: 20 }}
                      animate={{ opacity: 1, y: 0 }}
                      transition={{ delay: 0.3 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                     className="bg-white rounded-xl shadow-sm bbooking bbooking-gray-100 p-6"
                   >
                      <h2 className="text-xl font-bold text-gray-900 mb-6">Thông tin bệnh nhân</h2>
                      <div className="grid md:grid-cols-2 gap-6">
                         <div>
                            <div className="mb-4">
-                              <div className="font-medium text-gray-900">{order.patientName}</div>
+                              <div className="font-medium text-gray-900">{booking.patientName}</div>
                               <div className="text-sm text-gray-600">Họ và tên</div>
                            </div>
                            <div className="mb-4">
-                              <div className="font-medium text-gray-900">{order.patientPhone}</div>
+                              <div className="font-medium text-gray-900">
+                                 {booking.patientPhone}
+                              </div>
                               <div className="text-sm text-gray-600">Số điện thoại</div>
                            </div>
                         </div>
                         <div>
                            <div className="mb-4">
-                              <div className="font-medium text-gray-900">{order.patientEmail}</div>
+                              <div className="font-medium text-gray-900">
+                                 {booking.patientEmail}
+                              </div>
                               <div className="text-sm text-gray-600">Email</div>
                            </div>
                            <div className="mb-4">
                               <div className="font-medium text-gray-900">
-                                 {order.patientAddress}
+                                 {booking.patientAddress}
                               </div>
                               <div className="text-sm text-gray-600">Địa chỉ</div>
                            </div>
@@ -420,41 +194,39 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   </motion.div>
                </div>
 
-               {/* Sidebar */}
                <div className="space-y-6">
-                  {/* Payment Information */}
                   <motion.div
                      initial={{ opacity: 0, x: 20 }}
                      animate={{ opacity: 1, x: 0 }}
                      transition={{ delay: 0.2 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6"
+                     className="bg-white rounded-xl shadow-sm bbooking bbooking-gray-100 p-6 sticky top-6"
                   >
                      <h3 className="text-lg font-bold text-gray-900 mb-4">Thông tin thanh toán</h3>
                      <div className="space-y-4">
                         <div className="flex justify-between">
                            <span className="text-gray-600">Tổng tiền:</span>
                            <span className="font-bold text-2xl text-green-600">
-                              {order.totalAmount}
+                              {booking.totalAmount}
                            </span>
                         </div>
                         <div className="flex justify-between">
                            <span className="text-gray-600">Phương thức:</span>
-                           <span className="font-medium">{order.paymentMethod}</span>
+                           <span className="font-medium">{booking.paymentMethod}</span>
                         </div>
                         <div className="flex justify-between">
                            <span className="text-gray-600">Trạng thái:</span>
                            <span
                               className={`font-medium ${
-                                 order.paymentStatus === 'paid'
+                                 booking.paymentStatus === 'paid'
                                     ? 'text-green-600'
-                                    : order.paymentStatus === 'pending'
+                                    : booking.paymentStatus === 'pending'
                                       ? 'text-yellow-600'
                                       : 'text-red-600'
                               }`}
                            >
-                              {order.paymentStatus === 'paid'
+                              {booking.paymentStatus === 'paid'
                                  ? 'Đã thanh toán'
-                                 : order.paymentStatus === 'pending'
+                                 : booking.paymentStatus === 'pending'
                                    ? 'Chờ thanh toán'
                                    : 'Đã hoàn tiền'}
                            </span>
@@ -462,24 +234,21 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                      </div>
                   </motion.div>
 
-                  {/* Actions */}
                   <motion.div
                      initial={{ opacity: 0, x: 20 }}
                      animate={{ opacity: 1, x: 0 }}
                      transition={{ delay: 0.3 }}
-                     className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                     className="bg-white rounded-xl shadow-sm bbooking bbooking-gray-100 p-6"
                   >
                      <h3 className="text-lg font-bold text-gray-900 mb-4">Thao tác</h3>
                      <div className="space-y-3">
-                        {order.status === 'pending' && (
+                        {booking.status === 'pending' && (
                            <>
                               <Button
                                  className="w-full"
                                  variant="outline"
                                  onClick={() => {
-                                    // TODO: Implement reschedule modal
-                                    // handleRescheduleOrder('new-date', 'new-time')
-                                    console.log('Reschedule order')
+                                    console.log('Reschedule booking')
                                  }}
                               >
                                  Dời lịch
@@ -487,20 +256,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                               <Button
                                  className="w-full"
                                  variant="outline"
-                                 onClick={handleCancelOrder}
+                                 onClick={() => console.log('cancel')}
                               >
                                  Hủy lịch
                               </Button>
                            </>
                         )}
-                        {order.status === 'confirmed' && (
+                        {booking.status === 'confirmed' && (
                            <Button
                               className="w-full"
                               variant="outline"
                               onClick={() => {
-                                 // TODO: Implement reschedule modal
-                                 // handleRescheduleOrder('new-date', 'new-time')
-                                 console.log('Reschedule order')
+                                 console.log('Reschedule booking')
                               }}
                            >
                               Dời lịch

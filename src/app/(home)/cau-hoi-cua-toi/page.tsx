@@ -1,393 +1,67 @@
-'use client'
-
-import React, { useEffect, useState, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
 import { motion } from 'framer-motion'
-import useSWR from 'swr'
-import {
-   Search,
-   Filter,
-   CheckCircle,
-   Clock,
-   XCircle,
-   Plus,
-   ChevronRight,
-   MessageSquare
-} from 'lucide-react'
-import Link from 'next/link'
-import { LoadingSpinner, EmptyState, QuestionCard } from '@/components'
-import { getUserQuestions, filterQuestions } from '@/services'
-
-// SWR fetcher
-const fetcher = async (): Promise<Question[]> => {
-   return await getUserQuestions()
-}
+import { Calendar, ChevronRight, Eye, FileText, User } from 'lucide-react'
+import { formatDate, formatTime } from '@/lib'
 
 export default function MyQuestionsPage() {
-   const router = useRouter()
-   const { data: session, status } = useSession()
+   return <div>Not Implemented</div>
+}
 
-   // Authentication state
-   const isAuthenticated = !!session
-   const isLoading = status === 'loading'
-
-   // SWR for data fetching
-   const {
-      data: questions = [],
-      error,
-      isLoading: isDataLoading,
-      mutate: mutateQuestions
-   } = useSWR(isAuthenticated ? '/api/user/questions' : null, fetcher, {
-      revalidateOnFocus: false,
-      dedupingInterval: 10000,
-      errorRetryCount: 3,
-      errorRetryInterval: 1000
-   })
-
-   // Component state
-   const [isFilterOpen, setIsFilterOpen] = React.useState(false)
-   const [isFiltering, setIsFiltering] = React.useState(false)
-   const filterRef = React.useRef<HTMLDivElement>(null)
-
-   // Filter state
-   const [selectedStatus, setSelectedStatus] = useState<Question['status'] | 'all'>('answered')
-   const [searchQuery, setSearchQuery] = useState('')
-
-   // Filter questions based on selected status and search query
-   const filteredQuestions = useMemo(() => {
-      return filterQuestions(questions, {
-         status: selectedStatus === 'all' ? undefined : selectedStatus,
-         searchQuery: searchQuery.trim()
-      })
-   }, [questions, selectedStatus, searchQuery])
-
-   // Fetch data on component mount
-   useEffect(() => {
-      if (isAuthenticated && !isLoading) {
-         // fetchQuestions()
-      }
-   }, [isAuthenticated, isLoading])
-
-   // Close filter dropdown when clicking outside
-   React.useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-         if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-            setIsFilterOpen(false)
-         }
-      }
-
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => {
-         document.removeEventListener('mousedown', handleClickOutside)
-      }
-   }, [])
-
-   // Handle search filtering with delay
-   React.useEffect(() => {
-      if (searchQuery) {
-         setIsFiltering(true)
-         const timeoutId = setTimeout(() => {
-            setIsFiltering(false)
-         }, 300)
-         return () => clearTimeout(timeoutId)
-      }
-   }, [searchQuery])
-
-   // Only redirect if we're sure the user is not authenticated and not loading
-   useEffect(() => {
-      if (!isLoading && !isAuthenticated) {
-         const currentUrl = encodeURIComponent('/cau-hoi-cua-toi')
-         router.push(`/sign-in?returnUrl=${currentUrl}`)
-      }
-   }, [isAuthenticated, isLoading, router])
-
-   const handleTabChange = (tab: Question['status']) => {
-      setIsFiltering(true)
-      setSelectedStatus(tab)
-      // Simulate filtering delay for better UX
-      setTimeout(() => {
-         setIsFiltering(false)
-      }, 300)
-   }
-
-   const handleViewQuestion = (questionId: string) => {
-      router.push(`/cau-hoi-cua-toi/${questionId}`)
-   }
-
-   // Show loading state while checking authentication
-   if (isLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang kiểm tra thông tin đăng nhập..." />
-            </div>
-         </div>
-      )
-   }
-
-   // Don't render anything if not authenticated (let middleware handle redirect)
-   if (!isAuthenticated) {
-      return null
-   }
-
-   // Show error state with retry functionality
-   if (error) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <div className="text-center">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                     Không thể tải danh sách câu hỏi
-                  </h2>
-                  <p className="text-gray-600 mb-4">
-                     Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.
-                  </p>
-                  <button
-                     onClick={() => mutateQuestions()}
-                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                     Thử lại
-                  </button>
-               </div>
-            </div>
-         </div>
-      )
-   }
-
-   // Show loading state while fetching data
-   if (isDataLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang tải danh sách câu hỏi..." />
-            </div>
-         </div>
-      )
-   }
-
-   const getQuestionCountByStatus = (status: Question['status']) => {
-      return filteredQuestions.filter((q) => q.status === status).length
-   }
-
-   return (
-      <div className="min-h-screen bg-gray-50">
-         {/* Breadcrumb */}
-         <div className="bg-white border-b">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-               <nav className="flex items-center space-x-2 text-sm text-gray-500">
-                  <Link href="/" className="hover:text-blue-600">
-                     Trang chủ
-                  </Link>
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="text-gray-900">Câu hỏi của tôi</span>
-               </nav>
-            </div>
-         </div>
-
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-               <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Câu hỏi của tôi</h1>
-                  <p className="text-gray-600 mt-1">Quản lý và theo dõi các câu hỏi đã gửi</p>
-               </div>
-               <Link
-                  href="/dat-cau-hoi"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-colors"
-               >
-                  <Plus className="h-5 w-5" />
-                  <span>Đặt câu hỏi mới</span>
-               </Link>
-            </div>
-
-            {/* Tabs */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-               <div className="border-b border-gray-200">
-                  <nav className="flex space-x-8 px-6" aria-label="Tabs">
-                     <button
-                        onClick={() => handleTabChange('answered')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                           selectedStatus === 'answered'
-                              ? 'border-green-500 text-green-600'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                        }`}
-                     >
-                        <div className="flex items-center space-x-2">
-                           <CheckCircle className="h-4 w-4" />
-                           <span>Câu hỏi được trả lời</span>
-                           <span className="bg-green-100 text-green-800 py-1 px-2 rounded-full text-xs">
-                              {getQuestionCountByStatus('answered')}
-                           </span>
-                        </div>
-                     </button>
-                     <button
-                        onClick={() => handleTabChange('pending')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                           selectedStatus === 'pending'
-                              ? 'border-yellow-500 text-yellow-600'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                        }`}
-                     >
-                        <div className="flex items-center space-x-2">
-                           <Clock className="h-4 w-4" />
-                           <span>Câu hỏi chưa trả lời</span>
-                           <span className="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full text-xs">
-                              {getQuestionCountByStatus('pending')}
-                           </span>
-                        </div>
-                     </button>
-                     <button
-                        onClick={() => handleTabChange('rejected')}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                           selectedStatus === 'rejected'
-                              ? 'border-red-500 text-red-600'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                        }`}
-                     >
-                        <div className="flex items-center space-x-2">
-                           <XCircle className="h-4 w-4" />
-                           <span>Câu hỏi bị từ chối</span>
-                           <span className="bg-red-100 text-red-800 py-1 px-2 rounded-full text-xs">
-                              {getQuestionCountByStatus('rejected')}
-                           </span>
-                        </div>
-                     </button>
-                  </nav>
-               </div>
-
-               {/* Search and Filter */}
-               <div className="p-6 border-b border-gray-200">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                        <input
-                           type="text"
-                           placeholder="Tìm kiếm câu hỏi..."
-                           value={searchQuery}
-                           onChange={(e) => setSearchQuery(e.target.value)}
-                           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        />
-                     </div>
-                     <div className="relative" ref={filterRef}>
-                        <button
-                           onClick={() => setIsFilterOpen(!isFilterOpen)}
-                           className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-                        >
-                           <Filter className="h-5 w-5 text-gray-400" />
-                           <span className="text-gray-700">Bộ lọc</span>
-                        </button>
-                        {isFilterOpen && (
-                           <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                              <div className="p-4">
-                                 <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                    Lọc theo trạng thái
-                                 </h3>
-                                 <div className="space-y-2">
-                                    <label className="flex items-center">
-                                       <input
-                                          type="radio"
-                                          name="filter-status"
-                                          value="all"
-                                          checked={selectedStatus === 'all'}
-                                          onChange={() => setSelectedStatus('all')}
-                                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
-                                       />
-                                       <span className="ml-2 text-sm text-gray-700">Tất cả</span>
-                                    </label>
-                                    <label className="flex items-center">
-                                       <input
-                                          type="radio"
-                                          name="filter-status"
-                                          value="answered"
-                                          checked={selectedStatus === 'answered'}
-                                          onChange={() => setSelectedStatus('answered')}
-                                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
-                                       />
-                                       <span className="ml-2 text-sm text-gray-700">
-                                          Đã trả lời
-                                       </span>
-                                    </label>
-                                    <label className="flex items-center">
-                                       <input
-                                          type="radio"
-                                          name="filter-status"
-                                          value="pending"
-                                          checked={selectedStatus === 'pending'}
-                                          onChange={() => setSelectedStatus('pending')}
-                                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
-                                       />
-                                       <span className="ml-2 text-sm text-gray-700">
-                                          Chờ trả lời
-                                       </span>
-                                    </label>
-                                    <label className="flex items-center">
-                                       <input
-                                          type="radio"
-                                          name="filter-status"
-                                          value="rejected"
-                                          checked={selectedStatus === 'rejected'}
-                                          onChange={() => setSelectedStatus('rejected')}
-                                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
-                                       />
-                                       <span className="ml-2 text-sm text-gray-700">
-                                          Bị từ chối
-                                       </span>
-                                    </label>
-                                 </div>
-                              </div>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            {/* Questions List */}
-            {isFiltering ? (
-               <div className="py-16">
-                  <LoadingSpinner size="lg" text="Đang lọc câu hỏi..." />
-               </div>
-            ) : filteredQuestions.length === 0 ? (
-               <EmptyState
-                  icon={<MessageSquare className="h-16 w-16 text-gray-400 mx-auto" />}
-                  title={
-                     selectedStatus === 'answered'
-                        ? 'Chưa có câu hỏi nào được trả lời'
-                        : selectedStatus === 'pending'
-                          ? 'Không có câu hỏi nào đang chờ trả lời'
-                          : 'Không có câu hỏi nào bị từ chối'
-                  }
-                  description={
-                     selectedStatus === 'pending'
-                        ? 'Hãy đặt câu hỏi đầu tiên để nhận được tư vấn từ bác sĩ'
-                        : 'Khi có câu hỏi mới, chúng sẽ hiển thị ở đây'
-                  }
-                  action={
-                     <Link
-                        href="/dat-cau-hoi"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium inline-flex items-center space-x-2 transition-colors"
-                     >
-                        <Plus className="h-5 w-5" />
-                        <span>Đặt câu hỏi ngay</span>
-                     </Link>
-                  }
-               />
-            ) : (
-               <div className="space-y-4">
-                  {filteredQuestions.map((question, index) => (
-                     <motion.div
-                        key={question.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                     >
-                        <QuestionCard question={question} onView={handleViewQuestion} />
-                     </motion.div>
-                  ))}
-               </div>
-            )}
+const QuestionCard = ({ question }: { question: Question }) => (
+   <motion.div
+      whileHover={{ y: -2 }}
+      className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200"
+   >
+      <div className="flex items-start justify-between mb-4">
+         <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 mb-2">
+               {question.title}
+            </h3>
+            <p className="text-gray-600 text-sm line-clamp-3 mb-3">{question.content}</p>
          </div>
       </div>
-   )
-}
+
+      <div className="flex items-center justify-between">
+         <div className="flex items-center space-x-4 text-sm text-gray-500">
+            <div className="flex items-center">
+               <FileText className="w-4 h-4 mr-1" />
+               {question.specialty}
+            </div>
+            <div className="flex items-center">
+               <Calendar className="w-4 h-4 mr-1" />
+               {formatDate(question.createdAt.toISOString())}
+            </div>
+            <div className="flex items-center">
+               <Eye className="w-4 h-4 mr-1" />
+               {question.views} lượt xem
+            </div>
+         </div>
+
+         <button
+            onClick={() => console.log(question.id)}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+         >
+            Xem chi tiết
+            <ChevronRight className="w-4 h-4 ml-1" />
+         </button>
+      </div>
+
+      {question.status === 'answered' && question.doctorName && (
+         <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center space-x-3">
+               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-blue-600" />
+               </div>
+               <div>
+                  <p className="text-sm font-medium text-gray-900">{question.doctorName}</p>
+                  <p className="text-xs text-gray-500">{question.doctorSpecialty}</p>
+               </div>
+               {question.answeredAt && (
+                  <div className="ml-auto text-xs text-gray-500">
+                     {formatDate(question.answeredAt)} • {formatTime(question.answeredAt)}
+                  </div>
+               )}
+            </div>
+         </div>
+      )}
+   </motion.div>
+)

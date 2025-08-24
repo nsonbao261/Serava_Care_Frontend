@@ -10,7 +10,7 @@ const backgrounds = [
    '/images/public/app/SeravaCare_Background4.png'
 ]
 
-export default function BackgroundMotion() {
+export function BackgroundMotion() {
    const [index, setIndex] = useState(0)
    const [fade, setFade] = useState(true)
 

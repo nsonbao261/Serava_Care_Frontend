@@ -10,10 +10,10 @@ interface Doctor {
    rating: number
    reviewCount?: number
    consultationFee: string
-   image?: ImageInfo | string
+   image?: string
 }
 
-interface LegacyDoctorDetail extends Omit<Doctor, 'languages'> {
+interface DoctorDetail extends Doctor {
    about: string
    education: string[]
    achievements: string[]

@@ -1,58 +1,10 @@
 import { Button } from '@/components'
-import { GraduationCap, Users, Award, BookOpen } from 'lucide-react'
+import { Award, BookOpen, GraduationCap, Users } from 'lucide-react'
 import Link from 'next/link'
+import { mockDoctors } from '@/data'
 
-const ExpertTeamSection = () => {
-   const experts = [
-      {
-         name: 'PGS. TS. BS Nguyễn Văn Minh',
-         title: 'Giám đốc Y khoa',
-         specialty: 'Tim mạch can thiệp',
-         experience: '20+ năm kinh nghiệm',
-         education: 'Đại học Y Dược TP.HCM',
-         image: '/images/experts/expert-1.jpg' // Placeholder image
-      },
-      {
-         name: 'TS. BS Trần Thị Hương',
-         title: 'Trưởng khoa Nhi',
-         specialty: 'Nhi khoa - Nội tiết',
-         experience: '15+ năm kinh nghiệm',
-         education: 'Bệnh viện Nhi Đồng 1',
-         image: '/images/experts/expert-2.jpg' // Placeholder image
-      },
-      {
-         name: 'ThS. BS Lê Văn Đức',
-         title: 'Phó Giám đốc Chuyên môn',
-         specialty: 'Tiêu hóa - Gan mật',
-         experience: '18+ năm kinh nghiệm',
-         education: 'Bệnh viện Chợ Rẫy',
-         image: '/images/experts/expert-3.jpg' // Placeholder image
-      },
-      {
-         name: 'BS. CK2 Phạm Thị Lan',
-         title: 'Trưởng khoa Sản',
-         specialty: 'Sản phụ khoa',
-         experience: '12+ năm kinh nghiệm',
-         education: 'Bệnh viện Từ Dũ',
-         image: '/images/experts/expert-4.jpg' // Placeholder image
-      },
-      {
-         name: 'TS. BS Hoàng Minh Tuấn',
-         title: 'Chuyên gia tư vấn',
-         specialty: 'Thần kinh - Tâm thần',
-         experience: '16+ năm kinh nghiệm',
-         education: 'Viện Sức khỏe Tâm thần',
-         image: '/images/experts/expert-5.jpg' // Placeholder image
-      },
-      {
-         name: 'ThS. DS Nguyễn Thị Mai',
-         title: 'Trưởng bộ phận Dược',
-         specialty: 'Dược lâm sàng',
-         experience: '14+ năm kinh nghiệm',
-         education: 'Đại học Dược Hà Nội',
-         image: '/images/experts/expert-6.jpg' // Placeholder image
-      }
-   ]
+export const ExpertTeam = () => {
+   const experts = mockDoctors.slice(1, 7)
 
    return (
       <section className="py-20 bg-white">
@@ -133,7 +85,7 @@ const ExpertTeamSection = () => {
                            </div>
                            <div className="flex items-center justify-center">
                               <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
-                              {expert.education}
+                              {expert.hospital}
                            </div>
                         </div>
                      </div>
@@ -196,5 +148,3 @@ const ExpertTeamSection = () => {
       </section>
    )
 }
-
-export default ExpertTeamSection

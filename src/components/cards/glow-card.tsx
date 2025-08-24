@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react'
 import { cn } from '@/lib'
 
-interface GlowCardProps {
+interface Props {
    children: React.ReactNode
    className?: string
    style?: React.CSSProperties
@@ -17,7 +17,7 @@ export const GlowCard = ({
    style,
    glowColor = '#3b82f6',
    intensity = 'medium'
-}: GlowCardProps) => {
+}: Props) => {
    const cardRef = useRef<HTMLDivElement>(null)
 
    useEffect(() => {

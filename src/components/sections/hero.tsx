@@ -1,12 +1,12 @@
 'use client'
 
-import { MorphingButton, TypewriterText, ParticleBackground } from '@/components'
-import { Search, Calendar, Play } from 'lucide-react'
+import { MorphingButton, ParticleBackground, TypewriterText } from '@/components'
+import { Calendar, Play, Search } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const HeroSection = () => {
+export const Hero = () => {
    const [searchTerm, setSearchTerm] = useState('')
    const router = useRouter()
 
@@ -18,7 +18,7 @@ const HeroSection = () => {
       'chuyên môn',
       'lĩnh vực',
 
-      // Medical specialties
+      // Medical mockSpecialtyDetail
       'tim mạch',
       'tim',
       'mạch máu',
@@ -290,5 +290,3 @@ const HeroSection = () => {
       </section>
    )
 }
-
-export default HeroSection

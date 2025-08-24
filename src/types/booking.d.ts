@@ -1,7 +1,5 @@
-interface BookingOrder {
+interface Booking {
    id: string
-   createdAt: Date
-   updatedAt: Date
    orderNumber: string
    patientName: string
    patientPhone?: string
@@ -30,13 +28,4 @@ interface BookingOrder {
    prescription?: string
    diagnosis?: string
    followUpDate?: string
-}
-
-interface BookingFilters {
-   status: BookingOrder['status'] | 'all'
-   searchQuery: string
-   dateRange?: {
-      from: string
-      to: string
-   }
 }

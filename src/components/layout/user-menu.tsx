@@ -26,6 +26,8 @@ import {
    SheetTitle,
    SheetTrigger
 } from '@/components'
+// Types
+import { User } from 'next-auth'
 
 // Deps
 const userMenuItems = [
@@ -67,8 +69,6 @@ const userMenuItems = [
    }
 ]
 
-// Types
-import { User } from 'next-auth'
 type Props = {
    user: User
 }
@@ -77,7 +77,7 @@ export default function UserMenu({ user }: Props) {
    const [isSheetOpen, setIsSheetOpen] = useState(false)
 
    const handleLogout = async () => {
-      signOut({ callbackUrl: '/' })
+      await signOut({ callbackUrl: '/' })
    }
 
    return (

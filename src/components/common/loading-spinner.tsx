@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import React from 'react'
 
-interface LoadingSpinnerProps {
+interface Props {
    size?: 'sm' | 'md' | 'lg'
    color?: string
    text?: string
@@ -13,7 +13,7 @@ const sizeClasses = {
    lg: 'h-12 w-12'
 }
 
-export const LoadingSpinner = React.memo<LoadingSpinnerProps>(
+export const LoadingSpinner = React.memo<Props>(
    ({ size = 'md', color = 'border-green-600', text }) => {
       return (
          <div className="flex flex-col items-center justify-center">

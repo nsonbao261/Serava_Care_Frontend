@@ -17,6 +17,7 @@ import UserMenu from './user-menu'
 
 // Deps
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+
 const navigationItems = [
    { label: 'Danh sách bác sĩ', href: '/bac-si' },
    { label: 'Chuyên khoa', href: '/chuyen-khoa' },
@@ -44,7 +45,7 @@ const bookingServices = [
    }
 ]
 
-export default async function Header() {
+export async function Header() {
    const session = await getServerSession(authOptions)
 
    return (
@@ -64,10 +65,10 @@ export default async function Header() {
                      </div>
                   </div>
                   <div className="flex items-center space-x-4">
-                     <Link href="/download" className="text-blue-600 hover:text-blue-800">
+                     <Link href="/" className="text-blue-600 hover:text-blue-800">
                         Tải ứng dụng
                      </Link>
-                     <Link href="/help" className="text-gray-600 hover:text-gray-800">
+                     <Link href="/" className="text-gray-600 hover:text-gray-800">
                         Trợ giúp
                      </Link>
                   </div>

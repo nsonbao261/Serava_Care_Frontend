@@ -1,146 +1,25 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import useSWR from 'swr'
-import { getVitalSigns, getMedicalRecords } from '@/services'
 import {
-   User,
    Activity,
-   Heart,
-   Weight,
    ChevronRight,
-   Plus,
+   Download,
    Edit,
    Eye,
-   Download,
-   FileText
+   FileText,
+   Heart,
+   User,
+   Weight
 } from 'lucide-react'
 import Link from 'next/link'
-import {
-   LoadingSpinner,
-   EmptyState,
-   ErrorBoundaryFallback,
-   StatCard,
-   HealthProfileSkeleton
-} from '@/components'
+import { StatCard } from '@/components'
 import { formatDate } from '@/lib'
+import { getMedicalRecords, getVitalSigns } from '@/services'
+import { notFound } from 'next/navigation'
 
-// Fetcher functions for SWR
-const vitalSignsFetcher = async (): Promise<VitalSign[]> => {
-   return await getVitalSigns()
-}
+export default async function HealthProfilePage() {
+   const vitalSigns = await getVitalSigns()
+   const medicalRecords = await getMedicalRecords()
 
-const medicalRecordsFetcher = async (): Promise<MedicalRecord[]> => {
-   return await getMedicalRecords()
-}
-
-export default function HealthProfilePage() {
-   const router = useRouter()
-
-   // Auth state
-   const [isAuthenticated, setIsAuthenticated] = useState(false)
-   const [authLoading, setAuthLoading] = useState(true)
-
-   // SWR for vital signs
-   const {
-      data: vitalSigns = [],
-      error: vitalsError,
-      isLoading: isLoadingVitals,
-      mutate: mutateVitalSigns
-   } = useSWR(isAuthenticated ? '/api/health/vital-signs' : null, vitalSignsFetcher, {
-      revalidateOnFocus: false,
-      dedupingInterval: 60000, // 1 minute
-      errorRetryCount: 3,
-      errorRetryInterval: 1000
-   })
-
-   // SWR for medical records
-   const {
-      data: medicalRecords = [],
-      error: recordsError,
-      isLoading: isLoadingRecords,
-      mutate: mutateMedicalRecords
-   } = useSWR(isAuthenticated ? '/api/health/medical-records' : null, medicalRecordsFetcher, {
-      revalidateOnFocus: false,
-      dedupingInterval: 300000, // 5 minutes
-      errorRetryCount: 3,
-      errorRetryInterval: 1000
-   })
-
-   const isDataLoading = isLoadingVitals || isLoadingRecords
-   const error = vitalsError || recordsError
-
-   // Simulate auth check
-   useEffect(() => {
-      const checkAuth = () => {
-         // Simulate auth check
-         setTimeout(() => {
-            setIsAuthenticated(true) // In real app, check actual auth state
-            setAuthLoading(false)
-         }, 100)
-      }
-      checkAuth()
-   }, [])
-
-   // Refresh all health data
-   const refreshAllData = () => {
-      mutateVitalSigns()
-      mutateMedicalRecords()
-   }
-
-   // Only redirect if we're sure the user is not authenticated and not loading
-   useEffect(() => {
-      if (!authLoading && !isAuthenticated) {
-         const currentUrl = encodeURIComponent('/ho-so-suc-khoe')
-         router.push(`/sign-in?returnUrl=${currentUrl}`)
-      }
-   }, [isAuthenticated, authLoading, router])
-
-   // Show loading state while checking authentication
-   if (authLoading) {
-      return (
-         <div className="min-h-screen bg-gray-50">
-            <div className="py-16">
-               <LoadingSpinner size="lg" text="Đang kiểm tra thông tin đăng nhập..." />
-            </div>
-         </div>
-      )
-   }
-
-   // Don't render anything if not authenticated (let middleware handle redirect)
-   if (!isAuthenticated) {
-      return null
-   }
-
-   // Show error state with retry functionality
-   if (error) {
-      return <ErrorBoundaryFallback error={error} resetErrorBoundary={refreshAllData} />
-   }
-
-   // Show loading skeleton while fetching data
-   if (isDataLoading) {
-      return <HealthProfileSkeleton />
-   }
-
-   if (!vitalSigns.length && !medicalRecords.length) {
-      return (
-         <EmptyState
-            icon={<Activity className="h-16 w-16 text-gray-400 mx-auto" />}
-            title="Chưa có hồ sơ sức khỏe"
-            description="Hãy tạo hồ sơ sức khỏe để theo dõi tình trạng sức khỏe của bạn"
-            action={
-               <Link
-                  href="/thong-tin-ca-nhan"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium inline-flex items-center space-x-2 transition-colors"
-               >
-                  <Plus className="h-5 w-5" />
-                  <span>Tạo hồ sơ</span>
-               </Link>
-            }
-         />
-      )
-   }
+   if (!vitalSigns.length && !medicalRecords.length) notFound()
 
    return (
       <div className="min-h-screen bg-gray-50">
@@ -166,7 +45,7 @@ export default function HealthProfilePage() {
                </div>
                <div className="flex space-x-3">
                   <button
-                     onClick={refreshAllData}
+                     onClick={() => console.log('Renew')}
                      className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:bg-gray-50 transition-colors"
                   >
                      <Activity className="h-4 w-4" />
@@ -263,7 +142,7 @@ export default function HealthProfilePage() {
                      </h3>
                      {medicalRecords.length > 5 && (
                         <Link
-                           href="/ho-so-y-te"
+                           href="/ho-so-suc-khoe"
                            className="text-sm text-blue-600 hover:text-blue-700"
                         >
                            Xem tất cả
@@ -294,7 +173,7 @@ export default function HealthProfilePage() {
                         <div className="text-center py-8">
                            <p className="text-gray-500 mb-4">Chưa có hồ sơ nào</p>
                            <button
-                              onClick={() => mutateMedicalRecords()}
+                              onClick={() => console.log('Renew')}
                               className="text-blue-600 hover:text-blue-700 text-sm"
                            >
                               Làm mới dữ liệu

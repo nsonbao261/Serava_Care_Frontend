@@ -1,4 +1,3 @@
-// Mock question data
 export const mockQuestions: Question[] = [
    {
       id: '1',

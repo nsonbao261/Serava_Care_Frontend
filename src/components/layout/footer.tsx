@@ -3,18 +3,18 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import {
-   Phone,
+   ChevronDown,
+   Facebook,
+   Instagram,
    Mail,
    MapPin,
-   Facebook,
-   Youtube,
-   Instagram,
    MessageCircle,
+   Phone,
    Smartphone,
-   ChevronDown
+   Youtube
 } from 'lucide-react'
 
-const Footer = () => {
+export const Footer = () => {
    const currentYear = new Date().getFullYear()
    const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
 
@@ -226,7 +226,7 @@ const Footer = () => {
                         </p>
                         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                            <Link
-                              href="/download/ios"
+                              href="/"
                               className="bg-black text-white px-6 py-3 rounded-lg flex items-center space-x-2 hover:bg-gray-800 transition-colors duration-200"
                            >
                               <Smartphone className="h-5 w-5" />
@@ -236,7 +236,7 @@ const Footer = () => {
                               </div>
                            </Link>
                            <Link
-                              href="/download/android"
+                              href="/"
                               className="bg-black text-white px-6 py-3 rounded-lg flex items-center space-x-2 hover:bg-gray-800 transition-colors duration-200"
                            >
                               <Smartphone className="h-5 w-5" />
@@ -351,13 +351,10 @@ const Footer = () => {
                      </p>
                   </div>
                   <div className="flex items-center space-x-4">
-                     <Link href="/dmca" className="hover:text-white transition-colors duration-200">
+                     <Link href="/" className="hover:text-white transition-colors duration-200">
                         DMCA Protected
                      </Link>
-                     <Link
-                        href="/bo-cong-thuong"
-                        className="hover:text-white transition-colors duration-200"
-                     >
+                     <Link href="/" className="hover:text-white transition-colors duration-200">
                         Đăng ký Bộ Công Thương
                      </Link>
                   </div>
@@ -376,5 +373,3 @@ const Footer = () => {
       </footer>
    )
 }
-
-export default Footer

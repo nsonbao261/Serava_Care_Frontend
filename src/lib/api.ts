@@ -27,13 +27,17 @@ api.interceptors.request.use(
    }
 )
 
-api.interceptors.response.use( 
-   (response) => response, (error: AxiosError) => { // Handle token expiration 
-   if (error.response?.status === 401) { 
-      Cookies.remove(ACCESS_TOKEN) // Có thể redirect to login page 
-      window.location.href = '/auth/login' 
-   } 
+api.interceptors.response.use(
+   (response) => response,
+   (error: AxiosError) => {
+      // Handle token expiration
+      if (error.response?.status === 401) {
+         Cookies.remove(ACCESS_TOKEN) // Có thể redirect to login page
+         window.location.href = '/auth/login'
+      }
 
-   return Promise.reject(error) } )
+      return Promise.reject(error)
+   }
+)
 
 export default api

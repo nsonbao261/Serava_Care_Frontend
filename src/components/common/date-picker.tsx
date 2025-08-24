@@ -9,11 +9,11 @@ import { cn } from '@/lib'
 type Props = {
    className?: string
    disabled?: boolean
-   onChange?: (date: Date | undefined) => void
+   onChangeAction?: (date: Date | undefined) => void
    value?: Date | string
 }
 
-export function DatePicker({ value, onChange, disabled, className }: Props) {
+export function DatePicker({ value, onChangeAction, disabled, className }: Props) {
    const date = typeof value === 'string' ? new Date(value) : value
 
    return (
@@ -40,7 +40,7 @@ export function DatePicker({ value, onChange, disabled, className }: Props) {
                selected={date}
                captionLayout="dropdown"
                onSelect={(date) => {
-                  if (onChange) onChange(date)
+                  if (onChangeAction) onChangeAction(date)
                }}
                disabled={disabled}
                autoFocus

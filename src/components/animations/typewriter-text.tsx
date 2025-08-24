@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-interface TypewriterTextProps {
+interface Props {
    texts: string[]
    speed?: number
    pauseDuration?: number
@@ -14,16 +14,16 @@ export const TypewriterText = ({
    speed = 100,
    pauseDuration = 2000,
    className = ''
-}: TypewriterTextProps) => {
+}: Props) => {
    const [displayText, setDisplayText] = useState('')
    const [currentTextIndex, setCurrentTextIndex] = useState(0)
    const [currentCharIndex, setCurrentCharIndex] = useState(0)
    const [isDeleting, setIsDeleting] = useState(false)
    const [isPaused, setIsPaused] = useState(false)
 
-   useEffect(() => {
-      const currentText = texts[currentTextIndex]
+   const currentText = texts[currentTextIndex]
 
+   useEffect(() => {
       const timeout = setTimeout(
          () => {
             if (isPaused) {
@@ -33,19 +33,14 @@ export const TypewriterText = ({
             }
 
             if (!isDeleting && currentCharIndex < currentText.length) {
-               // Typing
                setDisplayText(currentText.slice(0, currentCharIndex + 1))
                setCurrentCharIndex(currentCharIndex + 1)
             } else if (isDeleting && currentCharIndex > 0) {
-               // Deleting
                setDisplayText(currentText.slice(0, currentCharIndex - 1))
                setCurrentCharIndex(currentCharIndex - 1)
             } else if (!isDeleting && currentCharIndex === currentText.length) {
-               // Pause before deleting
                setIsPaused(true)
-               return
             } else if (isDeleting && currentCharIndex === 0) {
-               // Move to next text
                setIsDeleting(false)
                setCurrentTextIndex((currentTextIndex + 1) % texts.length)
             }
@@ -54,7 +49,16 @@ export const TypewriterText = ({
       )
 
       return () => clearTimeout(timeout)
-   }, [currentCharIndex, currentTextIndex, isDeleting, isPaused, texts, speed, pauseDuration])
+   }, [
+      currentCharIndex,
+      isDeleting,
+      isPaused,
+      currentText,
+      speed,
+      pauseDuration,
+      texts,
+      currentTextIndex
+   ])
 
    return (
       <span className={className}>
