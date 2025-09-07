@@ -174,8 +174,12 @@ export default function BasicInfo({ userProfile }: Props) {
                      </FormLabel>
                      <FormControl>
                         <Select
+                           onValueChange={(value) => {
+                              if (['MALE', 'FEMALE', 'UNKNOWN'].includes(value)) {
+                                 field.onChange(value)
+                              }
+                           }}
                            value={field.value}
-                           onValueChange={field.onChange}
                            disabled={!isEditing}
                         >
                            <SelectTrigger

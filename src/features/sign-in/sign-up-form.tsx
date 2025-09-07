@@ -2,11 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { signIn } from 'next-auth/react'
-import api, { ISODateOnlyToInstant, ToInstant } from '@/lib'
 
 // Components
 import {
@@ -28,70 +27,43 @@ import {
 } from '@/components'
 
 // Deps
-import { type SignupInput, signUpSchema } from '@/schemas'
+import { type SignUpInput, signUpSchema } from '@/schemas'
+import { signUpWithCredentials } from '@/services/server/auth'
+import { toast } from 'sonner'
 
 export default function SignUpForm() {
    const router = useRouter()
    const [agreeTerms, setAgreeTerms] = useState(false)
    const [isLoading, startTransition] = useTransition()
 
-   const form = useForm<SignupInput>({
+   const form = useForm<SignUpInput>({
       resolver: zodResolver(signUpSchema),
       defaultValues: {
          birthDate: new Date().toISOString()
       }
    })
 
-   const onSubmit = (data: SignupInput) => {
+   const onSubmit = (data: SignUpInput) => {
       if (!agreeTerms) return
 
       startTransition(async () => {
-         try {
-            const submitData = data
+         const signUpRes = await signUpWithCredentials(data)
 
-            // Convert ngày sinh sang Instant (backend dùng Instant)
-            let birthInstant: string
-            if (/^\d{2}-\d{2}-\d{4}$/.test(submitData.birthDate)) {
-               birthInstant = ToInstant(submitData.birthDate)
-            } else {
-               birthInstant = ISODateOnlyToInstant(submitData.birthDate)
-            }
+         if (signUpRes.error) {
+            toast.error(signUpRes.message)
+            return
+         }
 
-            // TẠO PAYLOAD (đổi key nếu backend cần `dateOfBirth`)
-            const payload = {
-               email: submitData.email,
-               phoneNumber: submitData.phoneNumber,
-               username: submitData.username,
-               fullName: submitData.fullName,
-               birthDate: birthInstant,
-               gender: submitData.gender,
-               password: submitData.password,
-               confirmPassword: submitData.confirmPassword
-            }
+         // Đăng nhập ngay bằng NextAuth Credentials
+         const signInRes = await signIn('credentials', {
+            redirect: false,
+            username: data.username,
+            password: data.password
+         })
 
-            // Gọi sign-up
-            await api.post('/auth/sign-up', payload)
-
-            // Đăng nhập ngay bằng NextAuth Credentials
-            const res = await signIn('credentials', {
-               redirect: false,
-               username: data.username,
-               password: data.password
-            })
-
-            if (res?.ok) {
-               router.replace('/')
-               router.refresh()
-            } else {
-               alert(res?.error || 'Đăng nhập tự động thất bại')
-            }
-         } catch (error: any) {
-            const message =
-               error?.response?.data?.errors?.map((e: any) => e.message).join('\n') ||
-               error?.response?.data?.message ||
-               error?.message ||
-               'Có lỗi xảy ra vui lòng thử lại'
-            alert(`Chi tiết lỗi: ${message}`)
+         if (signInRes?.ok) {
+            router.replace('/')
+            router.refresh()
          }
       })
    }

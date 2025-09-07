@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 import { ACCESS_TOKEN } from '@/constants'
 
 const api = axios.create({
-   baseURL: process.env.NEXT_API_URL || 'http://localhost:9000/api',
+   baseURL: process.env.NEXT_API_URL || '/backend',
    timeout: 10000,
    headers: {
       'Content-Type': 'application/json'
