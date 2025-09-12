@@ -1,5 +1,3 @@
 export { mockDoctors, mockDoctorDetails } from './doctor.mock'
 export { mockSpecialtyDetail, mockSpecialties } from './specialty.mock'
-export { mockVitalSigns, mockMedicalRecords } from './health.mock'
 export { mockBookings } from './booking.mock'
-export { mockQuestions } from './question.mock'
