@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { MessageCircle, Phone, Calendar, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Calendar, MessageCircle, Phone, X } from 'lucide-react'
 
-interface FloatingActionButtonProps {
+interface Props {
    className?: string
 }
 
-export const FloatingActionButton = ({ className = '' }: FloatingActionButtonProps) => {
+export const FloatingActionButton = ({ className = '' }: Props) => {
    const [isOpen, setIsOpen] = useState(false)
    const [isVisible, setIsVisible] = useState(false)
 

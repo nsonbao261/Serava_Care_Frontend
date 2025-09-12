@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// Schema exports
 export const questionFormSchema = z.object({
    title: z
       .string()
@@ -14,4 +15,5 @@ export const questionFormSchema = z.object({
    attachments: z.array(z.instanceof(File))
 })
 
+// Type exports
 export type QuestionFormData = z.infer<typeof questionFormSchema>

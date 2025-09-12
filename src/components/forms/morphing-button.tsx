@@ -2,9 +2,9 @@
 
 import { Button } from '@/components'
 import { cn } from '@/lib'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-interface MorphingButtonProps {
+interface Props {
    children: React.ReactNode
    className?: string
    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
@@ -23,7 +23,7 @@ export const MorphingButton = ({
    morphText,
    disabled,
    ...props
-}: MorphingButtonProps) => {
+}: Props) => {
    const [isHovered, setIsHovered] = useState(false)
    const [isClicked, setIsClicked] = useState(false)
 

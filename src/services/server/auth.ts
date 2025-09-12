@@ -17,6 +17,15 @@ export const oauthWithGoogle = async (account: Account) => {
    return res.data?.accessToken
 }
 
+export const signUpWithCredentials = async (body: SignUpRequest) => {
+   const res = await request<void, SignUpRequest>('auth/sign-up', {
+      method: 'POST',
+      body
+   })
+
+   return res
+}
+
 export const oauthWithCredentials = async (credentials: SignInRequest) => {
    const res = await request<{ accessToken: string }, SignInRequest>('auth/sign-in', {
       method: 'POST',

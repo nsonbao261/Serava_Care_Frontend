@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import React from 'react'
 
-export interface StatCardProps {
+interface Props {
    icon: React.ElementType
    label: string
    value: string | number
@@ -9,7 +9,7 @@ export interface StatCardProps {
    trend?: 'up' | 'down' | 'stable'
 }
 
-export const StatCard = ({ icon: Icon, label, value, unit, trend }: StatCardProps) => (
+export const StatCard = ({ icon: Icon, label, value, unit, trend }: Props) => (
    <motion.div
       whileHover={{ y: -2 }}
       className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200"
@@ -42,5 +42,3 @@ export const StatCard = ({ icon: Icon, label, value, unit, trend }: StatCardProp
       </div>
    </motion.div>
 )
-
-StatCard.displayName = 'StatCard'

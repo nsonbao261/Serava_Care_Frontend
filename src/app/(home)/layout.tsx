@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 // Components
 import { AnimatedPageTitle, FloatingActionButton, Footer, Header } from '@/components'
+import React from 'react'
 
 // Deps
 export const metadata: Metadata = {
@@ -23,7 +24,11 @@ export const metadata: Metadata = {
    robots: 'index, follow'
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+interface Props {
+   children: React.ReactNode
+}
+
+export default function RootLayout({ children }: Props) {
    return (
       <main>
          <AnimatedPageTitle />

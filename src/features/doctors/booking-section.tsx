@@ -1,15 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Clock, Phone, Mail } from 'lucide-react'
+import { Calendar, Clock, Mail, Phone } from 'lucide-react'
 import { Button } from '@/components'
 import { BookingModal } from '@/features/booking/booking-modal'
 
-interface BookingSectionProps {
-   doctor: LegacyDoctorDetail
+interface Props {
+   doctor: DoctorDetail
 }
 
-export function BookingSection({ doctor }: BookingSectionProps) {
+export function BookingSection({ doctor }: Props) {
    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
    return (

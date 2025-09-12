@@ -1,27 +1,26 @@
 'use client'
 
-import { use } from 'react'
+import { use, useMemo, useState } from 'react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Button, DoctorCard } from '@/components'
-import { ChevronRight, Search, Users, Filter } from 'lucide-react'
-import { useState, useMemo } from 'react'
-import { specialtyData } from '@/data'
+import { ChevronRight, Filter, Search, Users } from 'lucide-react'
+import { mockSpecialtyDetail } from '@/data'
 
-export default function SpecialtyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+interface Props {
+   params: Promise<{ slug: string }>
+}
+
+export default function SpecialtyDetailPage({ params }: Props) {
    const { slug } = use(params)
    const [searchTerm, setSearchTerm] = useState('')
    const [sortBy, setSortBy] = useState('rating')
 
-   const specialty = specialtyData[slug]
+   const specialty = mockSpecialtyDetail[slug]
 
-   const doctors = useMemo(() => {
-      return specialty?.doctors || []
-   }, [specialty])
+   if (!specialty) notFound()
 
-   if (!specialty) {
-      notFound()
-   }
+   const doctors = specialty.doctors
 
    const filteredAndSortedDoctors = useMemo(() => {
       const filtered = doctors.filter((doctor) =>
@@ -41,8 +40,8 @@ export default function SpecialtyDetailPage({ params }: { params: Promise<{ slug
             break
          case 'fee':
             filtered.sort((a, b) => {
-               const aFee = parseInt(a.consultationFee.replace(/[^\d]/g, ''))
-               const bFee = parseInt(b.consultationFee.replace(/[^\d]/g, ''))
+               const aFee = parseInt(a.consultationFee.replace(/\D/g, ''))
+               const bFee = parseInt(b.consultationFee.replace(/\D/g, ''))
                return aFee - bFee
             })
             break
@@ -150,12 +149,7 @@ export default function SpecialtyDetailPage({ params }: { params: Promise<{ slug
             {filteredAndSortedDoctors.length > 0 ? (
                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredAndSortedDoctors.map((doctor: Doctor) => (
-                     <DoctorCard
-                        key={doctor.id}
-                        doctor={doctor}
-                        variant="compact"
-                        showSpecialty={false}
-                     />
+                     <DoctorCard key={doctor.id} doctor={doctor} />
                   ))}
                </div>
             ) : (

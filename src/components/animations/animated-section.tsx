@@ -1,10 +1,9 @@
 'use client'
 
-import { useInView } from '@/hooks'
-import React, { memo } from 'react'
+import { memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
-interface AnimatedSectionProps {
-   children: React.ReactNode
+interface Props {
+   children: ReactNode
    className?: string
    animation?:
       | 'fade-up'
@@ -28,13 +27,7 @@ interface AnimatedSectionProps {
 }
 
 export const AnimatedSection = memo(
-   ({
-      children,
-      className = '',
-      animation = 'simple',
-      delay = 0,
-      duration = 700
-   }: AnimatedSectionProps) => {
+   ({ children, className = '', animation = 'simple', delay = 0, duration = 700 }: Props) => {
       const [ref, isInView] = useInView({ threshold: 0.1, triggerOnce: true })
 
       if (animation === 'simple') {
@@ -81,3 +74,45 @@ export const AnimatedSection = memo(
 )
 
 AnimatedSection.displayName = 'AnimatedSection'
+
+const useInView = (
+   options: {
+      threshold?: number
+      rootMargin?: string
+      triggerOnce?: boolean
+   } = {}
+) => {
+   const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options
+   const ref = useRef<HTMLDivElement>(null)
+   const [isInView, setIsInView] = useState(false)
+
+   const handleIntersection = useCallback(
+      ([entry]: IntersectionObserverEntry[]) => {
+         if (entry.isIntersecting) {
+            setIsInView(true)
+         } else if (!triggerOnce) {
+            setIsInView(false)
+         }
+      },
+      [triggerOnce]
+   )
+
+   useEffect(() => {
+      const element = ref.current
+      if (!element) return
+
+      // Use passive observation for better performance
+      const observer = new IntersectionObserver(handleIntersection, {
+         threshold,
+         rootMargin
+      })
+
+      observer.observe(element)
+
+      return () => {
+         observer.disconnect()
+      }
+   }, [threshold, rootMargin, handleIntersection])
+
+   return [ref, isInView] as const
+}

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function AnimatedPageTitle() {
+export function AnimatedPageTitle() {
    useEffect(() => {
       const baseTitle = 'Serava Care'
       const suffixes = [

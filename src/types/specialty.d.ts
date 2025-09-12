@@ -1,65 +1,21 @@
-interface SpecialtyCard {
+interface Specialty {
    id: string
    name: string
    slug: string
    description: string
    shortDescription?: string
-   icon: React.ComponentType<{ className?: string }>
    color: string
    doctorCount: string
-   image?: ImageInfo
-   isPopular?: boolean
+   image: string
    order?: number
-}
-
-interface SpecialtyWithCategory extends SpecialtyCard {
    category: SpecialtyCategory
-   subCategories?: string[]
-   relatedSpecialties?: string[]
 }
 
-interface SpecialtyPageData {
+interface SpecialtyDetail {
    id: string
    name: string
    description: string
-   overview?: string
-   commonConditions?: string[]
-   treatments?: string[]
-   procedures?: string[]
    doctors: Doctor[]
-   stats?: SpecialtyStats
-   faqs?: SpecialtyFAQ[]
-   relatedArticles?: string[]
 }
 
-interface SpecialtyStats {
-   doctorCount: number
-   averageRating: number
-   totalConsultations: number
-   averageFee: number
-   mostCommonConditions: Array<{
-      condition: string
-      percentage: number
-   }>
-}
-
-interface SpecialtyFAQ {
-   id: string
-   question: string
-   answer: string
-   category?: string
-   helpful?: number
-}
-
-// Utility types
-interface SpecialtySearchResult extends SpecialtyWithCategory {
-   matchScore?: number
-   relevantDoctors?: Doctor[]
-}
-
-interface SpecialtyFilters {
-   category?: SpecialtyCategory
-   minDoctorCount?: number
-   popularOnly?: boolean
-   hasAvailableDoctors?: boolean
-}
+type SpecialtyCategory = 'all' | 'noi-khoa' | 'ngoai-khoa' | 'can-lam-sang' | 'phuc-hoi' | 'chuyen-khoa';

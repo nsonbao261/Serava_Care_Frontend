@@ -1,13 +1,25 @@
-import { Suspense, lazy } from 'react'
-import { HeroSection, LoadingSpinner, AnimatedSection } from '@/components'
+import { lazy, Suspense } from 'react'
+import { AnimatedSection, Hero as HeroSection, LoadingSpinner } from '@/components'
 
 // Lazy load heavy sections for better initial page load
-const FeaturesSection = lazy(() => import('@/components/sections/FeaturesSection'))
-const SpecialtiesSection = lazy(() => import('@/components/sections/SpecialtiesSection'))
-const StatisticsSection = lazy(() => import('@/components/sections/StatisticsSection'))
-const ExpertTeamSection = lazy(() => import('@/components/sections/ExpertTeamSection'))
-const NewsletterSection = lazy(() => import('@/components/sections/NewsletterSection'))
-const CTASection = lazy(() => import('@/components/sections/CTASection'))
+const FeaturesSection = lazy(() =>
+   import('@/components/sections/features').then((module) => ({ default: module.Features }))
+)
+const SpecialtiesSection = lazy(() =>
+   import('@/components/sections/specialties').then((module) => ({ default: module.Specialties }))
+)
+const StatisticsSection = lazy(() =>
+   import('@/components/sections/statistics').then((module) => ({ default: module.Statistics }))
+)
+const ExpertTeamSection = lazy(() =>
+   import('@/components/sections/expert-team').then((module) => ({ default: module.ExpertTeam }))
+)
+const NewsletterSection = lazy(() =>
+   import('@/components/sections/newsletter').then((module) => ({ default: module.Newsletter }))
+)
+const CTASection = lazy(() =>
+   import('@/components/sections/cta').then((module) => ({ default: module.CTA }))
+)
 
 // Optimized loading component
 const SectionLoader = () => (

@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
@@ -26,24 +27,45 @@ import {
 } from '@/components'
 
 // Deps
-import { signUpSchema, type SignupInput } from '@/schemas'
+import { type SignUpInput, signUpSchema } from '@/schemas'
+import { signUpWithCredentials } from '@/services/server/auth'
+import { toast } from 'sonner'
 
 export default function SignUpForm() {
    const router = useRouter()
    const [agreeTerms, setAgreeTerms] = useState(false)
    const [isLoading, startTransition] = useTransition()
 
-   const form = useForm<SignupInput>({
+   const form = useForm<SignUpInput>({
       resolver: zodResolver(signUpSchema),
       defaultValues: {
          birthDate: new Date().toISOString()
       }
    })
 
-   const onSubmit = (data: SignupInput) => {
+   const onSubmit = (data: SignUpInput) => {
       if (!agreeTerms) return
 
-      startTransition(async () => {})
+      startTransition(async () => {
+         const signUpRes = await signUpWithCredentials(data)
+
+         if (signUpRes.error) {
+            toast.error(signUpRes.message)
+            return
+         }
+
+         // Đăng nhập ngay bằng NextAuth Credentials
+         const signInRes = await signIn('credentials', {
+            redirect: false,
+            username: data.username,
+            password: data.password
+         })
+
+         if (signInRes?.ok) {
+            router.replace('/')
+            router.refresh()
+         }
+      })
    }
 
    return (
@@ -157,7 +179,7 @@ export default function SignUpForm() {
                               <FormControl>
                                  <DatePicker
                                     {...field}
-                                    onChange={(date) => {
+                                    onChangeAction={(date) => {
                                        const value = date
                                           ? date.toISOString()
                                           : new Date().toISOString()
@@ -187,7 +209,7 @@ export default function SignUpForm() {
                               <SelectContent>
                                  <SelectItem value="MALE">Nam</SelectItem>
                                  <SelectItem value="FEMALE">Nữ</SelectItem>
-                                 <SelectItem value="UNKNOWN">Khác</SelectItem>
+                                 <SelectItem value="OTHER">Khác</SelectItem>
                               </SelectContent>
                            </Select>
                         </FormItem>

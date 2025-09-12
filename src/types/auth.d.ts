@@ -1,4 +1,4 @@
-type JwtPayload = {
+interface JwtPayload {
    userId: string
    fullName: string
    email: string
@@ -9,7 +9,18 @@ type JwtPayload = {
    iat: number
 }
 
-type SignInRequest = {
+interface SignInRequest {
    username: string
    password: string
+}
+
+interface SignUpRequest {
+   fullName: string
+   username: string
+   email: string
+   phoneNumber: string
+   birthDate: string
+   gender: 'MALE' | 'FEMALE' | 'UNKNOWN'
+   password: string
+   confirmPassword: string
 }

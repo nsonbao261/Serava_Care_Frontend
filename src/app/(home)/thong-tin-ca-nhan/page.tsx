@@ -66,7 +66,7 @@ export default function PersonalInfoPage() {
    }
 
    useEffect(() => {
-      if (user) form.reset(userProfile)
+      if (user) form.reset(user)
    }, [user])
 
    return (

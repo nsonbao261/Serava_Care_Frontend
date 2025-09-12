@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// Schema exports
 export const profileFormSchema = z.object({
    userId: z.string().uuid(),
    fullName: z
@@ -20,4 +21,5 @@ export const profileFormSchema = z.object({
       .optional()
 })
 
+// Type exports
 export type ProfileFormData = z.infer<typeof profileFormSchema>
