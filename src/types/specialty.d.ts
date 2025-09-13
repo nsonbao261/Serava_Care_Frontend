@@ -3,19 +3,24 @@ interface Specialty {
    name: string
    slug: string
    description: string
-   shortDescription?: string
-   color: string
    doctorCount: string
-   image: string
-   order?: number
+   imageUrl: string
    category: SpecialtyCategory
 }
 
 interface SpecialtyDetail {
    id: string
    name: string
+   slug: string
    description: string
+   imageUrl: string
    doctors: Doctor[]
 }
 
-type SpecialtyCategory = 'all' | 'noi-khoa' | 'ngoai-khoa' | 'can-lam-sang' | 'phuc-hoi' | 'chuyen-khoa';
+type SpecialtyCategory =
+   | 'all'
+   | 'noi-khoa'
+   | 'ngoai-khoa'
+   | 'can-lam-sang'
+   | 'phuc-hoi'
+   | 'chuyen-khoa'

@@ -6,8 +6,6 @@ import { Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-
-// Components
 import {
    Button,
    Checkbox,
@@ -19,15 +17,9 @@ import {
    FormMessage,
    Input
 } from '@/components'
-
-// Deps
 import { type SignInInput, signInSchema } from '@/schemas'
 
-// Types
-type Props = {
-   callbackUrl?: string
-}
-export default function SignInForm({ callbackUrl = '/' }: Props) {
+export default function SignInForm({ callbackUrl = '/' }: { callbackUrl?: string }) {
    const [isPending, startTransition] = useTransition()
 
    const form = useForm<SignInInput>({

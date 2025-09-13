@@ -2,19 +2,17 @@
 
 import { useEffect, useState } from 'react'
 
-interface Props {
-   texts: string[]
-   speed?: number
-   pauseDuration?: number
-   className?: string
-}
-
 export const TypewriterText = ({
    texts,
    speed = 100,
    pauseDuration = 2000,
    className = ''
-}: Props) => {
+}: {
+   texts: string[]
+   speed?: number
+   pauseDuration?: number
+   className?: string
+}) => {
    const [displayText, setDisplayText] = useState('')
    const [currentTextIndex, setCurrentTextIndex] = useState(0)
    const [currentCharIndex, setCurrentCharIndex] = useState(0)

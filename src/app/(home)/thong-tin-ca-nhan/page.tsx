@@ -5,17 +5,13 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import useSWR from 'swr'
-
-// Components
 import { Form, LoadingSpinner } from '@/components'
 import ProtectedRoute from '@/components/protected-route'
 import BasicInfo from '@/features/personal-info/basic-info'
 import EmergencyContact from '@/features/personal-info/emergency-contact'
-import InsuranceInfomation from '@/features/personal-info/insurance-info'
-import MedicalInfomation from '@/features/personal-info/medical-info'
+import InsuranceInformation from '@/features/personal-info/insurance-info'
+import MedicalInformation from '@/features/personal-info/medical-info'
 import Overview from '@/features/personal-info/overview'
-
-// Deps
 import { usePersonalInfoStore } from '@/features/personal-info/store/personal-info'
 import { getChangedFields } from '@/lib'
 import { type ProfileFormData, profileFormSchema } from '@/schemas'
@@ -103,10 +99,10 @@ export default function PersonalInfoPage() {
 
                                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                                     <EmergencyContact />
-                                    <MedicalInfomation />
+                                    <MedicalInformation />
                                  </div>
 
-                                 <InsuranceInfomation />
+                                 <InsuranceInformation />
                               </form>
                            </Form>
                         </div>

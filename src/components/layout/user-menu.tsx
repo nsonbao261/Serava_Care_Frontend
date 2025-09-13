@@ -14,8 +14,6 @@ import {
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useState } from 'react'
-
-// Components
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -26,55 +24,49 @@ import {
    SheetTitle,
    SheetTrigger
 } from '@/components'
-// Types
 import { User } from 'next-auth'
 
-// Deps
-const userMenuItems = [
-   {
-      label: 'Thông tin cá nhân',
-      href: '/thong-tin-ca-nhan',
-      icon: UserCircle,
-      description: 'Xem và chỉnh sửa thông tin cá nhân'
-   },
-   {
-      label: 'Lịch sử đặt khám',
-      href: '/lich-su-dat-kham',
-      icon: Calendar,
-      description: 'Xem lịch sử các lần đặt khám'
-   },
-   {
-      label: 'Hồ sơ sức khỏe',
-      href: '/ho-so-suc-khoe',
-      icon: FileText,
-      description: 'Quản lý hồ sơ sức khỏe của bạn'
-   },
-   {
-      label: 'Câu hỏi của tôi',
-      href: '/cau-hoi-cua-toi',
-      icon: HelpCircle,
-      description: 'Các câu hỏi đã đặt cho bác sĩ'
-   },
-   {
-      label: 'Liên kết tài khoản',
-      href: '/lien-ket-tai-khoan',
-      icon: LinkIcon,
-      description: 'Liên kết với các tài khoản khác'
-   },
-   {
-      label: 'Đổi mật khẩu',
-      href: '/doi-mat-khau',
-      icon: Lock,
-      description: 'Thay đổi mật khẩu tài khoản'
-   }
-]
-
-type Props = {
-   user: User
-}
-
-export default function UserMenu({ user }: Props) {
+export default function UserMenu({ user }: { user: User }) {
    const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+   const userMenuItems = [
+      {
+         label: 'Thông tin cá nhân',
+         href: '/thong-tin-ca-nhan',
+         icon: UserCircle,
+         description: 'Xem và chỉnh sửa thông tin cá nhân'
+      },
+      {
+         label: 'Lịch sử đặt khám',
+         href: '/lich-su-dat-kham',
+         icon: Calendar,
+         description: 'Xem lịch sử các lần đặt khám'
+      },
+      {
+         label: 'Hồ sơ sức khỏe',
+         href: '/ho-so-suc-khoe',
+         icon: FileText,
+         description: 'Quản lý hồ sơ sức khỏe của bạn'
+      },
+      {
+         label: 'Câu hỏi của tôi',
+         href: '/cau-hoi-cua-toi',
+         icon: HelpCircle,
+         description: 'Các câu hỏi đã đặt cho bác sĩ'
+      },
+      {
+         label: 'Liên kết tài khoản',
+         href: '/lien-ket-tai-khoan',
+         icon: LinkIcon,
+         description: 'Liên kết với các tài khoản khác'
+      },
+      {
+         label: 'Đổi mật khẩu',
+         href: '/doi-mat-khau',
+         icon: Lock,
+         description: 'Thay đổi mật khẩu tài khoản'
+      }
+   ]
 
    const handleLogout = async () => {
       await signOut({ callbackUrl: '/' })
@@ -127,9 +119,9 @@ export default function UserMenu({ user }: Props) {
                   })}
 
                   <button
-                     onClick={() => {
+                     onClick={async () => {
                         setIsSheetOpen(false)
-                        handleLogout()
+                        await handleLogout()
                      }}
                      className="flex items-start space-x-3 px-6 py-4 hover:bg-red-50 transition-colors duration-200 w-full text-left border-t text-red-600"
                   >

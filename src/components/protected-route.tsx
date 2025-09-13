@@ -6,12 +6,13 @@ import React, { useEffect } from 'react'
 
 type Role = 'GUEST' | 'ADMIN' | 'DOCTOR' | 'NURSE'
 
-interface Props {
+export default function ProtectedRoute({
+   allowedRoles,
+   children
+}: {
    allowedRoles: Role[]
    children: React.ReactNode
-}
-
-export default function ProtectedRoute({ allowedRoles, children }: Props) {
+}) {
    const { data: session, status } = useSession()
    const pathname = usePathname()
    const router = useRouter()

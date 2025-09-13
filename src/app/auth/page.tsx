@@ -3,17 +3,14 @@
 import { BackgroundMotion } from '@/components'
 import { useRouter } from 'next/navigation'
 import { use, useState } from 'react'
-
-// Components
 import SignInForm from '@/features/sign-in/sign-in-form'
 import SignUpForm from '@/features/sign-in/sign-up-form'
 
-// Types
-type Props = {
+export default function SignInPage({
+   searchParams
+}: {
    searchParams: Promise<{ callbackUrl?: string }>
-}
-
-export default function SignInPage({ searchParams }: Props) {
+}) {
    const { callbackUrl } = use(searchParams)
 
    const router = useRouter()

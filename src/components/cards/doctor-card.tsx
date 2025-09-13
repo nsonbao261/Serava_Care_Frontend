@@ -1,24 +1,21 @@
 import Link from 'next/link'
 import { MorphingButton } from '@/components/forms/morphing-button'
 import { Clock, GraduationCap, MapPin, Star } from 'lucide-react'
+import Image from 'next/image'
 
-interface Props {
-   doctor: Doctor
-}
-
-export const DoctorCard = ({ doctor }: Props) => (
+export const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
       <div className="p-6">
          <div className="flex items-start space-x-4">
             {/* Doctor Avatar */}
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300">
-               <div className="text-white font-bold text-lg">
-                  {doctor.name
-                     .split(' ')
-                     .slice(-2)
-                     .map((n) => n[0])
-                     .join('')}
-               </div>
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+               <Image
+                  src={doctor.imageUrl ?? '/placeholder.svg'}
+                  alt={doctor.name}
+                  width={500}
+                  height={300}
+                  className="w-full h-full object-cover"
+               />
             </div>
 
             <div className="flex-1 min-w-0">

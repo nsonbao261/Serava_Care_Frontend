@@ -2,8 +2,6 @@ import { jwtDecode } from 'jwt-decode'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
-
-// Deps
 import { oauthWithCredentials, oauthWithGoogle } from '@/services/server/auth'
 
 export const authOptions: NextAuthOptions = {

@@ -3,17 +3,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { cn } from '@/lib'
 
-interface Props {
-   particleCount?: number
-   particleColor?: string
-   className?: string
-}
-
 export const ParticleBackground = ({
    particleCount = 30,
    particleColor = '#3b82f6',
    className
-}: Props) => {
+}: {
+   particleCount?: number
+   particleColor?: string
+   className?: string
+}) => {
    const [particles, setParticles] = useState<
       Array<{
          id: number

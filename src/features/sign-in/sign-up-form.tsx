@@ -6,8 +6,6 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-
-// Components
 import {
    Button,
    Checkbox,
@@ -25,8 +23,6 @@ import {
    SelectTrigger,
    SelectValue
 } from '@/components'
-
-// Deps
 import { type SignUpInput, signUpSchema } from '@/schemas'
 import { signUpWithCredentials } from '@/services/server/auth'
 import { toast } from 'sonner'

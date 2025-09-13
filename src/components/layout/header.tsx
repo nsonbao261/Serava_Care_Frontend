@@ -10,43 +10,40 @@ import {
 } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
-
-// Components
 import { Button } from '@/components'
 import UserMenu from './user-menu'
-
-// Deps
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-
-const navigationItems = [
-   { label: 'Danh sách bác sĩ', href: '/bac-si' },
-   { label: 'Chuyên khoa', href: '/chuyen-khoa' },
-   { label: 'Tin Y tế', href: '/tin-tuc' },
-   { label: 'Về chúng tôi', href: '/ve-chung-toi' }
-]
-const bookingServices = [
-   {
-      label: 'Đặt khám Bác sĩ',
-      href: '/bac-si',
-      icon: Stethoscope,
-      description: 'Đặt lịch khám với bác sĩ chuyên khoa'
-   },
-   {
-      label: 'Đặt khám Bệnh viện',
-      href: '/benh-vien',
-      icon: Building2,
-      description: 'Đặt lịch khám tại các bệnh viện uy tín'
-   },
-   {
-      label: 'Đặt khám Phòng khám',
-      href: '/phong-kham',
-      icon: Calendar,
-      description: 'Đặt lịch tại phòng khám tư nhân'
-   }
-]
 
 export async function Header() {
    const session = await getServerSession(authOptions)
+
+   const NAVIGATION_LINKS = [
+      { label: 'Danh sách bác sĩ', href: '/bac-si' },
+      { label: 'Chuyên khoa', href: '/chuyen-khoa' },
+      { label: 'Tin Y tế', href: '/tin-tuc' },
+      { label: 'Về chúng tôi', href: '/ve-chung-toi' }
+   ]
+
+   const BOOKING_SERVICES = [
+      {
+         label: 'Đặt khám Bác sĩ',
+         href: '/bac-si',
+         icon: Stethoscope,
+         description: 'Đặt lịch khám với bác sĩ chuyên khoa'
+      },
+      {
+         label: 'Đặt khám Bệnh viện',
+         href: '/benh-vien',
+         icon: Building2,
+         description: 'Đặt lịch khám tại các bệnh viện uy tín'
+      },
+      {
+         label: 'Đặt khám Phòng khám',
+         href: '/phong-kham',
+         icon: Calendar,
+         description: 'Đặt lịch tại phòng khám tư nhân'
+      }
+   ]
 
    return (
       <header className="bg-white shadow-md sticky top-0 z-50">
@@ -107,7 +104,7 @@ export async function Header() {
                      <div className="absolute -bottom-4 hidden group-hover:block w-full h-4 z-2 bg-transparent"></div>
 
                      <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-4 z-1 invisible group-hover:visible">
-                        {bookingServices.map((service) => {
+                        {BOOKING_SERVICES.map((service) => {
                            const IconComponent = service.icon
                            return (
                               <Link
@@ -131,7 +128,7 @@ export async function Header() {
                   </div>
 
                   {/* Other Navigation Items */}
-                  {navigationItems.map((item) => (
+                  {NAVIGATION_LINKS.map((item) => (
                      <Link
                         key={item.href}
                         href={item.href}

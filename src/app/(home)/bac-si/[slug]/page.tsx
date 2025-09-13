@@ -1,7 +1,5 @@
-import { use } from 'react'
 import { notFound } from 'next/navigation'
 import { ArticlesSection, BookingSection } from '@/features/doctors'
-import { mockDoctorDetails } from '@/data'
 import {
    Award,
    Bookmark,
@@ -17,14 +15,12 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components'
+import { getDoctorBySlug } from '@/services'
+import Image from 'next/image'
 
-interface Props {
-   params: Promise<{ slug: string }>
-}
-
-export default function DoctorDetailPage({ params }: Props) {
-   const { slug } = use(params)
-   const doctor = mockDoctorDetails[slug]
+export default async function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+   const { slug } = await params
+   const doctor = await getDoctorBySlug(slug)
 
    if (!doctor) notFound()
 
@@ -55,15 +51,15 @@ export default function DoctorDetailPage({ params }: Props) {
                   <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                      <div className="p-8">
                         <div className="flex items-start space-x-6">
-                           {/* Doctor Image */}
-                           <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                              <div className="text-white font-bold text-3xl">
-                                 {doctor.name
-                                    .split(' ')
-                                    .slice(-2)
-                                    .map((n) => n[0])
-                                    .join('')}
-                              </div>
+                           {/* Doctor Avatar */}
+                           <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                              <Image
+                                 src={doctor.imageUrl ?? '/placeholder.svg'}
+                                 alt={doctor.name}
+                                 width={500}
+                                 height={300}
+                                 className="w-full h-full object-cover"
+                              />
                            </div>
 
                            <div className="flex-1">

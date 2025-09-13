@@ -1,12 +1,12 @@
 'use client'
 
-import * as React from 'react'
+import React from 'react'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker'
 import { cn } from '@/lib'
 import { Button, buttonVariants } from '@/components/ui/button'
 
-function Calendar({
+export function Calendar({
    className,
    classNames,
    showOutsideDays = true,
@@ -140,7 +140,7 @@ function Calendar({
    )
 }
 
-function CalendarDayButton({
+export function CalendarDayButton({
    className,
    day,
    modifiers,
@@ -177,5 +177,3 @@ function CalendarDayButton({
       />
    )
 }
-
-export { Calendar, CalendarDayButton }

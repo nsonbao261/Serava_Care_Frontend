@@ -1,10 +1,7 @@
-import type { Metadata } from 'next'
-
-// Components
+import { Metadata } from 'next'
 import { AnimatedPageTitle, FloatingActionButton, Footer, Header } from '@/components'
 import React from 'react'
 
-// Deps
 export const metadata: Metadata = {
    title: {
       default: 'Serava Care - Đặt lịch khám bệnh dễ dàng & nhanh chóng',
@@ -24,11 +21,7 @@ export const metadata: Metadata = {
    robots: 'index, follow'
 }
 
-interface Props {
-   children: React.ReactNode
-}
-
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
    return (
       <main>
          <AnimatedPageTitle />

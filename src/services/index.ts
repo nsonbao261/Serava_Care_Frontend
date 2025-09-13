@@ -1,5 +1,5 @@
-export { getAllSpecialties } from './specialty.service'
+export { getAllSpecialties, getSpecialtyBySlug } from './specialty.service'
 
 export { getBookingById } from './booking.service'
 
-export { getAllDoctors, getDoctorById } from './doctor.service'
+export { getAllDoctors, getDoctorBySlug } from './doctor.service'

@@ -2,8 +2,6 @@ import { getAllSpecialties } from '@/services'
 import SpecialtyResults from '@/app/(home)/chuyen-khoa/specialty-results'
 
 export default async function SpecialtiesPage() {
-   const specialties = await getAllSpecialties()
-
    return (
       <div className="min-h-screen bg-gray-50">
          {/* Header */}
@@ -18,8 +16,7 @@ export default async function SpecialtiesPage() {
             </div>
          </div>
 
-         {/* Pass data to the Client Component */}
-         <SpecialtyResults specialties={specialties} />
+         <SpecialtyResults specialties={await getAllSpecialties()} />
       </div>
    )
 }

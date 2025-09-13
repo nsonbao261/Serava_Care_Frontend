@@ -4,13 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { cn } from '@/lib'
 import { ChevronUp } from 'lucide-react'
 
-interface Props {
+export const BackToTop = ({
+   threshold = 400,
+   className,
+   smooth = true
+}: {
    threshold?: number
    className?: string
    smooth?: boolean
-}
-
-export const BackToTop = ({ threshold = 400, className, smooth = true }: Props) => {
+}) => {
    const [isVisible, setIsVisible] = useState(false)
 
    useEffect(() => {

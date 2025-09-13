@@ -10,15 +10,15 @@ export const Hero = () => {
    const [searchTerm, setSearchTerm] = useState('')
    const router = useRouter()
 
-   // Define specialty keywords for smart routing
-   const specialtyKeywords = [
+   // Smart routing
+   const SPECIALTY_KEYWORDS = [
       // General terms
       'chuyên khoa',
       'khoa',
       'chuyên môn',
       'lĩnh vực',
 
-      // Medical mockSpecialtyDetail
+      // Medical terms
       'tim mạch',
       'tim',
       'mạch máu',
@@ -108,12 +108,12 @@ export const Hero = () => {
       }
 
       // Check if search term contains specialty keywords
-      const isSpecialtySearch = specialtyKeywords.some((keyword) =>
+      const isSpecialtySearch = SPECIALTY_KEYWORDS.some((keyword) =>
          searchText.includes(keyword.toLowerCase())
       )
 
       // Check if search contains doctor-specific terms
-      const doctorKeywords = [
+      const DOCTOR_KEYWORDS = [
          'bác sĩ',
          'bs',
          'thầy thuốc',
@@ -124,7 +124,7 @@ export const Hero = () => {
          'giáo sư',
          'gs'
       ]
-      const isDoctorSearch = doctorKeywords.some((keyword) =>
+      const isDoctorSearch = DOCTOR_KEYWORDS.some((keyword) =>
          searchText.includes(keyword.toLowerCase())
       )
 
@@ -190,7 +190,7 @@ export const Hero = () => {
                         className="flex-1 outline-none text-gray-700 min-w-0 text-sm sm:text-base placeholder:text-sm sm:placeholder:text-base focus:placeholder-transparent transition-all"
                      />
                      <MorphingButton
-                        onClick={handleSearch}
+                        action={handleSearch}
                         className="ml-2 sm:ml-4 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-8 py-1.5 sm:py-2 rounded-full text-xs sm:text-base whitespace-nowrap font-medium border-0"
                         morphText="Tìm ngay!"
                         size="sm"
@@ -220,7 +220,7 @@ export const Hero = () => {
                               setSearchTerm(suggestion)
                               // Auto-trigger search
                               const searchText = suggestion.toLowerCase()
-                              const isSpecialtySearch = specialtyKeywords.some((keyword) =>
+                              const isSpecialtySearch = SPECIALTY_KEYWORDS.some((keyword) =>
                                  searchText.includes(keyword.toLowerCase())
                               )
                               const doctorKeywords = [
@@ -265,7 +265,7 @@ export const Hero = () => {
                            size="lg"
                            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full border-0"
                            morphText="Đặt ngay!"
-                           onClick={() => {}}
+                           action={() => {}}
                         >
                            <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                            Đặt khám ngay
@@ -278,7 +278,7 @@ export const Hero = () => {
                         size="lg"
                         className="w-full border-gray-300 text-gray-700 hover:text-blue-700 hover:border-blue-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full"
                         morphText="Xem ngay!"
-                        onClick={() => {}}
+                        action={() => {}}
                      >
                         <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                         Xem video hướng dẫn

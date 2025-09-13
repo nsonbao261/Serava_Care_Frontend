@@ -3,11 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Calendar, MessageCircle, Phone, X } from 'lucide-react'
 
-interface Props {
-   className?: string
-}
-
-export const FloatingActionButton = ({ className = '' }: Props) => {
+export const FloatingActionButton = ({ className = '' }: { className?: string }) => {
    const [isOpen, setIsOpen] = useState(false)
    const [isVisible, setIsVisible] = useState(false)
 

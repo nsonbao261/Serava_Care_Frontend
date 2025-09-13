@@ -19,7 +19,6 @@ export { TypewriterText } from './animations/typewriter-text'
 
 // Cards
 export { DoctorCard } from './cards/doctor-card'
-export { GlowCard } from './cards/glow-card'
 export { SpecialtyCard } from './cards/specialty-card'
 
 // Common
@@ -46,9 +45,7 @@ export { Hero } from './sections/hero'
 export { Newsletter } from './sections/newsletter'
 export { Specialties } from './sections/specialties'
 export { Statistics } from './sections/statistics'
-
-// Health
-export { StatCard } from './health/stat-card'
+export { SearchAndFilterBar } from './sections/search-and-filter-bar'
 
 // Providers
 export { Providers } from './providers'

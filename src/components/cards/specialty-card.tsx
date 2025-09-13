@@ -5,11 +5,7 @@ import { motion } from 'framer-motion'
 import { Star, Users } from 'lucide-react'
 import Link from 'next/link'
 
-interface Props {
-   specialty: Specialty
-}
-
-export function SpecialtyCard({ specialty }: Props) {
+export function SpecialtyCard({ specialty }: { specialty: Specialty }) {
    return (
       <motion.div
          whileHover={{ y: -8, scale: 1.02 }}

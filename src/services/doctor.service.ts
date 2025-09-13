@@ -9,10 +9,10 @@ export async function getAllDoctors(): Promise<Doctor[]> {
    }
 }
 
-export async function getDoctorById(id: string): Promise<DoctorDetail | null> {
+export async function getDoctorBySlug(slug: string): Promise<DoctorDetail | undefined> {
    try {
       await new Promise((resolve) => setTimeout(resolve, 800))
-      return mockDoctorDetails[id] || null
+      return mockDoctorDetails.find(doctor => doctor.slug == slug)
    } catch {
       throw new Error('Không thể tải thông tin bác sĩ từ server')
    }

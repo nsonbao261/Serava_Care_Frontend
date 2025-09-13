@@ -10,7 +10,7 @@ interface Doctor {
    rating: number
    reviewCount?: number
    consultationFee: string
-   image?: string
+   imageUrl?: string
 }
 
 interface DoctorDetail extends Doctor {

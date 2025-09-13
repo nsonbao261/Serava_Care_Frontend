@@ -1,5 +1,5 @@
 export * from './api'
-export * from './core'
+export * from './ui'
 export * from './formatting'
 
 import api from './api'

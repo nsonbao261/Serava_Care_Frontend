@@ -16,7 +16,7 @@ export const Specialties = () => (
 
          {/* Specialties Grid */}
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
-            {mockSpecialties.map((specialty) => (
+            {mockSpecialties.slice(1, 6).map((specialty) => (
                <SpecialtyCard key={specialty.id} specialty={specialty} />
             ))}
          </div>

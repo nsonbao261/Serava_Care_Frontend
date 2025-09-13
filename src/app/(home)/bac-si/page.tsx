@@ -2,10 +2,9 @@ import { getAllDoctors } from '@/services'
 import DoctorResults from './doctor-results'
 
 export default async function DoctorsPage() {
-   const doctors = await getAllDoctors()
-
    return (
       <div className="bg-gray-50">
+         {/* Header */}
          <div className="bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                <div className="text-center">
@@ -20,7 +19,7 @@ export default async function DoctorsPage() {
             </div>
          </div>
 
-         <DoctorResults doctors={doctors} />
+         <DoctorResults doctors={await getAllDoctors()} />
       </div>
    )
 }

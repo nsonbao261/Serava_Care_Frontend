@@ -3,17 +3,19 @@
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@/components'
-import { DATE_FORMAT } from '@/constants'
 import { cn } from '@/lib'
 
-type Props = {
+export function DatePicker({
+   value,
+   onChangeAction,
+   disabled,
+   className
+}: {
    className?: string
    disabled?: boolean
    onChangeAction?: (date: Date | undefined) => void
    value?: Date | string
-}
-
-export function DatePicker({ value, onChangeAction, disabled, className }: Props) {
+}) {
    const date = typeof value === 'string' ? new Date(value) : value
 
    return (
@@ -30,7 +32,7 @@ export function DatePicker({ value, onChangeAction, disabled, className }: Props
                )}
             >
                <CalendarIcon className="mr-2 h-4 w-4" />
-               {date ? format(new Date(date), DATE_FORMAT) : <span>Chọn ngày</span>}
+               {date ? format(new Date(date), 'dd-MM-yyyy') : <span>Chọn ngày</span>}
             </Button>
          </PopoverTrigger>
 

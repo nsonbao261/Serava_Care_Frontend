@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
    ArrowLeft,
@@ -17,11 +16,7 @@ import { Button } from '@/components'
 import { getBookingById } from '@/services'
 import { notFound } from 'next/navigation'
 
-interface Props {
-   params: Promise<{ id: string }>
-}
-
-export default async function BookingDetailPage({ params }: Props) {
+export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params
    const booking = await getBookingById(id)
 

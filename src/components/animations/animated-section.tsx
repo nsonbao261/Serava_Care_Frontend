@@ -1,33 +1,37 @@
 'use client'
 
-import { memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
-
-interface Props {
-   children: ReactNode
-   className?: string
-   animation?:
-      | 'fade-up'
-      | 'fade-down'
-      | 'fade-left'
-      | 'fade-right'
-      | 'scale'
-      | 'slide-up'
-      | 'bounce-up'
-      | 'bounce-in'
-      | 'rotate-in'
-      | 'flip-up'
-      | 'zoom-in'
-      | 'slide-left'
-      | 'slide-right'
-      | 'elastic-up'
-      | 'magnetic'
-      | 'simple'
-   delay?: number
-   duration?: number
-}
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 
 export const AnimatedSection = memo(
-   ({ children, className = '', animation = 'simple', delay = 0, duration = 700 }: Props) => {
+   ({
+      children,
+      className = '',
+      animation = 'simple',
+      delay = 0,
+      duration = 700
+   }: {
+      children: React.ReactNode
+      className?: string
+      animation?:
+         | 'fade-up'
+         | 'fade-down'
+         | 'fade-left'
+         | 'fade-right'
+         | 'scale'
+         | 'slide-up'
+         | 'bounce-up'
+         | 'bounce-in'
+         | 'rotate-in'
+         | 'flip-up'
+         | 'zoom-in'
+         | 'slide-left'
+         | 'slide-right'
+         | 'elastic-up'
+         | 'magnetic'
+         | 'simple'
+      delay?: number
+      duration?: number
+   }) => {
       const [ref, isInView] = useInView({ threshold: 0.1, triggerOnce: true })
 
       if (animation === 'simple') {

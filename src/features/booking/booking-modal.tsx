@@ -422,7 +422,7 @@ const ConfirmationStep = ({
       <div className="bg-gray-50 rounded-xl p-6 space-y-4">
          <div className="flex items-center space-x-4">
             <Image
-               src={typeof doctor.image === 'string' ? doctor.image : '/placeholder.svg'}
+               src={typeof doctor.imageUrl === 'string' ? doctor.imageUrl : '/placeholder.svg'}
                alt={doctor.name}
                width={64}
                height={64}

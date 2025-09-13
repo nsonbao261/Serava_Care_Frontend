@@ -4,26 +4,24 @@ import { Button } from '@/components'
 import { cn } from '@/lib'
 import React, { useState } from 'react'
 
-interface Props {
-   children: React.ReactNode
-   className?: string
-   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-   size?: 'default' | 'sm' | 'lg' | 'icon'
-   onClick?: () => void
-   morphText?: string
-   disabled?: boolean
-}
-
 export const MorphingButton = ({
    children,
    className,
    variant = 'default',
    size = 'default',
-   onClick,
+   action,
    morphText,
    disabled,
    ...props
-}: Props) => {
+}: {
+   children: React.ReactNode
+   className?: string
+   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+   size?: 'default' | 'sm' | 'lg' | 'icon'
+   action?: () => void | Promise<void>
+   morphText?: string
+   disabled?: boolean
+}) => {
    const [isHovered, setIsHovered] = useState(false)
    const [isClicked, setIsClicked] = useState(false)
 
@@ -31,7 +29,7 @@ export const MorphingButton = ({
       if (disabled) return
 
       setIsClicked(true)
-      if (onClick) onClick()
+      if (action) action()
 
       setTimeout(() => {
          setIsClicked(false)

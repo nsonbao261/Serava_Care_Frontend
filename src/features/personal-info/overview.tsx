@@ -1,14 +1,9 @@
 import { differenceInYears, format, isValid, parseISO } from 'date-fns'
 import { Calendar, Camera, ChevronRight, Key, Mail, MapPin, Phone, Shield } from 'lucide-react'
-import { DATE_FORMAT } from '@/constants'
 import { ProfileFormData } from '@/schemas'
 import { usePersonalInfoStore } from './store/personal-info'
 
-type Props = {
-   personalInfo: ProfileFormData
-}
-
-export default function Overview({ personalInfo }: Props) {
+export default function Overview({ personalInfo }: { personalInfo: ProfileFormData }) {
    const { isEditing } = usePersonalInfoStore()
 
    const getAge = (birthDate?: string): string => {
@@ -59,7 +54,7 @@ export default function Overview({ personalInfo }: Props) {
             <div className="flex items-center gap-3 text-sm">
                <Calendar className="h-4 w-4 text-purple-500" />
                <span className="text-gray-600">
-                  {format(parseISO(personalInfo.birthDate), DATE_FORMAT)}
+                  {format(parseISO(personalInfo.birthDate), 'dd-MM-yyyy')}
                </span>
             </div>
             <div className="flex items-center gap-3 text-sm">
