@@ -14,7 +14,7 @@ import {
    Youtube
 } from 'lucide-react'
 
-export const Footer = () => {
+export default (() => {
    const currentYear = new Date().getFullYear()
    const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
 
@@ -22,7 +22,7 @@ export const Footer = () => {
       setActiveDropdown(activeDropdown === section ? null : section)
    }
 
-   const quickLinks = [
+   const QUICK_LINKS = [
       { label: 'Đặt khám Bác sĩ', href: '/bac-si' },
       { label: 'Đặt khám Bệnh viện', href: '/benh-vien' },
       { label: 'Đặt khám Phòng khám', href: '/phong-kham' },
@@ -31,7 +31,7 @@ export const Footer = () => {
       { label: 'Cơ sở y tế', href: '/co-so-y-te' }
    ]
 
-   const serviceLinks = [
+   const SERVICE_LINKS = [
       { label: 'Tư vấn trực tuyến', href: '/tu-van-truc-tuyen' },
       { label: 'Hỏi đáp bác sĩ', href: '/hoi-dap' },
       { label: 'Hồ sơ sức khỏe', href: '/ho-so-suc-khoe' },
@@ -40,7 +40,7 @@ export const Footer = () => {
       { label: 'Khám sức khỏe định kỳ', href: '/kham-dinh-ky' }
    ]
 
-   const supportLinks = [
+   const SUPPORT_LINKS = [
       { label: 'Trung tâm hỗ trợ', href: '/ho-tro' },
       { label: 'Điều khoản sử dụng', href: '/dieu-khoan' },
       { label: 'Chính sách bảo mật', href: '/bao-mat' },
@@ -49,7 +49,7 @@ export const Footer = () => {
       { label: 'Liên hệ', href: '/lien-he' }
    ]
 
-   const partnerLinks = [
+   const PARTNER_LINKS   = [
       { label: 'Trở thành đối tác', href: '/doi-tac' },
       { label: 'Dành cho bác sĩ', href: '/danh-cho-bac-si' },
       { label: 'Dành cho cơ sở y tế', href: '/danh-cho-co-so-y-te' },
@@ -113,7 +113,7 @@ export const Footer = () => {
                         activeDropdown === 'quickLinks' ? 'block' : 'hidden md:block'
                      }`}
                   >
-                     {quickLinks.map((link) => (
+                     {QUICK_LINKS.map((link) => (
                         <li key={link.href}>
                            <Link
                               href={link.href}
@@ -144,7 +144,7 @@ export const Footer = () => {
                         activeDropdown === 'services' ? 'block' : 'hidden md:block'
                      }`}
                   >
-                     {serviceLinks.map((link) => (
+                     {SERVICE_LINKS.map((link) => (
                         <li key={link.href}>
                            <Link
                               href={link.href}
@@ -172,7 +172,7 @@ export const Footer = () => {
                   </button>
                   <div className={`${activeDropdown === 'support' ? 'block' : 'hidden md:block'}`}>
                      <ul className="space-y-3 mb-6">
-                        {supportLinks.map((link) => (
+                        {SUPPORT_LINKS.map((link) => (
                            <li key={link.href}>
                               <Link
                                  href={link.href}
@@ -186,7 +186,7 @@ export const Footer = () => {
 
                      <h4 className="text-md font-semibold mb-4">Đối tác</h4>
                      <ul className="space-y-3">
-                        {partnerLinks.map((link) => (
+                        {PARTNER_LINKS.map((link) => (
                            <li key={link.href}>
                               <Link
                                  href={link.href}
@@ -372,4 +372,4 @@ export const Footer = () => {
          </div>
       </footer>
    )
-}
+}) satisfies React.FC

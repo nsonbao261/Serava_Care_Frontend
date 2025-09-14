@@ -2,7 +2,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '1',
       slug: 'bs-ckii-nguyen-van-minh',
-      name: 'BS.CKII Nguyễn Văn Minh',
+      name: 'Nguyễn Văn Minh',
       title: 'Bác sĩ Chuyên khoa II',
       specialty: 'can-lam-sang',
       experience: '20+ năm kinh nghiệm',
@@ -15,7 +15,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '2',
       slug: 'ts-bs-tran-thi-huong',
-      name: 'TS. BS Trần Thị Hương',
+      name: 'Trần Thị Hương',
       title: 'Tiến sĩ Bác sĩ',
       specialty: 'noi-khoa',
       experience: '15+ năm kinh nghiệm',
@@ -28,7 +28,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '3',
       slug: 'ths-bs-le-van-duc',
-      name: 'ThS. BS Lê Văn Đức',
+      name: 'Lê Văn Đức',
       title: 'Thạc sĩ Bác sĩ',
       specialty: 'ngoai-khoa',
       experience: '18+ năm kinh nghiệm',
@@ -41,7 +41,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '4',
       slug: 'bs-ck1-pham-thi-lan',
-      name: 'BS.CK1 Phạm Thị Lan',
+      name: 'Phạm Thị Lan',
       title: 'Bác sĩ Chuyên khoa I',
       specialty: 'chuyen-khoa',
       experience: '12+ năm kinh nghiệm',
@@ -54,7 +54,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '5',
       slug: 'prof-bs-hoang-van-nam',
-      name: 'Prof. BS Hoàng Văn Nam',
+      name: 'Hoàng Văn Nam',
       title: 'Giáo sư Bác sĩ',
       specialty: 'phuc-hoi',
       experience: '25+ năm kinh nghiệm',
@@ -67,7 +67,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '6',
       slug: 'bs-nguyen-thi-mai',
-      name: 'BS Nguyễn Thị Mai',
+      name: 'Nguyễn Thị Mai',
       title: 'Bác sĩ',
       specialty: 'noi-khoa',
       experience: '8+ năm kinh nghiệm',
@@ -80,7 +80,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '7',
       slug: 'ts-bs-tran-van-minh',
-      name: 'TS. BS Trần Văn Minh',
+      name: 'Trần Văn Minh',
       title: 'Tiến sĩ Bác sĩ',
       specialty: 'chuyen-khoa',
       experience: '22+ năm kinh nghiệm',
@@ -93,7 +93,7 @@ export const mockDoctors: Doctor[] = [
    {
       id: '8',
       slug: 'ths-bs-le-thi-hong',
-      name: 'ThS. BS Lê Thị Hồng',
+      name: 'Lê Thị Hồng',
       title: 'Thạc sĩ Bác sĩ',
       specialty: 'tai-mui-hong',
       experience: '14+ năm kinh nghiệm',
@@ -109,7 +109,7 @@ export const mockDoctorDetails: DoctorDetail[] = [
    {
       id: '1',
       slug: 'bs-ckii-nguyen-van-minh',
-      name: 'BS.CKII Nguyễn Văn Minh',
+      name: 'Nguyễn Văn Minh',
       title: 'Bác sĩ Chuyên khoa II',
       specialty: 'can-lam-sang',
       experience: '20+ năm kinh nghiệm',
@@ -133,7 +133,7 @@ export const mockDoctorDetails: DoctorDetail[] = [
       ],
       languages: ['Tiếng Việt', 'English', '日本語'],
       workingHours: 'Thứ 2-6: 8:00-17:00, Thứ 7: 8:00-12:00',
-      phoneNumber: '028-3855-4269',
+      phone: '028-3855-4269',
       email: 'bs.nguyenvanminh@choray.vn',
       articles: [
          {
@@ -153,7 +153,7 @@ export const mockDoctorDetails: DoctorDetail[] = [
    {
       id: '2',
       slug: 'ts-bs-tran-thi-huong',
-      name: 'TS. BS Trần Thị Hương',
+      name: 'Trần Thị Hương',
       title: 'Tiến sĩ Bác sĩ',
       specialty: 'noi-khoa',
       experience: '15+ năm kinh nghiệm',
@@ -176,7 +176,7 @@ export const mockDoctorDetails: DoctorDetail[] = [
       ],
       languages: ['Tiếng Việt', 'English', 'Français'],
       workingHours: 'Thứ 2-6: 7:30-16:30, Thứ 7: 7:30-11:30',
-      phoneNumber: '028-3896-5555',
+      phone: '028-3896-5555',
       email: 'ts.tranthihuong@nhi1.org.vn',
       articles: [
          {
@@ -187,4 +187,33 @@ export const mockDoctorDetails: DoctorDetail[] = [
          }
       ]
    }
-];
+]
+
+export const mockDoctorProfile : DoctorProfile = {
+   id: '1',
+   name: 'Nguyễn Văn Minh',
+   slug: 'bs-ckii-nguyen-van-minh',
+   imageUrl: '/placeholder.svg',
+   email: 'bs.nguyenvanminh@choray.vn',
+   phone: '028-3855-4269',
+   about: 'BS.CKII Nguyễn Văn Minh có hơn 20 năm kinh nghiệm trong lĩnh vực Tim mạch can thiệp. Bác sĩ Minh hiện đang là Trưởng khoa Tim mạch tại Bệnh viện Chợ Rẫy.',
+   education: [
+       '2000: Tốt nghiệp Đại học Y Dược TP.HCM',
+       '2005: Tốt nghiệp chuyên khoa 1 Tim mạch, Đại học Y Dược TP.HCM',
+       '2010: Tốt nghiệp chuyên khoa 2 Tim mạch, Đại học Y Dược TP.HCM',
+       '2015: Học tập tại Bệnh viện Đại học Tokyo, Nhật Bản'
+   ],
+   achievements: [
+       'Thành viên Hội Tim mạch Việt Nam',
+       'Chứng chỉ can thiệp tim mạch quốc tế',
+       'Giải thưởng Bác sĩ xuất sắc năm 2020',
+       'Chứng chỉ đào tạo tại Đại học Harvard'
+   ],
+   languages: ['Tiếng Việt', 'English', '日本語'],
+   title: 'Bác sĩ Chuyên khoa II',
+   specialty: 'Tim mạch',
+   experience: '20+ năm kinh nghiệm',
+   hospital: 'Bệnh viện Chợ Rẫy',
+   location: 'TP. Hồ Chí Minh',
+   consultationFee: '300.000đ'
+}

@@ -13,8 +13,6 @@ interface SpecialtyDetail {
    name: string
    slug: string
    description: string
-   imageUrl: string
-   doctors: Doctor[]
 }
 
 type SpecialtyCategory =

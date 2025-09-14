@@ -1,8 +1,9 @@
 'use client'
 
 import { usePersonalInfoStore } from './store/personal-info'
+import React from "react"
 
-export default function InsuranceInfo() {
+export default (() => {
    const { isEditing } = usePersonalInfoStore()
 
    return (
@@ -53,4 +54,4 @@ export default function InsuranceInfo() {
          </div>
       </div>
    )
-}
+}) satisfies React.FC

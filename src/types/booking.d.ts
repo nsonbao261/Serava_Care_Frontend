@@ -1,31 +1,47 @@
-interface Booking {
-   id: string
-   orderNumber: string
-   patientName: string
-   patientPhone?: string
-   patientEmail?: string
-   patientAddress?: string
-   doctorName: string
-   doctorSpecialty: string
-   doctorImage: string
-   doctorPhone?: string
-   doctorEmail?: string
-   serviceType: 'telemedicine' | 'clinic' | 'home' | 'emergency'
-   serviceName: string
-   appointmentDate: string
-   appointmentTime: string
-   status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'rescheduled'
-   totalAmount: string
-   paymentStatus: 'pending' | 'paid' | 'refunded'
-   paymentMethod?: string
-   bookingDate: string
-   hospital: string
-   hospitalAddress?: string
-   reason?: string
-   notes?: string
-   symptoms?: string[]
-   medicalHistory?: string
-   prescription?: string
-   diagnosis?: string
-   followUpDate?: string
+interface BookingResult {
+    id: string
+    booking: {
+        code: string
+        status: string
+        date: string
+    }
+    patient: {
+        name: string
+        phone: string
+        email?: string
+        address?: string
+    }
+    doctor: {
+        name: string
+        specialty: string
+        imageUrl: string
+        phone?: string
+        email?: string
+    }
+    service: {
+        type: string
+        name: string
+    }
+    appointment: {
+        date: string
+        time: string
+    }
+    payment: {
+        totalAmount: string
+        status: string
+        method: string
+    }
+    hospital: {
+        name: string
+        address: string
+    }
+    medicalRecord: {
+        reason?: string
+        notes?: string
+        symptoms?: string[]
+        medicalHistory?: string
+        prescription?: string
+        diagnosis?: string
+        followUpDate?: string
+    }
 }

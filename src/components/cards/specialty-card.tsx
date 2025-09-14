@@ -5,8 +5,7 @@ import { motion } from 'framer-motion'
 import { Star, Users } from 'lucide-react'
 import Link from 'next/link'
 
-export function SpecialtyCard({ specialty }: { specialty: Specialty }) {
-   return (
+export default (({ specialty }) => (
       <motion.div
          whileHover={{ y: -8, scale: 1.02 }}
          className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-2xl transition-all duration-300 group overflow-hidden relative"
@@ -63,5 +62,4 @@ export function SpecialtyCard({ specialty }: { specialty: Specialty }) {
             </div>
          </div>
       </motion.div>
-   )
-}
+   )) satisfies React.FC<{ specialty: Specialty }>

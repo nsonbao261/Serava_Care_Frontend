@@ -1,40 +1,38 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { usePathname, useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import {useSession} from 'next-auth/react'
+import {usePathname, useRouter} from 'next/navigation'
+import React, {useEffect} from 'react'
 
 type Role = 'GUEST' | 'ADMIN' | 'DOCTOR' | 'NURSE'
 
-export default function ProtectedRoute({
-   allowedRoles,
-   children
-}: {
-   allowedRoles: Role[]
-   children: React.ReactNode
-}) {
-   const { data: session, status } = useSession()
-   const pathname = usePathname()
-   const router = useRouter()
+export default ((props) => {
+    const {allowedRoles, children} = props
+    const {data: session, status} = useSession()
+    const pathname = usePathname()
+    const router = useRouter()
 
-   useEffect(() => {
-      if (status === 'loading') return
+    useEffect(() => {
+        if (status === 'loading') return
 
-      if (!session) {
-         router.replace(`/auth?callbackUrl=${encodeURIComponent(pathname)}`)
-         return
-      }
+        if (!session) {
+            router.replace(`/auth?callbackUrl=${encodeURIComponent(pathname)}`)
+            return
+        }
 
-      const userRole = (session.user?.role || 'GUEST') as Role
-      if (!allowedRoles.includes(userRole)) {
-         router.replace('/')
-         return
-      }
-   }, [status, session, allowedRoles, pathname, router])
+        const userRole = (session.user?.role || 'GUEST') as Role
+        if (!allowedRoles.includes(userRole)) {
+            router.replace('/')
+            return
+        }
+    }, [status, session, allowedRoles, pathname, router])
 
-   if (status === 'loading' || status === 'unauthenticated') {
-      return null
-   }
+    if (status === 'loading' || status === 'unauthenticated') {
+        return null
+    }
 
-   return <>{children}</>
-}
+    return <>{children}</>
+}) satisfies React.FC<{
+    allowedRoles: Role[]
+    children: React.ReactNode
+}>

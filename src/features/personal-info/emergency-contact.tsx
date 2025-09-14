@@ -1,8 +1,9 @@
 'use client'
 
 import { usePersonalInfoStore } from './store/personal-info'
+import React from "react"
 
-export default function EmergencyContact() {
+export default (() => {
    const { isEditing } = usePersonalInfoStore()
 
    return (
@@ -52,4 +53,4 @@ export default function EmergencyContact() {
          </div>
       </div>
    )
-}
+}) satisfies React.FC

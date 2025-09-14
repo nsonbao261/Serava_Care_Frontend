@@ -1,3 +1,5 @@
-export function BookingHistoryPage() {
-   return <div>Not Implemented</div>
-}
+import React from "react"
+
+export default (() => (
+   <div>Not Implemented</div>
+)) satisfies React.FC

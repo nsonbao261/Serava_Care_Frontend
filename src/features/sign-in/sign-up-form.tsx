@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import React, { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import {
    Button,
@@ -27,7 +27,7 @@ import { type SignUpInput, signUpSchema } from '@/schemas'
 import { signUpWithCredentials } from '@/services/server/auth'
 import { toast } from 'sonner'
 
-export default function SignUpForm() {
+export default (() => {
    const router = useRouter()
    const [agreeTerms, setAgreeTerms] = useState(false)
    const [isLoading, startTransition] = useTransition()
@@ -290,4 +290,4 @@ export default function SignUpForm() {
          </Form>
       </motion.div>
    )
-}
+}) satisfies React.FC

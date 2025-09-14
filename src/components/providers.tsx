@@ -1,21 +1,19 @@
 'use client'
 
-import { SessionProvider } from 'next-auth/react'
-import { SWRConfig } from 'swr'
-import React from 'react'
+import {SessionProvider} from 'next-auth/react'
+import {SWRConfig} from 'swr'
+import React, {PropsWithChildren} from 'react'
 
-export function Providers({ children }: { children: React.ReactNode }) {
-   return (
-      <SessionProvider>
-         <SWRConfig
+export default (({children}) => (
+    <SessionProvider>
+        <SWRConfig
             value={{
-               revalidateOnFocus: false,
-               revalidateOnReconnect: true,
-               dedupingInterval: 5000
+                revalidateOnFocus: false,
+                revalidateOnReconnect: true,
+                dedupingInterval: 5000
             }}
-         >
+        >
             {children}
-         </SWRConfig>
-      </SessionProvider>
-   )
-}
+        </SWRConfig>
+    </SessionProvider>
+)) satisfies React.FC<PropsWithChildren>

@@ -12,40 +12,40 @@ export * from './ui/sheet'
 export * from './ui/sonner'
 
 // Animations
-export { AnimatedPageTitle } from './animations/animated-page-title'
-export { AnimatedSection } from './animations/animated-section'
-export { ParticleBackground } from './animations/particle-background'
-export { TypewriterText } from './animations/typewriter-text'
+export { default as AnimatedPageTitle } from './animations/animated-page-title'
+export { default as AnimatedSection } from './animations/animated-section'
+export { default as ParticleBackground } from './animations/particle-background'
+export { default as TypewriterText } from './animations/typewriter-text'
 
 // Cards
-export { DoctorCard } from './cards/doctor-card'
-export { SpecialtyCard } from './cards/specialty-card'
+export { default as DoctorCard } from './cards/doctor-card'
+export { default as SpecialtyCard } from './cards/specialty-card'
 
 // Common
-export { BackToTop } from './common/back-to-top'
-export { DatePicker } from './common/date-picker'
-export { FloatingActionButton } from './common/floating-action-button'
-export { LoadingSpinner } from './common/loading-spinner'
+export { default as BackToTop } from './common/back-to-top'
+export { default as DatePicker } from './common/date-picker'
+export { default as FloatingActionButton } from './common/floating-action-button'
+export { default as LoadingSpinner } from './common/loading-spinner'
 
 // Forms
-export { MorphingButton } from './forms/morphing-button'
+export { default as MorphingButton } from './forms/morphing-button'
 
 // Layout
-export { Footer } from './layout/footer'
-export { Header } from './layout/header'
+export { default as Footer } from './layout/footer'
+export { default as Header } from './layout/header'
 
 // Motion
-export { BackgroundMotion } from './motion/background-motion'
+export { default as BackgroundMotion } from './motion/background-motion'
 
 // Sections
-export { CTA } from './sections/cta'
-export { ExpertTeam } from './sections/expert-team'
-export { Features } from './sections/features'
-export { Hero } from './sections/hero'
-export { Newsletter } from './sections/newsletter'
-export { Specialties } from './sections/specialties'
-export { Statistics } from './sections/statistics'
-export { SearchAndFilterBar } from './sections/search-and-filter-bar'
+export { default as CTA } from './sections/cta'
+export { default as ExpertTeam } from './sections/expert-team'
+export { default as Features } from './sections/features'
+export { default as Hero } from './sections/hero'
+export { default as Newsletter } from './sections/newsletter'
+export { default as Specialties } from './sections/specialties'
+export { default as Statistics } from './sections/statistics'
+export { default as SearchAndFilterBar } from './sections/search-and-filter-bar'
 
 // Providers
-export { Providers } from './providers'
+export { default as Providers } from './providers'

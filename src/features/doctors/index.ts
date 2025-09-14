@@ -1,2 +1,2 @@
-export { ArticlesSection } from './articles-section'
-export { BookingSection } from './booking-section'
+export { default as ArticlesSection } from './articles-section'
+export { default as BookingSection } from './booking-section'

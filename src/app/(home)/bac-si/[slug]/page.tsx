@@ -1,234 +1,223 @@
-import { notFound } from 'next/navigation'
-import { ArticlesSection, BookingSection } from '@/features/doctors'
+import {notFound} from 'next/navigation'
+import {ArticlesSection, BookingSection} from '@/features/doctors'
 import {
-   Award,
-   Bookmark,
-   Building2,
-   ChevronRight,
-   Clock,
-   GraduationCap,
-   MapPin,
-   Share2,
-   Star,
-   ThumbsUp,
-   User
+    Award,
+    Bookmark,
+    Building2,
+    ChevronRight,
+    Clock,
+    GraduationCap,
+    MapPin,
+    Share2,
+    Star,
+    ThumbsUp,
+    User
 } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@/components'
-import { getDoctorBySlug } from '@/services'
+import {Button} from '@/components'
+import {getDoctorBySlug} from '@/services'
 import Image from 'next/image'
+import React from "react"
+import {IMAGE_PLACEHOLDER_CONTENT} from "@/constants";
 
-export default async function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-   const { slug } = await params
-   const doctor = await getDoctorBySlug(slug)
+export default (async (props) => {
+    const {slug} = await props.params
+    const doctor = await getDoctorBySlug(slug)
 
-   if (!doctor) notFound()
+    if (!doctor) notFound()
 
-   return (
-      <div className="min-h-screen bg-gray-50">
-         {/* Breadcrumb */}
-         <div className="bg-white border-b">
+    return (<div className="min-h-screen bg-gray-50">
+        {/* Breadcrumb */}
+        <div className="bg-white border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-               <nav className="flex items-center space-x-2 text-sm text-gray-500">
-                  <Link href="/" className="hover:text-blue-600">
-                     Trang chủ
-                  </Link>
-                  <ChevronRight className="h-4 w-4" />
-                  <Link href="/bac-si" className="hover:text-blue-600">
-                     Danh sách bác sĩ
-                  </Link>
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="text-gray-900">{doctor.name}</span>
-               </nav>
+                <nav className="flex items-center space-x-2 text-sm text-gray-500">
+                    <Link href="/" className="hover:text-blue-600">
+                        Trang chủ
+                    </Link>
+                    <ChevronRight className="h-4 w-4"/>
+                    <Link href="/bac-si" className="hover:text-blue-600">
+                        Danh sách bác sĩ
+                    </Link>
+                    <ChevronRight className="h-4 w-4"/>
+                    <span className="text-gray-900">{doctor.name}</span>
+                </nav>
             </div>
-         </div>
+        </div>
 
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid lg:grid-cols-3 gap-8">
-               {/* Main Content */}
-               <div className="lg:col-span-2 space-y-8">
-                  {/* Doctor Header */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                     <div className="p-8">
-                        <div className="flex items-start space-x-6">
-                           {/* Doctor Avatar */}
-                           <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                              <Image
-                                 src={doctor.imageUrl ?? '/placeholder.svg'}
-                                 alt={doctor.name}
-                                 width={500}
-                                 height={300}
-                                 className="w-full h-full object-cover"
-                              />
-                           </div>
+                {/* Main Content */}
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Doctor Header */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="p-8">
+                            <div className="flex items-start space-x-6">
+                                {/* Doctor Avatar */}
+                                <div
+                                    className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                                    <Image
+                                        src={doctor.imageUrl ?? IMAGE_PLACEHOLDER_CONTENT}
+                                        alt={doctor.name}
+                                        width={500}
+                                        height={300}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
 
-                           <div className="flex-1">
-                              <div className="flex items-start justify-between mb-4">
-                                 <div>
-                                    <div className="flex items-center mb-2">
-                                       <h1 className="text-3xl font-bold text-gray-900">
-                                          {doctor.name}
-                                       </h1>
+                                <div className="flex-1">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div>
+                                            <div className="flex items-center mb-2">
+                                                <h1 className="text-3xl font-bold text-gray-900">
+                                                    {doctor.name}
+                                                </h1>
+                                            </div>
+                                            <p className="text-lg text-gray-600 mb-2">{doctor.title}</p>
+                                            <div className="flex items-center text-blue-600 mb-3">
+                                                <GraduationCap className="h-5 w-5 mr-2"/>
+                                                <span className="font-medium">{doctor.specialty}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Button variant="outline" size="sm">
+                                                <Share2 className="h-4 w-4 mr-1"/>
+                                                Chia sẻ
+                                            </Button>
+                                            <Button variant="outline" size="sm">
+                                                <Bookmark className="h-4 w-4 mr-1"/>
+                                                Lưu
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <p className="text-lg text-gray-600 mb-2">{doctor.title}</p>
-                                    <div className="flex items-center text-blue-600 mb-3">
-                                       <GraduationCap className="h-5 w-5 mr-2" />
-                                       <span className="font-medium">{doctor.specialty}</span>
-                                    </div>
-                                 </div>
-                                 <div className="flex items-center space-x-2">
-                                    <Button variant="outline" size="sm">
-                                       <Share2 className="h-4 w-4 mr-1" />
-                                       Chia sẻ
-                                    </Button>
-                                    <Button variant="outline" size="sm">
-                                       <Bookmark className="h-4 w-4 mr-1" />
-                                       Lưu
-                                    </Button>
-                                 </div>
-                              </div>
 
-                              <div className="grid md:grid-cols-2 gap-4 mb-6">
-                                 <div className="flex items-center text-gray-600">
-                                    <Building2 className="h-5 w-5 mr-2" />
-                                    <span>{doctor.hospital}</span>
-                                 </div>
-                                 <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-5 w-5 mr-2" />
-                                    <span>{doctor.location}</span>
-                                 </div>
-                                 <div className="flex items-center text-gray-600">
-                                    <Clock className="h-5 w-5 mr-2" />
-                                    <span>{doctor.experience}</span>
-                                 </div>
-                                 <div className="flex items-center text-gray-600">
-                                    <Star className="h-5 w-5 mr-2 text-yellow-400" />
-                                    <span>
+                                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                                        <div className="flex items-center text-gray-600">
+                                            <Building2 className="h-5 w-5 mr-2"/>
+                                            <span>{doctor.hospital}</span>
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <MapPin className="h-5 w-5 mr-2"/>
+                                            <span>{doctor.location}</span>
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <Clock className="h-5 w-5 mr-2"/>
+                                            <span>{doctor.experience}</span>
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <Star className="h-5 w-5 mr-2 text-yellow-400"/>
+                                            <span>
                                        {doctor.rating} ({doctor.reviewCount} đánh giá)
                                     </span>
-                                 </div>
-                              </div>
+                                        </div>
+                                    </div>
 
-                              <div className="flex items-center space-x-4">
-                                 <div className="text-2xl font-bold text-green-600">
-                                    {doctor.consultationFee}
-                                 </div>
-                                 <span className="text-gray-500">phí tư vấn</span>
-                              </div>
-                           </div>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="text-2xl font-bold text-green-600">
+                                            {doctor.consultationFee}
+                                        </div>
+                                        <span className="text-gray-500">phí tư vấn</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                     </div>
-                  </div>
+                    </div>
 
-                  {/* About Section */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Giới thiệu</h2>
-                     <p className="text-gray-700 leading-relaxed">{doctor.about}</p>
-                  </div>
+                    {/* About Section */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Giới thiệu</h2>
+                        <p className="text-gray-700 leading-relaxed">{doctor.about}</p>
+                    </div>
 
-                  {/* Education Section */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Học vấn</h2>
-                     <div className="space-y-3">
-                        {doctor.education.map((item: string, index: number) => (
-                           <div key={index} className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                              <p className="text-gray-700">{item}</p>
-                           </div>
-                        ))}
-                     </div>
-                  </div>
+                    {/* Education Section */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Học vấn</h2>
+                        <div className="space-y-3">
+                            {doctor.education.map((item: string, index: number) => (
+                                <div key={index} className="flex items-start space-x-3">
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                    <p className="text-gray-700">{item}</p>
+                                </div>))}
+                        </div>
+                    </div>
 
-                  {/* Achievements Section */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                        Thành tích & Chứng chỉ
-                     </h2>
-                     <div className="grid md:grid-cols-2 gap-4">
-                        {doctor.achievements.map((achievement: string, index: number) => (
-                           <div key={index} className="flex items-start space-x-3">
-                              <Award className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                              <p className="text-gray-700">{achievement}</p>
-                           </div>
-                        ))}
-                     </div>
-                  </div>
+                    {/* Achievements Section */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                            Thành tích & Chứng chỉ
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {doctor.achievements.map((achievement: string, index: number) => (
+                                <div key={index} className="flex items-start space-x-3">
+                                    <Award className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0"/>
+                                    <p className="text-gray-700">{achievement}</p>
+                                </div>))}
+                        </div>
+                    </div>
 
-                  {/* Articles Section */}
-                  <ArticlesSection articles={doctor.articles} doctorName={doctor.name} />
-               </div>
+                    {/* Articles Section */}
+                    <ArticlesSection articles={doctor.articles} doctorName={doctor.name}/>
+                </div>
 
-               {/* Sidebar */}
-               <div className="space-y-6">
-                  {/* Booking Section - Client Component */}
-                  <BookingSection doctor={doctor} />
+                {/* Sidebar */}
+                <div className="space-y-6">
+                    {/* Booking Section - Client Component */}
+                    <BookingSection doctor={doctor}/>
 
-                  {/* Languages */}
-                  {doctor.languages && doctor.languages.length > 0 && (
-                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">Ngôn ngữ</h3>
-                        <div className="flex flex-wrap gap-2">
-                           {doctor.languages.map((language: string, index: number) => (
-                              <span
-                                 key={index}
-                                 className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                              >
+                    {/* Languages */}
+                    {doctor.languages && doctor.languages.length > 0 && (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4">Ngôn ngữ</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {doctor.languages.map((language: string, index: number) => (<span
+                                    key={index}
+                                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                >
                                  {language}
-                              </span>
-                           ))}
-                        </div>
-                     </div>
-                  )}
+                              </span>))}
+                            </div>
+                        </div>)}
 
-                  {/* Reviews Preview */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                     <h3 className="text-lg font-bold text-gray-900 mb-4">Đánh giá bệnh nhân</h3>
-                     <div className="flex items-center mb-4">
-                        <div className="flex items-center">
-                           {[1, 2, 3, 4, 5].map((star) => (
-                              <Star
-                                 key={star}
-                                 className={`h-5 w-5 ${
-                                    star <= Math.floor(doctor.rating)
-                                       ? 'text-yellow-400 fill-current'
-                                       : 'text-gray-300'
-                                 }`}
-                              />
-                           ))}
+                    {/* Reviews Preview */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h3 className="text-lg font-bold text-gray-900 mb-4">Đánh giá bệnh nhân</h3>
+                        <div className="flex items-center mb-4">
+                            <div className="flex items-center">
+                                {[1, 2, 3, 4, 5].map((star) => (<Star
+                                    key={star}
+                                    className={`h-5 w-5 ${star <= Math.floor(doctor.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                                />))}
+                            </div>
+                            <span className="ml-2 text-lg font-semibold">{doctor.rating}</span>
+                            <span className="ml-1 text-gray-500">({doctor.reviewCount} đánh giá)</span>
                         </div>
-                        <span className="ml-2 text-lg font-semibold">{doctor.rating}</span>
-                        <span className="ml-1 text-gray-500">({doctor.reviewCount} đánh giá)</span>
-                     </div>
 
-                     <div className="space-y-3">
-                        <div className="border-b border-gray-100 pb-3">
-                           <div className="flex items-center mb-2">
-                              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                                 <User className="h-4 w-4 text-gray-600" />
-                              </div>
-                              <div>
-                                 <div className="text-sm font-medium">Nguyễn T.</div>
-                                 <div className="text-xs text-gray-500">2 ngày trước</div>
-                              </div>
-                           </div>
-                           <p className="text-sm text-gray-700">
-                              &ldquo;Bác sĩ rất tận tâm và chu đáo. Giải thích rõ ràng về tình trạng
-                              bệnh.&rdquo;
-                           </p>
-                           <div className="flex items-center mt-2">
-                              <ThumbsUp className="h-4 w-4 text-gray-400 mr-1" />
-                              <span className="text-xs text-gray-500">Hữu ích (5)</span>
-                           </div>
+                        <div className="space-y-3">
+                            <div className="border-b border-gray-100 pb-3">
+                                <div className="flex items-center mb-2">
+                                    <div
+                                        className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                                        <User className="h-4 w-4 text-gray-600"/>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium">Nguyễn T.</div>
+                                        <div className="text-xs text-gray-500">2 ngày trước</div>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-gray-700">&ldquo;Bác sĩ rất tận tâm và chu đáo. Giải thích rõ
+                                    ràng về tình trạng bệnh.&rdquo;</p>
+                                <div className="flex items-center mt-2">
+                                    <ThumbsUp className="h-4 w-4 text-gray-400 mr-1"/>
+                                    <span className="text-xs text-gray-500">Hữu ích (5)</span>
+                                </div>
+                            </div>
                         </div>
-                     </div>
 
-                     <Button variant="outline" className="w-full mt-4">
-                        Xem tất cả đánh giá
-                     </Button>
-                  </div>
-               </div>
+                        <Button variant="outline" className="w-full mt-4">
+                            Xem tất cả đánh giá
+                        </Button>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-   )
-}
+        </div>
+    </div>)
+}) satisfies React.FC<{ params: Promise<{ slug: string }> }>

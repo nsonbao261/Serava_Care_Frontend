@@ -12,7 +12,7 @@ export async function getAllSpecialties(): Promise<Specialty[]> {
 export async function getSpecialtyBySlug(slug: string): Promise<SpecialtyDetail | undefined> {
    try {
       await new Promise((resolve) => setTimeout(resolve, 800))
-      return mockSpecialtyDetail.find(specialty => specialty.slug = slug);
+      return mockSpecialtyDetail.find(specialty => specialty.slug = slug)
    } catch {
       throw new Error('Không thể tải chuyên khoa từ server')
    }

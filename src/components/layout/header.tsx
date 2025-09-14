@@ -13,8 +13,9 @@ import Link from 'next/link'
 import { Button } from '@/components'
 import UserMenu from './user-menu'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import React from "react";
 
-export async function Header() {
+export default (async () => {
    const session = await getServerSession(authOptions)
 
    const NAVIGATION_LINKS = [
@@ -167,4 +168,4 @@ export async function Header() {
          </div>
       </header>
    )
-}
+}) satisfies React.FC

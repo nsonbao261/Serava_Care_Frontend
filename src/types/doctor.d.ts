@@ -3,10 +3,10 @@ interface Doctor {
    slug: string
    name: string
    title: string
-   specialty?: string
+   specialty: string
    experience: string
    hospital: string
-   location?: string
+   location: string
    rating: number
    reviewCount?: number
    consultationFee: string
@@ -19,7 +19,7 @@ interface DoctorDetail extends Doctor {
    achievements: string[]
    languages: string[]
    workingHours: string
-   phoneNumber: string
+   phone: string
    email: string
    articles: Array<{
       id: string
@@ -27,4 +27,23 @@ interface DoctorDetail extends Doctor {
       publishDate: string
       readTime: string
    }>
+}
+
+interface DoctorProfile {
+    id: string
+    name: string
+    slug: string
+    imageUrl?: string
+    email: string
+    phone: string
+    about: string
+    education: string[]
+    achievements: string[]
+    languages: string[]
+    title: string
+    specialty: string
+    experience: string
+    hospital: string
+    location: string
+    consultationFee: string
 }

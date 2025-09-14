@@ -1,16 +1,18 @@
 import Link from 'next/link'
-import { MorphingButton } from '@/components/forms/morphing-button'
+import { default as MorphingButton } from '@/components/forms/morphing-button'
 import { Clock, GraduationCap, MapPin, Star } from 'lucide-react'
 import Image from 'next/image'
+import React from "react"
+import {IMAGE_PLACEHOLDER_CONTENT} from "@/constants";
 
-export const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
+export default (({ doctor }) => (
    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
       <div className="p-6">
          <div className="flex items-start space-x-4">
             {/* Doctor Avatar */}
             <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
                <Image
-                  src={doctor.imageUrl ?? '/placeholder.svg'}
+                  src={doctor.imageUrl ?? IMAGE_PLACEHOLDER_CONTENT}
                   alt={doctor.name}
                   width={500}
                   height={300}
@@ -80,4 +82,4 @@ export const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
          </div>
       </div>
    </div>
-)
+)) satisfies React.FC<{ doctor: Doctor }>
