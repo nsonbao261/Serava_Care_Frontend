@@ -2,8 +2,9 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
 
 import { ACCESS_TOKEN } from '@/constants'
+import { getSession } from 'next-auth/react'
 
-const api = axios.create({
+export const axiosInstance = axios.create({
    baseURL: process.env.NEXT_API_URL || '/backend',
    timeout: 10000,
    headers: {
@@ -11,9 +12,9 @@ const api = axios.create({
    }
 })
 
-api.interceptors.request.use(
-   (config: InternalAxiosRequestConfig) => {
-      const token = Cookies.get(ACCESS_TOKEN)
+axiosInstance.interceptors.request.use(
+   async (config: InternalAxiosRequestConfig) => {
+      const token = await getSession()
 
       if (token) {
          config.headers.Authorization = `Bearer ${token}`
@@ -26,8 +27,8 @@ api.interceptors.request.use(
    }
 )
 
-api.interceptors.response.use(
-   (response) => response,
+axiosInstance.interceptors.response.use(
+   (response) => response.data,
    (error: AxiosError) => {
       // Handle token expiration
       if (error.response?.status === 401) {
@@ -38,5 +39,3 @@ api.interceptors.response.use(
       return Promise.reject(error)
    }
 )
-
-export default api
