@@ -21,61 +21,77 @@ import { TimeSelectSkeleton } from '@/components/skeletons'
 
 // Deps
 import { IMAGE_PLACEHOLDER_CONTENT } from '@/constants'
-import { cn } from '@/lib'
+import { cn, toastMessage } from '@/lib'
+import { createAppointment } from '@/services/client/appointments'
 import { getDoctorTimeSlots } from '@/services/client/timelines'
+import { toast } from 'sonner'
 
 // Types
 type Step = 'datetime' | 'info' | 'confirm'
-type BookingForm = {
-   doctorId: string
-   date: string
-   time: string
-   patientName: string
-   patientPhone: string
-   reason: string
+
+interface BookingModalProps {
+   doctor: Doctor
+   workDates: WorkDate[]
+   specializationId: string
 }
 
-export default function BookingModal(props: { doctor: Doctor; workDates: string[] }) {
-   const { doctor, workDates } = props
-   const initialFormState: BookingForm = {
-      doctorId: doctor.id,
-      date: '',
-      time: '',
-      patientName: '',
-      patientPhone: '',
-      reason: ''
-   }
+export default function BookingModal(props: BookingModalProps) {
+   const { doctor, workDates, specializationId } = props
 
+   const initialFormState: Pick<BookingForm, 'fullName' | 'phoneNumber' | 'reason' | 'patientId'> =
+      { fullName: '', phoneNumber: '', reason: '' }
+
+   const [isOpen, setOpen] = useState(false)
    const [step, setStep] = useState<Step>('datetime')
-   const [selectedDate, setSelectedDate] = useState<string>(workDates[0])
-   const [selectedTime, setSelectedTime] = useState<string>('')
-   const [bookingForm, setBookingForm] = useState<BookingForm>(initialFormState)
+   const [selectedDate, setSelectedDate] = useState<WorkDate>(workDates[0])
+   const [selectedTime, setSelectedTime] = useState<TimeSlot | undefined>(undefined)
+   const [bookingForm, setBookingForm] = useState(initialFormState)
 
-   const { data: timeSlots } = useSWR([doctor.id, selectedDate], ([doctorId, selectedDate]) =>
-      getDoctorTimeSlots(doctorId, selectedDate)
+   const { data: timeSlots } = useSWR([doctor.id, selectedDate.date], ([doctorId, date]) =>
+      getDoctorTimeSlots(doctorId, date)
    )
 
    const handleReset = () => {
-      setStep('datetime')
-      setSelectedDate('')
-      setSelectedTime('')
-      setBookingForm(initialFormState)
+      setOpen(false)
+
+      // Delay tránh bị flick modal
+      setTimeout(() => {
+         setStep('datetime')
+         setSelectedDate(workDates[0])
+         setBookingForm(initialFormState)
+         setSelectedTime(undefined)
+      }, 300)
    }
 
-   const handleBookingSubmit = () => {
-      console.log('Booking submitted:', bookingForm)
-      alert('Đặt khám thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.')
+   const handleBookingSubmit = async () => {
+      if (!selectedTime?.timelineId) return
+
+      const data: BookingForm = {
+         timelineId: selectedTime.timelineId,
+         doctorScheduleId: selectedDate.doctorScheduleId,
+         specializationId: specializationId,
+         patientId: bookingForm.patientId,
+         phoneNumber: bookingForm.phoneNumber,
+         fullName: bookingForm.fullName
+      }
+
+      const res = await createAppointment(data)
+      toastMessage(res, { success: toast.success, error: toast.warning })
 
       handleReset()
    }
 
    const isDateTimeValid = !!selectedDate && !!selectedTime
-   const isInfoValid = !!bookingForm.patientName.trim() && !!bookingForm.patientPhone.trim()
+   const isInfoValid = !!bookingForm.fullName?.trim() && !!bookingForm.phoneNumber?.trim()
 
    const handleDateTimeNext = () => {
-      if (!isDateTimeValid) return
+      if (!isDateTimeValid || !selectedTime) return
 
-      setBookingForm((prev) => ({ ...prev, date: selectedDate, time: selectedTime }))
+      setBookingForm((prev) => ({
+         ...prev,
+         timelineId: selectedTime.timelineId,
+         doctorScheduleId: selectedDate.doctorScheduleId
+      }))
       setStep('info')
    }
 
@@ -93,7 +109,7 @@ export default function BookingModal(props: { doctor: Doctor; workDates: string[
    }
 
    return (
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
          <DialogTrigger asChild>
             <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-4">
                <Calendar className="h-4 w-4 mr-2" />
@@ -133,8 +149,8 @@ export default function BookingModal(props: { doctor: Doctor; workDates: string[
                            </label>
                            <input
                               type="text"
-                              value={bookingForm.patientName}
-                              onChange={(e) => updateBookingForm('patientName', e.target.value)}
+                              value={bookingForm.fullName}
+                              onChange={(e) => updateBookingForm('fullName', e.target.value)}
                               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Nhập họ và tên"
                            />
@@ -146,8 +162,8 @@ export default function BookingModal(props: { doctor: Doctor; workDates: string[
                            </label>
                            <input
                               type="tel"
-                              value={bookingForm.patientPhone}
-                              onChange={(e) => updateBookingForm('patientPhone', e.target.value)}
+                              value={bookingForm.phoneNumber}
+                              onChange={(e) => updateBookingForm('phoneNumber', e.target.value)}
                               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Nhập số điện thoại"
                            />
@@ -199,20 +215,21 @@ export default function BookingModal(props: { doctor: Doctor; workDates: string[
                         <div className="border-t pt-4 space-y-2">
                            <div className="flex justify-between">
                               <span className="text-gray-600">Ngày khám:</span>
-                              <span className="font-medium">{bookingForm.date}</span>
+                              <span className="font-medium">{selectedDate.date}</span>
                            </div>
                            <div className="flex justify-between">
                               <span className="text-gray-600">Giờ khám:</span>
-                              <span className="font-medium">{bookingForm.time}</span>
+                              <span className="font-medium">{selectedTime?.startTime}</span>
                            </div>
                            <div className="flex justify-between">
                               <span className="text-gray-600">Bệnh nhân:</span>
-                              <span className="font-medium">{bookingForm.patientName}</span>
+                              <span className="font-medium">{bookingForm.fullName}</span>
                            </div>
                            <div className="flex justify-between">
                               <span className="text-gray-600">Số điện thoại:</span>
-                              <span className="font-medium">{bookingForm.patientPhone}</span>
+                              <span className="font-medium">{bookingForm.phoneNumber}</span>
                            </div>
+
                            {bookingForm.reason && (
                               <div className="flex justify-between">
                                  <span className="text-gray-600">Lý do khám:</span>
@@ -384,10 +401,10 @@ const DateTimeStep = (({
 }) => {
    const dates = useMemo(
       () =>
-         workDates.map((dateStr) => {
-            const date = new Date(dateStr)
+         workDates.map((workDate) => {
+            const date = new Date(workDate.date)
             return {
-               date: dateStr,
+               ...workDate,
                day: date.getDate(),
                weekday: date.toLocaleDateString('vi-VN', { weekday: 'short' }),
                month: date.getMonth() + 1
@@ -396,9 +413,9 @@ const DateTimeStep = (({
       [workDates]
    )
 
-   const handleDateSelect = (date: string) => {
-      onDateSelect(date)
-      onTimeSelect('')
+   const handleDateSelect = (workDate: WorkDate) => {
+      onDateSelect(workDate)
+      onTimeSelect(undefined)
    }
 
    return (
@@ -412,15 +429,20 @@ const DateTimeStep = (({
             <div className="grid grid-cols-7 gap-2">
                {dates.map((date) => (
                   <button
-                     key={date.date}
-                     onClick={() => handleDateSelect(date.date)}
+                     key={date.doctorScheduleId}
+                     onClick={() =>
+                        handleDateSelect({
+                           doctorScheduleId: date.doctorScheduleId,
+                           date: date.date
+                        })
+                     }
                      className={cn(
                         'p-3 text-center rounded-lg border transition-all duration-200',
                         {
                            'bg-blue-600 text-white border-blue-600 shadow-lg':
-                              selectedDate === date.date,
+                              selectedDate?.doctorScheduleId === date.doctorScheduleId,
                            'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50':
-                              selectedDate !== date.date
+                              selectedDate?.doctorScheduleId !== date.doctorScheduleId
                         }
                      )}
                   >
@@ -442,15 +464,15 @@ const DateTimeStep = (({
                <div className="grid grid-cols-4 gap-3">
                   {timeSlots.map((slot) => (
                      <button
-                        key={slot.startTime}
-                        onClick={() => slot.isAvailable && onTimeSelect(slot.startTime)}
+                        key={slot.timelineId}
+                        onClick={() => slot.isAvailable && onTimeSelect(slot)}
                         disabled={!slot.isAvailable}
                         className={cn('p-3 rounded-lg font-medium transition-all duration-200', {
                            'bg-gray-100 text-gray-400 cursor-not-allowed': !slot.isAvailable,
                            'bg-blue-600 text-white shadow-lg':
-                              slot.isAvailable && selectedTime === slot.startTime,
+                              slot.isAvailable && selectedTime?.timelineId === slot.timelineId,
                            'bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-blue-50':
-                              slot.isAvailable && selectedTime !== slot.startTime
+                              slot.isAvailable && selectedTime?.timelineId !== slot.timelineId
                         })}
                      >
                         {slot.startTime}
@@ -464,10 +486,10 @@ const DateTimeStep = (({
       </div>
    )
 }) satisfies React.FC<{
-   workDates: string[]
+   workDates: WorkDate[]
    timeSlots?: TimeSlot[]
-   selectedDate: string
-   selectedTime: string
-   onDateSelect: (date: string) => void
-   onTimeSelect: (time: string) => void
+   selectedDate: WorkDate | undefined
+   selectedTime: TimeSlot | undefined
+   onDateSelect: (date: WorkDate) => void
+   onTimeSelect: (time: TimeSlot | undefined) => void
 }>

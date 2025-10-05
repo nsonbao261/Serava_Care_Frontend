@@ -22,7 +22,11 @@ export default async function BookingSection(props: { doctor: DoctorDetail }) {
             </div>
          </div>
 
-         <BookingModal doctor={doctor as Doctor} workDates={workDates} />
+         <BookingModal
+            doctor={doctor as Doctor}
+            workDates={workDates}
+            specializationId={'13e757f8-d89f-463b-a3e5-b088109ff563'}
+         />
 
          <div className="space-y-3">
             <div className="flex items-center text-gray-600">

@@ -1,8 +1,15 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
-import Cookies from 'js-cookie'
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
-import { ACCESS_TOKEN } from '@/constants'
 import { getSession } from 'next-auth/react'
+
+interface CustomAxiosInstance
+   extends Omit<AxiosInstance, 'get' | 'post' | 'put' | 'delete' | 'patch'> {
+   get<T = undefined>(url: string): Promise<ApiResponse<T>>
+   post<T = undefined, D = undefined>(url: string, data?: D): Promise<ApiResponse<T>>
+   put<T = undefined>(url: string, data?: undefined): Promise<ApiResponse<T>>
+   delete<T = undefined>(url: string): Promise<ApiResponse<T>>
+   patch<T = undefined, D = undefined>(url: string, data?: D): Promise<ApiResponse<T>>
+}
 
 export const axiosInstance = axios.create({
    baseURL: process.env.NEXT_API_URL || '/backend',
@@ -10,7 +17,7 @@ export const axiosInstance = axios.create({
    headers: {
       'Content-Type': 'application/json'
    }
-})
+}) as CustomAxiosInstance
 
 axiosInstance.interceptors.request.use(
    async (config: InternalAxiosRequestConfig) => {
@@ -30,12 +37,25 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
    (response) => response.data,
    (error: AxiosError) => {
-      // Handle token expiration
-      if (error.response?.status === 401) {
-         Cookies.remove(ACCESS_TOKEN) // Có thể redirect to login page
-         window.location.href = '/auth/login'
+      if (error.response) {
+         const responseData = error.response.data as ApiResponse<unknown>
+
+         return {
+            statusCode: responseData.statusCode,
+            message: responseData.message,
+            error: responseData.error
+         }
       }
 
+      if (error.request) {
+         return {
+            statusCode: 0,
+            message: 'Không thể kết nối tới máy chủ. Vui lòng thử lại.',
+            error: 'NETWORK_ERROR'
+         }
+      }
+
+      // Lỗi cấu hình
       return Promise.reject(error)
    }
 )
