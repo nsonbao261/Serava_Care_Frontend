@@ -47,7 +47,7 @@ export default function BookingModal(props: BookingModalProps) {
    const [selectedTime, setSelectedTime] = useState<TimeSlot | undefined>(undefined)
    const [bookingForm, setBookingForm] = useState(initialFormState)
 
-   const { data: timeSlots } = useSWR([doctor.id, selectedDate.date], ([doctorId, date]) =>
+   const { data: timeSlots, mutate } = useSWR([doctor.id, selectedDate.date], ([doctorId, date]) =>
       getDoctorTimeSlots(doctorId, date)
    )
 
@@ -77,6 +77,7 @@ export default function BookingModal(props: BookingModalProps) {
 
       const res = await createAppointment(data)
       toastMessage(res, { success: toast.success, error: toast.warning })
+      await mutate()
 
       handleReset()
    }
@@ -215,7 +216,7 @@ export default function BookingModal(props: BookingModalProps) {
                         <div className="border-t pt-4 space-y-2">
                            <div className="flex justify-between">
                               <span className="text-gray-600">Ngày khám:</span>
-                              <span className="font-medium">{selectedDate.date}</span>
+                              <span className="font-medium">{selectedDate.date.split('T')[0]}</span>
                            </div>
                            <div className="flex justify-between">
                               <span className="text-gray-600">Giờ khám:</span>
