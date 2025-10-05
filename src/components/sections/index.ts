@@ -1,0 +1,8 @@
+export { default as CTA } from './cta'
+export { default as ExpertTime } from './expert-team'
+export { default as Features } from './features'
+export { default as Hero } from './hero'
+export { default as Newsletter } from './newsletter'
+export { default as SearchAndFilterBar } from './search-and-filter-bar'
+export { default as Specialties } from './specialties'
+export { default as Statistics } from './statistics'

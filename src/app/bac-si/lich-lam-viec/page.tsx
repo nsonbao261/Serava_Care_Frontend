@@ -1,9 +1,7 @@
 'use client'
 
-import React from "react";
+import React from 'react'
 
 export default (() => {
-
-    return <div/>
+   return <div />
 }) satisfies React.FC
-

@@ -1,10 +1,12 @@
+// Component
+import { DoctorResults } from '@/features/doctors'
+
+// Deps
 import { getAllDoctors } from '@/services'
-import DoctorResults from './doctor-results'
-import React from "react"
 
 export default (async () => (
    <div className="bg-gray-50">
-   {/* Header */}
+      {/* Header */}
       <div className="bg-white shadow-sm">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
@@ -12,8 +14,7 @@ export default (async () => (
                   Danh sách Bác sĩ
                </h1>
                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Tìm kiếm và đặt lịch khám với hơn 1000+ bác sĩ chuyên khoa uy tín trên toàn
-                  quốc
+                  Tìm kiếm và đặt lịch khám với hơn 1000+ bác sĩ chuyên khoa uy tín trên toàn quốc
                </p>
             </div>
          </div>

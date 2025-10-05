@@ -1,6 +1,4 @@
-'use client'
-
-import { axiosInstance } from '@/lib'
+import { axiosInstance } from '@/libs'
 
 export const getDoctorTimeSlots = async (doctorId: string, workDate: string) => {
    const response = await axiosInstance.get<TimeSlot[]>(

@@ -1,6 +1,6 @@
 import { Clock } from 'lucide-react'
 
-export const TimeSelectSkeleton = () => {
+export default function TimeSelectSkeleton() {
    return (
       <div className="space-y-6 animate-pulse">
          <div>

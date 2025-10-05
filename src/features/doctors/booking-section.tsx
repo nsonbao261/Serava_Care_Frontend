@@ -1,6 +1,10 @@
-import { default as BookingModal } from '@/features/booking/booking-modal'
-import { getDoctorWorkDates } from '@/services/server/timelines'
 import { Clock, Mail, Phone } from 'lucide-react'
+
+// Components
+import BookingModal from './booking-modal'
+
+// Deps
+import { getDoctorWorkDates } from '@/services/server'
 
 export default async function BookingSection(props: { doctor: DoctorDetail }) {
    const { doctor } = props

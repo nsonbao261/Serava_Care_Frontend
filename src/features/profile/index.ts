@@ -1,0 +1,5 @@
+export { default as BasicInfo } from './basic-info'
+export { default as EmergencyContact } from './emergency-contact'
+export { default as InsuranceInfor } from './insurance-info'
+export { default as MedicalInfo } from './medical-info'
+export { default as Overview } from './overview'

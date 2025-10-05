@@ -24,3 +24,5 @@ interface SignUpRequest {
    password: string
    confirmPassword: string
 }
+
+type Role = 'GUEST' | 'ADMIN' | 'DOCTOR' | 'NURSE'

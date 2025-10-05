@@ -1,5 +1,3 @@
-import { notFound } from 'next/navigation'
-import { ArticlesSection, BookingSection } from '@/features/doctors'
 import {
    Award,
    Bookmark,
@@ -13,12 +11,17 @@ import {
    ThumbsUp,
    User
 } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components'
-import { getDoctorBySlug } from '@/services'
 import Image from 'next/image'
-import React from 'react'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+
+// Components
+import { Button } from '@/components/ui'
+import { ArticlesSection, BookingSection } from '@/features/doctors'
+
+// Deps
 import { IMAGE_PLACEHOLDER_CONTENT } from '@/constants'
+import { getDoctorBySlug } from '@/services'
 
 interface Props {
    params: Promise<{ slug: string }>

@@ -1,6 +1,6 @@
 'use server'
 
-import { request } from '@/lib/request'
+import { request } from '@/libs'
 
 export const getDoctorWorkDates = async (doctorId: string, startDate: string, endDate?: string) => {
    const params = new URLSearchParams({ startDate })

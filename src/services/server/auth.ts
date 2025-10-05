@@ -1,9 +1,10 @@
 'use server'
 
-import {request} from '@/lib/request'
-import {Account} from 'next-auth'
-import {ResponseCookie} from 'next/dist/compiled/@edge-runtime/cookies'
-import {cookies} from 'next/headers'
+import { Account } from 'next-auth'
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+import { cookies } from 'next/headers'
+
+import { request } from '@/libs'
 
 export const oauthWithGoogle = async (account: Account) => {
    const idToken = account.id_token
@@ -18,9 +19,9 @@ export const oauthWithGoogle = async (account: Account) => {
 }
 
 export const signUpWithCredentials = async (body: SignUpRequest) => {
-    return await request<void, SignUpRequest>('auth/sign-up', {
-       method: 'POST',
-       body
+   return await request<void, SignUpRequest>('auth/sign-up', {
+      method: 'POST',
+      body
    })
 }
 

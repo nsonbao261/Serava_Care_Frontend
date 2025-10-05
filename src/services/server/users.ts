@@ -1,6 +1,6 @@
 'use server'
 
-import { request } from '@/lib/request'
+import { request } from '@/libs'
 
 export const getUserProfile = async () => {
    const response = await request<User>('users/profile', { requireAuth: true })

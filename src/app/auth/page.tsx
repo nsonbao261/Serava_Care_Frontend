@@ -1,16 +1,18 @@
 'use client'
 
-import { BackgroundMotion } from '@/components'
 import { useRouter } from 'next/navigation'
 import { use, useState } from 'react'
-import SignInForm from '@/features/sign-in/sign-in-form'
-import SignUpForm from '@/features/sign-in/sign-up-form'
 
-export default function SignInPage({
-   searchParams
-}: {
+// Components
+import { BackgroundMotion } from '@/features/animations'
+import { SignInForm, SignUpForm } from '@/features/auth'
+
+// Types
+interface ISignInPageProps {
    searchParams: Promise<{ callbackUrl?: string }>
-}) {
+}
+
+export default function SignInPage({ searchParams }: ISignInPageProps) {
    const { callbackUrl } = use(searchParams)
 
    const router = useRouter()

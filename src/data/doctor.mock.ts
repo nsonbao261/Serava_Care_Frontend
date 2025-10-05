@@ -189,7 +189,7 @@ export const mockDoctorDetails: DoctorDetail[] = [
    }
 ]
 
-export const mockDoctorProfile : DoctorProfile = {
+export const mockDoctorProfile: DoctorProfile = {
    id: '1',
    name: 'Nguyễn Văn Minh',
    slug: 'bs-ckii-nguyen-van-minh',
@@ -198,16 +198,16 @@ export const mockDoctorProfile : DoctorProfile = {
    phone: '028-3855-4269',
    about: 'BS.CKII Nguyễn Văn Minh có hơn 20 năm kinh nghiệm trong lĩnh vực Tim mạch can thiệp. Bác sĩ Minh hiện đang là Trưởng khoa Tim mạch tại Bệnh viện Chợ Rẫy.',
    education: [
-       '2000: Tốt nghiệp Đại học Y Dược TP.HCM',
-       '2005: Tốt nghiệp chuyên khoa 1 Tim mạch, Đại học Y Dược TP.HCM',
-       '2010: Tốt nghiệp chuyên khoa 2 Tim mạch, Đại học Y Dược TP.HCM',
-       '2015: Học tập tại Bệnh viện Đại học Tokyo, Nhật Bản'
+      '2000: Tốt nghiệp Đại học Y Dược TP.HCM',
+      '2005: Tốt nghiệp chuyên khoa 1 Tim mạch, Đại học Y Dược TP.HCM',
+      '2010: Tốt nghiệp chuyên khoa 2 Tim mạch, Đại học Y Dược TP.HCM',
+      '2015: Học tập tại Bệnh viện Đại học Tokyo, Nhật Bản'
    ],
    achievements: [
-       'Thành viên Hội Tim mạch Việt Nam',
-       'Chứng chỉ can thiệp tim mạch quốc tế',
-       'Giải thưởng Bác sĩ xuất sắc năm 2020',
-       'Chứng chỉ đào tạo tại Đại học Harvard'
+      'Thành viên Hội Tim mạch Việt Nam',
+      'Chứng chỉ can thiệp tim mạch quốc tế',
+      'Giải thưởng Bác sĩ xuất sắc năm 2020',
+      'Chứng chỉ đào tạo tại Đại học Harvard'
    ],
    languages: ['Tiếng Việt', 'English', '日本語'],
    title: 'Bác sĩ Chuyên khoa II',

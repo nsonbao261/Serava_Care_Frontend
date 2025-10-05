@@ -1,5 +1,3 @@
-import React from "react"
+import React from 'react'
 
-export default (() => (
-   <div>Not Implemented</div>
-)) satisfies React.FC
+export default (() => <div>Not Implemented</div>) satisfies React.FC

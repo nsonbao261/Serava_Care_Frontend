@@ -1,7 +1,5 @@
 'use client'
 
-import React, { useState } from 'react'
-import Link from 'next/link'
 import {
    ChevronDown,
    Facebook,
@@ -13,6 +11,8 @@ import {
    Smartphone,
    Youtube
 } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export default (() => {
    const currentYear = new Date().getFullYear()
@@ -49,7 +49,7 @@ export default (() => {
       { label: 'Liên hệ', href: '/lien-he' }
    ]
 
-   const PARTNER_LINKS   = [
+   const PARTNER_LINKS = [
       { label: 'Trở thành đối tác', href: '/doi-tac' },
       { label: 'Dành cho bác sĩ', href: '/danh-cho-bac-si' },
       { label: 'Dành cho cơ sở y tế', href: '/danh-cho-co-so-y-te' },

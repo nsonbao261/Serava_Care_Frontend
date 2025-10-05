@@ -10,10 +10,13 @@ import {
 } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
-import { Button } from '@/components'
+
+// Components
+import { Button } from '@/components/ui'
 import UserMenu from './user-menu'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import React from "react";
+
+// Deps
+import { authOptions } from '@/libs'
 
 export default (async () => {
    const session = await getServerSession(authOptions)

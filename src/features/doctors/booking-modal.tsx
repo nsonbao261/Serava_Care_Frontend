@@ -1,0 +1,491 @@
+'use client'
+
+import { Calendar, Clock, CreditCard, MapPin, User, X } from 'lucide-react'
+import Image from 'next/image'
+import { Fragment, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+import useSWR from 'swr'
+
+// Components
+import { TimeSelectSkeleton } from '@/components/skeletons'
+import {
+   Button,
+   Dialog,
+   DialogClose,
+   DialogContent,
+   DialogDescription,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger
+} from '@/components/ui'
+
+// Deps
+import { IMAGE_PLACEHOLDER_CONTENT } from '@/constants'
+import { createAppointment, getDoctorTimeSlots } from '@/services/client'
+import { cn, toastMessage } from '@/utils'
+const initialFormState: Pick<BookingForm, 'fullName' | 'phoneNumber' | 'reason' | 'patientId'> = {
+   fullName: '',
+   phoneNumber: '',
+   reason: ''
+}
+
+// Types
+type Step = 'datetime' | 'info' | 'confirm'
+
+interface BookingModalProps {
+   doctor: Doctor
+   workDates: WorkDate[]
+   specializationId: string
+}
+
+export default function BookingModal(props: BookingModalProps) {
+   const { doctor, workDates, specializationId } = props
+
+   const [isOpen, setOpen] = useState(false)
+   const [step, setStep] = useState<Step>('datetime')
+   const [selectedDate, setSelectedDate] = useState<WorkDate>(workDates[0])
+   const [selectedTime, setSelectedTime] = useState<TimeSlot | undefined>(undefined)
+   const [bookingForm, setBookingForm] = useState(initialFormState)
+
+   const { data: timeSlots, mutate } = useSWR([doctor.id, selectedDate.date], ([doctorId, date]) =>
+      getDoctorTimeSlots(doctorId, date)
+   )
+
+   const handleReset = () => {
+      setOpen(false)
+
+      // Delay tránh bị flick modal
+      setTimeout(() => {
+         setStep('datetime')
+         setSelectedDate(workDates[0])
+         setBookingForm(initialFormState)
+         setSelectedTime(undefined)
+      }, 300)
+   }
+
+   const handleBookingSubmit = async () => {
+      if (!selectedTime?.timelineId) return
+
+      const data: BookingForm = {
+         timelineId: selectedTime.timelineId,
+         doctorScheduleId: selectedDate.doctorScheduleId,
+         specializationId: specializationId,
+         patientId: bookingForm.patientId,
+         phoneNumber: bookingForm.phoneNumber,
+         fullName: bookingForm.fullName
+      }
+
+      const res = await createAppointment(data)
+      toastMessage(res, { success: toast.success, error: toast.warning })
+      handleReset()
+      await mutate()
+   }
+
+   const isDateTimeValid = !!selectedDate && !!selectedTime
+   const isInfoValid = !!bookingForm.fullName?.trim() && !!bookingForm.phoneNumber?.trim()
+
+   const handleDateTimeNext = () => {
+      if (!isDateTimeValid || !selectedTime) return
+
+      setBookingForm((prev) => ({
+         ...prev,
+         timelineId: selectedTime.timelineId,
+         doctorScheduleId: selectedDate.doctorScheduleId
+      }))
+      setStep('info')
+   }
+
+   const handleInfoNext = () => {
+      if (!isInfoValid) return
+      setStep('confirm')
+   }
+
+   const handleStepBack = () => {
+      setStep(step === 'info' ? 'datetime' : 'info')
+   }
+
+   const updateBookingForm = (field: keyof BookingForm, value: string) => {
+      setBookingForm((prev) => ({ ...prev, [field]: value }))
+   }
+
+   return (
+      <Dialog open={isOpen} onOpenChange={(open) => setOpen(open)}>
+         <DialogTrigger asChild>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-4">
+               <Calendar className="h-4 w-4 mr-2" />
+               Đặt lịch khám ngay
+            </Button>
+         </DialogTrigger>
+
+         <DialogContent
+            showCloseButton={false}
+            className="flex flex-col bg-transparent p-0 border-0 gap-0 max-w-xl max-h-[85dvh] min-h-[450px] overflow-hidden"
+         >
+            <BookingModelHeader doctor={doctor} step={step} />
+
+            <div className="flex-1 bg-white overflow-y-auto p-6">
+               {step === 'datetime' && (
+                  <DateTimeStep
+                     workDates={workDates}
+                     timeSlots={timeSlots}
+                     selectedDate={selectedDate}
+                     selectedTime={selectedTime}
+                     onDateSelect={setSelectedDate}
+                     onTimeSelect={setSelectedTime}
+                  />
+               )}
+
+               {step === 'info' && (
+                  <div className="space-y-6">
+                     <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <User className="w-5 h-5 mr-2 text-blue-600" />
+                        Thông tin bệnh nhân
+                     </h3>
+
+                     <div className="space-y-4">
+                        <div>
+                           <label className="block text-sm font-medium mb-2">
+                              Họ và tên <span className="text-red-500">*</span>
+                           </label>
+                           <input
+                              type="text"
+                              value={bookingForm.fullName}
+                              onChange={(e) => updateBookingForm('fullName', e.target.value)}
+                              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Nhập họ và tên"
+                           />
+                        </div>
+
+                        <div>
+                           <label className="block text-sm font-medium mb-2">
+                              Số điện thoại <span className="text-red-500">*</span>
+                           </label>
+                           <input
+                              type="tel"
+                              value={bookingForm.phoneNumber}
+                              onChange={(e) => updateBookingForm('phoneNumber', e.target.value)}
+                              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Nhập số điện thoại"
+                           />
+                        </div>
+
+                        <div>
+                           <label className="block text-sm font-medium mb-2">
+                              Lý do khám (tùy chọn)
+                           </label>
+                           <textarea
+                              value={bookingForm.reason}
+                              onChange={(e) => updateBookingForm('reason', e.target.value)}
+                              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={3}
+                              placeholder="Mô tả ngắn gọn tình trạng sức khỏe hoặc lý do khám"
+                           />
+                        </div>
+                     </div>
+                  </div>
+               )}
+
+               {step === 'confirm' && (
+                  <div className="space-y-6">
+                     <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <CreditCard className="w-5 h-5 mr-2 text-blue-600" />
+                        Xác nhận đặt khám
+                     </h3>
+
+                     {/* Booking Summary */}
+                     <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                        <div className="flex items-center space-x-4">
+                           <Image
+                              src={doctor.imageUrl ?? IMAGE_PLACEHOLDER_CONTENT}
+                              alt={doctor.name}
+                              width={64}
+                              height={64}
+                              className="w-16 h-16 rounded-full object-cover"
+                           />
+                           <div>
+                              <h4 className="text-lg font-semibold text-gray-900">{doctor.name}</h4>
+                              <p className="text-gray-600">{doctor.specialty}</p>
+                              <div className="flex items-center text-gray-500 text-sm mt-1">
+                                 <MapPin className="h-4 w-4 mr-1" />
+                                 <span>{doctor.location}</span>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="border-t pt-4 space-y-2">
+                           <div className="flex justify-between">
+                              <span className="text-gray-600">Ngày khám:</span>
+                              <span className="font-medium">{selectedDate.date.split('T')[0]}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-gray-600">Giờ khám:</span>
+                              <span className="font-medium">{selectedTime?.startTime}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-gray-600">Bệnh nhân:</span>
+                              <span className="font-medium">{bookingForm.fullName}</span>
+                           </div>
+                           <div className="flex justify-between">
+                              <span className="text-gray-600">Số điện thoại:</span>
+                              <span className="font-medium">{bookingForm.phoneNumber}</span>
+                           </div>
+
+                           {bookingForm.reason && (
+                              <div className="flex justify-between">
+                                 <span className="text-gray-600">Lý do khám:</span>
+                                 <span className="font-medium">{bookingForm.reason}</span>
+                              </div>
+                           )}
+                        </div>
+
+                        <div className="border-t pt-4">
+                           <div className="flex justify-between text-lg font-semibold">
+                              <span>Phí khám:</span>
+                              <span className="text-green-600">{doctor.consultationFee}</span>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 className="font-medium text-blue-800 mb-2">Lưu ý quan trọng:</h4>
+                        <ul className="text-sm text-blue-700 space-y-1">
+                           <li>• Vui lòng có mặt trước 15 phút so với giờ hẹn</li>
+                           <li>• Mang theo giấy tờ tùy thân và sổ khám bệnh (nếu có)</li>
+                           <li>• Liên hệ hotline nếu cần thay đổi lịch hẹn</li>
+                        </ul>
+                     </div>
+                  </div>
+               )}
+            </div>
+
+            <BookingModelFooter
+               step={step}
+               isDateTimeValid={isDateTimeValid}
+               isInfoValid={isInfoValid}
+               onStepBack={handleStepBack}
+               onDateTimeNext={handleDateTimeNext}
+               onInfoNext={handleInfoNext}
+               onBookingSubmit={handleBookingSubmit}
+            />
+         </DialogContent>
+      </Dialog>
+   )
+}
+
+const BookingModelHeader = (({ doctor, step }) => {
+   const steps: { label: string; key: Step }[] = [
+      { label: 'Chọn thời gian', key: 'datetime' },
+      { label: 'Thông tin', key: 'info' },
+      { label: 'Xác nhận', key: 'confirm' }
+   ]
+
+   return (
+      <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+         <div className="flex items-center justify-between">
+            <DialogTitle className="text-2xl font-bold">
+               Đặt lịch khám
+               <DialogDescription className="text-blue-100 mt-1">
+                  {doctor.name} - {doctor.specialty}
+               </DialogDescription>
+            </DialogTitle>
+            <DialogClose className="text-white hover:bg-white/20 rounded-full p-2 transition-colors">
+               <X className="w-6 h-6" />
+            </DialogClose>
+         </div>
+
+         {/* Progress Steps */}
+         <div className="flex items-center mt-6 space-x-4">
+            {steps.map((s, idx) => (
+               <Fragment key={s.key}>
+                  <div
+                     className={cn('flex items-center space-x-2 text-blue-300', {
+                        'text-white': step === s.key,
+                        'text-blue-200':
+                           (s.key === 'datetime' && step !== 'datetime') ||
+                           (s.key === 'info' && step === 'confirm')
+                     })}
+                  >
+                     <div
+                        className={cn(
+                           'w-8 h-8 rounded-full flex items-center justify-center bg-blue-400',
+                           {
+                              'bg-white text-blue-600': step === s.key,
+                              'bg-blue-500 text-white':
+                                 (s.key === 'datetime' && step !== 'datetime') ||
+                                 (s.key === 'info' && step === 'confirm')
+                           }
+                        )}
+                     >
+                        {idx + 1}
+                     </div>
+                     <span className="text-sm font-medium">{s.label}</span>
+                  </div>
+
+                  {idx < steps.length - 1 && <div className="flex-1 h-px bg-blue-400"></div>}
+               </Fragment>
+            ))}
+         </div>
+      </DialogHeader>
+   )
+}) satisfies React.FC<{ doctor: Doctor; step: Step }>
+
+const BookingModelFooter = (({
+   step,
+   isDateTimeValid,
+   isInfoValid,
+   onStepBack,
+   onDateTimeNext,
+   onInfoNext,
+   onBookingSubmit
+}) => {
+   return (
+      <DialogFooter className="flex justify-between items-center bg-white border-t border-gray-200 p-6">
+         {step !== 'datetime' && (
+            <button
+               onClick={onStepBack}
+               className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            >
+               Quay lại
+            </button>
+         )}
+
+         <div className="flex-1"></div>
+
+         {step === 'datetime' && (
+            <button
+               onClick={onDateTimeNext}
+               disabled={!isDateTimeValid}
+               className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+               Tiếp tục
+            </button>
+         )}
+
+         {step === 'info' && (
+            <button
+               onClick={onInfoNext}
+               disabled={!isInfoValid}
+               className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+               Tiếp tục
+            </button>
+         )}
+
+         {step === 'confirm' && (
+            <button
+               onClick={onBookingSubmit}
+               className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+               Xác nhận đặt khám
+            </button>
+         )}
+      </DialogFooter>
+   )
+}) satisfies React.FC<{
+   step: Step
+   isDateTimeValid: boolean
+   isInfoValid: boolean
+   onStepBack: () => void
+   onDateTimeNext: () => void
+   onInfoNext: () => void
+   onBookingSubmit: () => void
+}>
+
+const DateTimeStep = (({
+   workDates,
+   timeSlots,
+   selectedDate,
+   selectedTime,
+   onDateSelect,
+   onTimeSelect
+}) => {
+   const dates = useMemo(
+      () =>
+         workDates.map((workDate) => {
+            const date = new Date(workDate.date)
+            return {
+               ...workDate,
+               day: date.getDate(),
+               weekday: date.toLocaleDateString('vi-VN', { weekday: 'short' }),
+               month: date.getMonth() + 1
+            }
+         }),
+      [workDates]
+   )
+
+   const handleDateSelect = (workDate: WorkDate) => {
+      onDateSelect(workDate)
+      onTimeSelect(undefined)
+   }
+
+   return (
+      <div className="space-y-6">
+         {/* Date Selection */}
+         <div>
+            <h3 className="text-lg font-semibold mb-4 flex items-center">
+               <Calendar className="w-5 h-5 mr-2 text-blue-600" />
+               Chọn ngày khám
+            </h3>
+            <div className="grid grid-cols-7 gap-2">
+               {dates.map((date) => (
+                  <button
+                     key={date.doctorScheduleId}
+                     onClick={() => handleDateSelect(date)}
+                     className={cn(
+                        'p-3 text-center rounded-lg border transition-all duration-200',
+                        {
+                           'bg-blue-600 text-white border-blue-600 shadow-lg':
+                              selectedDate?.doctorScheduleId === date.doctorScheduleId,
+                           'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50':
+                              selectedDate?.doctorScheduleId !== date.doctorScheduleId
+                        }
+                     )}
+                  >
+                     <div className="text-xs text-current opacity-75">{date.weekday}</div>
+                     <div className="text-lg font-semibold">{date.day}</div>
+                     <div className="text-xs text-current opacity-75">T{date.month}</div>
+                  </button>
+               ))}
+            </div>
+         </div>
+
+         {/* Time Selection */}
+         {timeSlots ? (
+            <div>
+               <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  <Clock className="w-5 h-5 mr-2 text-blue-600" />
+                  Chọn giờ khám
+               </h3>
+               <div className="grid grid-cols-4 gap-3">
+                  {timeSlots.map((slot) => (
+                     <button
+                        key={slot.timelineId}
+                        onClick={() => slot.isAvailable && onTimeSelect(slot)}
+                        disabled={!slot.isAvailable}
+                        className={cn('p-3 rounded-lg font-medium transition-all duration-200', {
+                           'bg-gray-100 text-gray-400 cursor-not-allowed': !slot.isAvailable,
+                           'bg-blue-600 text-white shadow-lg':
+                              slot.isAvailable && selectedTime?.timelineId === slot.timelineId,
+                           'bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-blue-50':
+                              slot.isAvailable && selectedTime?.timelineId !== slot.timelineId
+                        })}
+                     >
+                        {slot.startTime}
+                     </button>
+                  ))}
+               </div>
+            </div>
+         ) : (
+            <TimeSelectSkeleton />
+         )}
+      </div>
+   )
+}) satisfies React.FC<{
+   workDates: WorkDate[]
+   timeSlots?: TimeSlot[]
+   selectedDate: WorkDate | undefined
+   selectedTime: TimeSlot | undefined
+   onDateSelect: (date: WorkDate) => void
+   onTimeSelect: (time: TimeSlot | undefined) => void
+}>

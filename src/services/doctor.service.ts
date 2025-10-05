@@ -1,4 +1,4 @@
-import {mockDoctors, mockDoctorDetails, mockDoctorProfile} from '@/data'
+import { mockDoctors, mockDoctorDetails, mockDoctorProfile } from '@/data'
 
 export async function getAllDoctors(): Promise<Doctor[]> {
    try {
@@ -12,17 +12,17 @@ export async function getAllDoctors(): Promise<Doctor[]> {
 export async function getDoctorBySlug(slug: string): Promise<DoctorDetail | undefined> {
    try {
       await new Promise((resolve) => setTimeout(resolve, 800))
-      return mockDoctorDetails.find(doctor => doctor.slug == slug)
+      return mockDoctorDetails.find((doctor) => doctor.slug == slug)
    } catch {
       throw new Error('Không thể tải thông tin bác sĩ từ server')
    }
 }
 
 export async function getDoctorProfile(): Promise<DoctorProfile | undefined> {
-    try {
-        await new Promise((resolve) => setTimeout(resolve, 800))
-        return mockDoctorProfile
-    } catch {
-        throw new Error('Không thể tải thông tin bác sĩ từ server')
-    }
+   try {
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      return mockDoctorProfile
+   } catch {
+      throw new Error('Không thể tải thông tin bác sĩ từ server')
+   }
 }

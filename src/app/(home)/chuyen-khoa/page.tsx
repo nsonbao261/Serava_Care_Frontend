@@ -1,6 +1,8 @@
+// Components
+import { SpecialtyResults } from '@/features/specialty'
+
+// Deps
 import { getAllSpecialties } from '@/services'
-import SpecialtyResults from '@/app/(home)/chuyen-khoa/specialty-results'
-import React from "react"
 
 export default (async () => (
    <div className="min-h-screen bg-gray-50">
