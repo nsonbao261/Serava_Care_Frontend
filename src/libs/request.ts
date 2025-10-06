@@ -4,53 +4,44 @@ import { getServerSession } from 'next-auth'
 import authOptions from './auth'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-
 type RequestOptions<B> = {
    method?: HttpMethod
    cache?: RequestCache
    next?: NextFetchRequestConfig
    headers?: HeadersInit
    body?: B
-   requireAuth?: boolean
+   authMode?: 'public' | 'auth' | 'optional'
 }
+
 const request = async <T, B = undefined>(
    path: string,
-   options: RequestOptions<B> = {}
+   { method = 'GET', headers = {}, authMode = 'public', cache, next, body }: RequestOptions<B> = {}
 ): Promise<ApiResponse<T>> => {
-   const { method = 'GET', cache = 'no-cache', next, headers, body, requireAuth } = options
-
-   let mergedHeader = { ...headers }
-
-   if (requireAuth) {
+   if (authMode !== 'public') {
       const session = await getServerSession(authOptions)
-
       const accessToken = session?.user?.accessToken
 
-      if (!accessToken) {
-         return {
-            statusCode: 401,
-            message: 'Không đủ thẩm quyền',
-            error: 'Unauthorized'
-         }
+      if (authMode === 'auth' && !accessToken) {
+         return { statusCode: 401, message: 'Không đủ thẩm quyền', error: 'Unauthorized' }
       }
 
-      mergedHeader = { ...headers, Authorization: `Bearer ${accessToken}` }
+      if (accessToken) {
+         headers = { ...headers, Authorization: `Bearer ${accessToken}` }
+      }
    }
 
    const baseURL = process.env.NEXT_API_URL
-
    const url = `${baseURL}/${path}`
 
    try {
-      const defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' }
-      const allHeaders = { ...defaultHeaders, ...mergedHeader }
+      const defaultHeaders = { 'Content-Type': 'application/json' }
 
       const response = await fetch(url, {
          method,
          cache,
-         headers: allHeaders,
-         body: body ? JSON.stringify(body) : undefined,
-         next
+         next,
+         headers: { ...defaultHeaders, ...headers },
+         body: body ? JSON.stringify(body) : undefined
       })
 
       return await response.json()
@@ -60,7 +51,7 @@ const request = async <T, B = undefined>(
       return {
          statusCode: 500,
          message: isErr ? error.message : 'Có lỗi xảy ra, vui lòng thử lại.',
-         error: isErr ? error.name : 'Unknown error'
+         error: isErr ? error.name : 'UnknownError'
       }
    }
 }

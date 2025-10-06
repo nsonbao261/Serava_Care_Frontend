@@ -22,7 +22,7 @@ import {
 import { usePersonalInfoStore } from '@/features/profile/store/personal-info'
 import { type ProfileFormData, profileFormSchema } from '@/schemas'
 import { getUserProfile, updateUserProfile } from '@/services/server'
-import { getChangedFields } from '@/utils'
+import { getChangedFields, toastMessage } from '@/utils'
 
 export default function ProfilePage() {
    const { setEditing, setLoading } = usePersonalInfoStore()
@@ -52,16 +52,12 @@ export default function ProfilePage() {
       if (!updatedFields) {
          toast.info('Không có thông tin nào thay đổi')
          setEditing(false)
+         setLoading(false)
          return
       }
 
       const res = await updateUserProfile(user.userId, updatedFields)
-
-      if (res.error) {
-         toast.error(res.message)
-      } else {
-         toast.success(res.message)
-      }
+      toastMessage(res, { success: toast.success, error: toast.error })
 
       await mutate()
       setEditing(false)
