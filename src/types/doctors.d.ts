@@ -2,6 +2,7 @@ interface Doctor {
    id: string
    slug: string
    name: string
+   professionalTitle?: string
    title: string
    specialty: string
    experience: string
@@ -11,6 +12,13 @@ interface Doctor {
    reviewCount?: number
    consultationFee: string
    imageUrl?: string
+   salary: double
+   userId: string
+   address: string
+   introduction: string
+   primarySpeciality: string
+   secondarySpecialities: []
+   experienceYears: number
 }
 
 interface DoctorDetail extends Doctor {
