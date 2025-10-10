@@ -1,34 +1,31 @@
+interface SpecialtyInfo {
+   specialityId: string // UUID
+   specialitiyName: string
+}
+
 interface Doctor {
-   id: string
+   staffId: string // UUID
    slug: string
-   name: string
-   professionalTitle?: string
-   title: string
-   specialty: string
-   experience: string
+   fullName: string
+   title?: string
+   imageUrl?: string
+   primarySpeciality?: SpecialtyInfo
+   secondarySpecialities?: SpecialtyInfo[]
    hospital: string
    location: string
-   rating: number
-   reviewCount?: number
-   consultationFee: string
-   imageUrl?: string
-   salary: double
-   userId: string
    address: string
    introduction: string
-   primarySpeciality: string
-   secondarySpecialities: []
-   experienceYears: number
+   consultationFee: number
+   experience: string
+   phoneNumber: string
+   email: string
+   achievements: string[]
+   educations: string[]
+   rating: number
+   totalRatings: number
 }
 
 interface DoctorDetail extends Doctor {
-   about: string
-   education: string[]
-   achievements: string[]
-   languages: string[]
-   workingHours: string
-   phone: string
-   email: string
    articles: Array<{
       id: string
       title: string

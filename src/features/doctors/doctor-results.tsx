@@ -13,8 +13,9 @@ export default ((props) => {
 
    // Filter specialties based on search query and category
    const filteredDoctors = doctors.filter((doctor) => {
-      const matchesCategory = specialtyCategory === 'all' || doctor.specialty === specialtyCategory
-      const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory =
+         specialtyCategory === 'all' || doctor.primarySpeciality?.name === specialtyCategory
+      const matchesSearch = doctor.fullName.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
    })
 
@@ -32,7 +33,7 @@ export default ((props) => {
          {filteredDoctors.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                {filteredDoctors.map((doctor) => (
-                  <DoctorCard key={doctor.id} doctor={doctor} />
+                  <DoctorCard key={doctor.staffId} doctor={doctor} />
                ))}
             </div>
          ) : (

@@ -1,24 +1,22 @@
 import { Clock, GraduationCap, MapPin, Star } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 // Components
-import { MorphingButton } from '@/components/common'
+import { AppImage, MorphingButton } from '@/components/common'
 
 // Deps
-import { IMAGE_PLACEHOLDER_CONTENT } from '@/constants'
 
 export default (({ doctor }) => (
    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
       <div className="p-6">
          <div className="flex items-start space-x-4">
             {/* Doctor Avatar */}
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-               <Image
-                  src={doctor.imageUrl ?? IMAGE_PLACEHOLDER_CONTENT}
-                  alt={doctor.name}
-                  width={500}
-                  height={300}
+            <div className="relative w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+               <AppImage
+                  src={doctor.imageUrl}
+                  alt={doctor.fullName}
+                  fill
+                  sizes="80px"
                   className="w-full h-full object-cover"
                />
             </div>
@@ -27,17 +25,17 @@ export default (({ doctor }) => (
                <div className="flex items-center mb-2">
                   <Link href={`/bac-si/${doctor.slug}`}>
                      <h3 className="text-lg font-bold text-gray-900 truncate hover:text-blue-600 cursor-pointer transition-colors duration-200">
-                        {doctor.name}
+                        {doctor.fullName}
                      </h3>
                   </Link>
                </div>
 
                <div className="text-sm text-gray-600 mb-1">{doctor.title}</div>
 
-               {doctor.specialty && (
+               {doctor.primarySpeciality && (
                   <div className="flex items-center text-sm text-blue-600 mb-2">
                      <GraduationCap className="h-4 w-4 mr-1" />
-                     {doctor.specialty}
+                     {doctor.primarySpeciality.name}
                   </div>
                )}
 
@@ -56,9 +54,7 @@ export default (({ doctor }) => (
                   <div className="flex items-center">
                      <Star className="h-4 w-4 text-yellow-400 mr-1" />
                      <span className="text-sm font-medium text-gray-900">{doctor.rating}</span>
-                     {doctor.reviewCount && (
-                        <span className="text-xs text-gray-500 ml-1">({doctor.reviewCount})</span>
-                     )}
+                     <span className="text-xs text-gray-500 ml-1">({doctor.totalRatings})</span>
                   </div>
                   <div className="text-sm font-semibold text-green-600">
                      {doctor.consultationFee}

@@ -1,11 +1,13 @@
-interface Specialty {
-   id: string
-   name: string
+interface SpecialtyInfo {
+   specialtyId: string // UUID
    slug: string
-   description: string
-   doctorCount: string
-   imageUrl: string
-   category: SpecialtyCategory
+   name: string
+   description?: string
+   doctorCount?: number
+   imageUrl?: string
+   category?: string
+   avgRating?: number
+   totalRating?: number
 }
 
 interface SpecialtyDetail {
