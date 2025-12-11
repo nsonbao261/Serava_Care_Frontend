@@ -1,7 +1,7 @@
 'use client'
 
 import {MorphingButton, ParticleBackground, TypewriterText} from '@/components'
-import {Calendar, Play, Search} from 'lucide-react'
+import {Calendar, Play, Search, Building, Users, Heart} from 'lucide-react'
 import Link from 'next/link'
 import React, {useState} from 'react'
 import {useRouter} from 'next/navigation'
@@ -55,108 +55,148 @@ export default (() => {
     }
 
     return (<section
-        className="relative py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
-        <ParticleBackground particleCount={30} particleColor="#3b82f6"/>
+        className="relative py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden">
+        <ParticleBackground particleCount={30} particleColor="#ffffff"/>
 
         <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center">
-                <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                    <span className="animate-in slide-in-from-left-4 duration-700">Đặt lịch khám bệnh</span>
-                    <span className="block text-blue-600">
-                     <TypewriterText
-                         texts={['Dễ dàng & Nhanh chóng', 'Tiện lợi & Tin cậy', 'Chuyên nghiệp & Uy tín']}
-                         speed={120}
-                         pauseDuration={2500}
-                     />
-                  </span>
-                </h1>
-                <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto px-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                    Tìm bác sĩ chính xác - Đặt lịch khám dễ dàng với hơn 1000 bác sĩ, 25 bệnh viện,
-                    100 phòng khám trên toàn quốc
-                </p>
-
-                {/* Enhanced Search Bar */}
-                <div className="max-w-2xl mx-auto mb-8 px-2 sm:px-0">
-                    <div
-                        className="flex items-center bg-white rounded-full shadow-lg hover:shadow-xl px-3 sm:px-6 py-3 sm:py-4 border border-gray-200 min-h-[48px] sm:min-h-[56px] transition-all duration-300">
-                        <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0"/>
-                        <input
-                            type="text"
-                            placeholder="Tìm bác sĩ, chuyên khoa, bệnh viện..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyDown={handleKeyPress}
-                            className="flex-1 outline-none text-gray-700 min-w-0 text-sm sm:text-base placeholder:text-sm sm:placeholder:text-base focus:placeholder-transparent transition-all"
-                        />
-                        <MorphingButton
-                            action={handleSearch}
-                            className="ml-2 sm:ml-4 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-8 py-1.5 sm:py-2 rounded-full text-xs sm:text-base whitespace-nowrap font-medium border-0"
-                            morphText="Tìm ngay!"
-                            size="sm"
-                        >
-                            Tìm kiếm
-                        </MorphingButton>
-                    </div>
-                </div>
-
-                {/* Animated Quick Search Suggestions */}
-                <div className="max-w-4xl mx-auto mb-8 px-2">
-                    <p className="text-sm text-gray-500 mb-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-500">
-                        Tìm kiếm phổ biến:
+            {/* Split Layout: Left Content - Right Banner */}
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+                {/* Left Column - Content */}
+                <div className="text-center lg:text-left">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                        <span className="animate-in slide-in-from-left-4 duration-700">Đặt lịch khám bệnh</span>
+                        <span className="block text-blue-100 mt-2">
+                         <TypewriterText
+                             texts={['Nhanh chóng & Tin cậy', 'Chuyên nghiệp & Uy tín']}
+                             speed={120}
+                             pauseDuration={2500}
+                         />
+                      </span>
+                    </h1>
+                    <p className="text-lg sm:text-xl text-white/90 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 drop-shadow">
+                        Kết nối 1.000+ bác sĩ uy tín trên toàn quốc
                     </p>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        {['Bác sĩ tim mạch', 'Chuyên khoa nhi', 'Sản phụ khoa', 'Bác sĩ da liễu', 'Tiêu hóa gan mật', 'Thần kinh'].map((suggestion, index) => (
+
+                    {/* Search Bar */}
+                    <div className="mb-8">
+                        <div
+                            className="flex items-center bg-white rounded-2xl shadow-2xl px-4 sm:px-6 py-4 border-2 border-white/20 min-h-[56px] transition-all duration-300">
+                            <Search className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 mr-3 flex-shrink-0"/>
+                            <input
+                                type="text"
+                                placeholder="Tìm bác sĩ, chuyên khoa, bệnh viện..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyDown={handleKeyPress}
+                                className="flex-1 outline-none text-gray-700 min-w-0 text-base sm:text-lg placeholder:text-gray-400 focus:placeholder-transparent transition-all"
+                            />
                             <button
-                                key={suggestion}
-                                onClick={() => {
-                                    setSearchTerm(suggestion)
-                                    // Auto-trigger search
-                                    const searchText = suggestion.toLowerCase()
-                                    const isSpecialtySearch = SPECIALTY_KEYWORDS.some((keyword) => searchText.includes(keyword.toLowerCase()))
-                                    const doctorKeywords = ['bác sĩ', 'bs', 'thầy thuốc', 'tiến sĩ', 'ts', 'phó giáo sư', 'pgs', 'giáo sư', 'gs']
-                                    const isDoctorSearch = doctorKeywords.some((keyword) => searchText.includes(keyword.toLowerCase()))
-
-                                    if (isSpecialtySearch && !isDoctorSearch) router.push(`/chuyen-khoa?search=${encodeURIComponent(suggestion)}`)
-                                    else router.push(`/bac-si?search=${encodeURIComponent(suggestion)}`)
-                                }}
-                                className="px-3 py-1 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-700 rounded-full text-sm transition-all duration-200 hover:-translate-y-0.5 animate-in fade-in slide-in-from-bottom-2"
-                                style={{
-                                    animationDuration: '500ms', animationDelay: `${700 + index * 100}ms`
-                                }}
+                                onClick={handleSearch}
+                                className="ml-3 bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-2.5 rounded-xl text-sm sm:text-base whitespace-nowrap font-semibold shadow-lg hover:shadow-xl transition-all"
                             >
-                                {suggestion}
-                            </button>))}
+                                Tìm kiếm
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div
-                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 max-w-2xl mx-auto">
-                    <div className="w-full sm:flex-1">
-                        <Link href="/bac-si" className="block w-full">
-                            <MorphingButton
-                                size="lg"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full border-0"
-                                morphText="Đặt ngay!"
-                                action={() => {
-                                }}
-                            >
-                                <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5"/>
-                                Đặt khám ngay
-                            </MorphingButton>
+                    {/* Trust Metrics */}
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
+                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
+                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
+                                <Users className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                                <div className="font-bold text-xl text-gray-900">1.000+</div>
+                                <div className="text-gray-600 text-xs">Bác sĩ</div>
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                <Building className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                                <div className="font-bold text-xl text-gray-900">125+</div>
+                                <div className="text-gray-600 text-xs">Bệnh viện</div>
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
+                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                                <Heart className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                                <div className="font-bold text-xl text-gray-900">1M+</div>
+                                <div className="text-gray-600 text-xs">Lượt khám</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* Quick Search Pills */}
+                    <div className="mb-8">
+                        <p className="text-sm text-white/90 mb-3">
+                            Tìm kiếm phổ biến:
+                        </p>
+                        <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                            {['Tim mạch', 'Nhi khoa', 'Sản phụ khoa', 'Da liễu'].map((suggestion, index) => (
+                                <button
+                                    key={suggestion}
+                                    onClick={() => {
+                                        setSearchTerm(suggestion)
+                                        const searchText = suggestion.toLowerCase()
+                                        const isSpecialtySearch = SPECIALTY_KEYWORDS.some((keyword) => searchText.includes(keyword.toLowerCase()))
+                                        const doctorKeywords = ['bác sĩ', 'bs', 'thầy thuốc', 'tiến sĩ', 'ts', 'phó giáo sư', 'pgs', 'giáo sư', 'gs']
+                                        const isDoctorSearch = doctorKeywords.some((keyword) => searchText.includes(keyword.toLowerCase()))
+
+                                        if (isSpecialtySearch && !isDoctorSearch) router.push(`/chuyen-khoa?search=${encodeURIComponent(suggestion)}`)
+                                        else router.push(`/bac-si?search=${encodeURIComponent(suggestion)}`)
+                                    }}
+                                    className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/30 hover:border-white/50 rounded-full text-sm font-medium transition-all duration-200"
+                                >
+                                    {suggestion}
+                                </button>))}
+                        </div>
+                    </div>
+
+                    {/* CTA Buttons - Dùng style của Diag */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <Link href="/bac-si" className="block">
+                            <button className="w-full flex items-center justify-center gap-2 bg-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+                                <Calendar className="h-5 w-5 text-blue-600 group-hover:scale-110 transition-transform" />
+                                <span className="font-semibold text-gray-900 text-sm">Đặt lịch ngay</span>
+                            </button>
+                        </Link>
+                        
+                        <Link href="/bac-si" className="block">
+                            <button className="w-full flex items-center justify-center gap-2 bg-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+                                <Users className="h-5 w-5 text-teal-600 group-hover:scale-110 transition-transform" />
+                                <span className="font-semibold text-gray-900 text-sm">1.000+ bác sĩ</span>
+                            </button>
+                        </Link>
+                        
+                        <Link href="/chuyen-khoa" className="block">
+                            <button className="w-full flex items-center justify-center gap-2 bg-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+                                <Building className="h-5 w-5 text-green-600 group-hover:scale-110 transition-transform" />
+                                <span className="font-semibold text-gray-900 text-sm">125+ bệnh viện</span>
+                            </button>
                         </Link>
                     </div>
-                    <div className="w-full sm:flex-1">
-                        <MorphingButton
-                            variant="outline"
-                            size="lg"
-                            className="w-full border-gray-300 text-gray-700 hover:text-blue-700 hover:border-blue-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full"
-                            morphText="Xem ngay!"
-                            action={() => {
-                            }}
-                        >
-                            <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5"/>
-                            Xem video hướng dẫn
-                        </MorphingButton>
+                </div>
+
+                {/* Right Column - Banner Slider */}
+                <div className="hidden lg:block">
+                    <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+                        {/* Placeholder for banner slider */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm flex items-center justify-center border-2 border-white/20">
+                            <div className="text-center text-white p-8">
+                                <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                    <Play className="h-10 w-10" />
+                                </div>
+                                <p className="text-lg font-semibold mb-2">Banner Slider</p>
+                                <p className="text-sm text-white/80">Khuyến mãi & Thông tin y tế</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

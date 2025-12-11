@@ -42,3 +42,80 @@ input[type='date'] {
     align-items: center;
     justify-content: center;
 }
+
+body {
+  @apply text-gray-900;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  @apply text-4xl md:text-5xl lg:text-6xl;
+  font-weight: 800;
+}
+
+h2 {
+  @apply text-3xl md:text-4xl;
+  font-weight: 700;
+}
+
+h3 {
+  @apply text-2xl md:text-3xl;
+  font-weight: 700;
+}
+
+p {
+  line-height: 1.7;
+}
+
+.btn-primary {
+  @apply px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 border-2 border-teal-600 text-teal-600 hover:bg-teal-50 rounded-lg font-semibold transition-all duration-200;
+}
+
+/* Custom Scrollbar - Medical Theme */
+/* Cách 1: Ẩn hoàn toàn scrollbar (Khuyên dùng cho UI hiện đại) */
+/* * {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+*::-webkit-scrollbar {
+  display: none; 
+} */
+
+/* Cách 2: Custom scrollbar đẹp (Comment out nếu muốn dùng) */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
