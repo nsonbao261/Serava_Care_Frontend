@@ -7,3 +7,19 @@
 /* Essential Custom Styles Only */
 @import '../styles/variables.css';
 @import '../styles/base.css';
+
+/* Swiper Pagination Custom Style */
+.swiper-pagination-bullet {
+  background: white;
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: white;
+  opacity: 1;
+  width: 24px;
+  border-radius: 5px;
+}

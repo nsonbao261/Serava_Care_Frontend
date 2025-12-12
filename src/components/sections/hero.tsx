@@ -3,8 +3,17 @@
 import {MorphingButton, ParticleBackground, TypewriterText} from '@/components'
 import {Calendar, Play, Search, Building, Users, Heart} from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import React, {useState} from 'react'
 import {useRouter} from 'next/navigation'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
+import { HERO_BANNERS } from '@/data'  // Import từ data folder
+import type { HeroBanner } from '@/types/hero'  // Import type trực tiếp
+
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-fade'
 
 export default (() => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -63,9 +72,9 @@ export default (() => {
             <div className="grid lg:grid-cols-2 gap-8 items-center">
                 {/* Left Column - Content */}
                 <div className="text-center lg:text-left">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
                         <span className="animate-in slide-in-from-left-4 duration-700">Đặt lịch khám bệnh</span>
-                        <span className="block text-blue-100 mt-2">
+                        <span className="block text-blue-100 mt-2 text-2xl sm:text-3xl md:text-4xl">
                          <TypewriterText
                              texts={['Nhanh chóng & Tin cậy', 'Chuyên nghiệp & Uy tín']}
                              speed={120}
@@ -98,40 +107,6 @@ export default (() => {
                             </button>
                         </div>
                     </div>
-
-                    {/* Trust Metrics */}
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
-                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
-                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
-                                <Users className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                                <div className="font-bold text-xl text-gray-900">1.000+</div>
-                                <div className="text-gray-600 text-xs">Bác sĩ</div>
-                            </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                                <Building className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                                <div className="font-bold text-xl text-gray-900">125+</div>
-                                <div className="text-gray-600 text-xs">Bệnh viện</div>
-                            </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-lg">
-                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                                <Heart className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                                <div className="font-bold text-xl text-gray-900">1M+</div>
-                                <div className="text-gray-600 text-xs">Lượt khám</div>
-                            </div>
-                        </div>
-                    </div>
-
 
                     {/* Quick Search Pills */}
                     <div className="mb-8">
@@ -186,17 +161,49 @@ export default (() => {
 
                 {/* Right Column - Banner Slider */}
                 <div className="hidden lg:block">
-                    <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl">
-                        {/* Placeholder for banner slider */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm flex items-center justify-center border-2 border-white/20">
-                            <div className="text-center text-white p-8">
-                                <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                    <Play className="h-10 w-10" />
-                                </div>
-                                <p className="text-lg font-semibold mb-2">Banner Slider</p>
-                                <p className="text-sm text-white/80">Khuyến mãi & Thông tin y tế</p>
-                            </div>
-                        </div>
+                    <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-inner border-4 border-white/20">
+                        <Swiper
+                            modules={[Autoplay, Pagination, EffectFade]}
+                            effect="fade"
+                            speed={800}
+                            autoplay={{ 
+                                delay: 3500, 
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true 
+                            }}
+                            pagination={{ 
+                                clickable: true,
+                                dynamicBullets: true 
+                            }}
+                            loop
+                            className="w-full h-full"
+                            aria-label="Banner khuyến mãi"
+                        >
+                            {HERO_BANNERS.map((banner) => (
+                                <SwiperSlide key={banner.id} role="group" aria-label={`Slide ${banner.id}`}>
+                                    <div className="relative w-full h-full bg-gradient-to-br from-blue-50 to-blue-100">
+                                        <Image
+                                            src={banner.image}
+                                            alt={banner.title}
+                                            fill
+                                            className="object-contain"
+                                            priority={banner.id === 1}
+                                            sizes="(max-width: 1024px) 0vw, 50vw"
+                                        />
+
+                                        {/* Overlay with gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex flex-col justify-end p-4 sm:p-6">
+                                            <h3 className="text-white text-lg sm:text-xl font-bold drop-shadow-lg">
+                                                {banner.title}
+                                            </h3>
+                                            <p className="text-white/90 text-xs sm:text-sm drop-shadow">
+                                                {banner.subtitle}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
                     </div>
                 </div>
             </div>
