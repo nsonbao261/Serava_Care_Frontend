@@ -161,7 +161,7 @@ export default (() => {
 
                 {/* Right Column - Banner Slider */}
                 <div className="hidden lg:block">
-                    <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-inner border-4 border-white/20">
+                    <div className="relative w-full h-[400px] overflow-hidden">
                         <Swiper
                             modules={[Autoplay, Pagination, EffectFade]}
                             effect="fade"
