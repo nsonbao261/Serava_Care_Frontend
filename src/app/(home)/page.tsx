@@ -21,6 +21,12 @@ export default (() => (
 
         <Suspense fallback={<SectionLoader/>}>
             <AnimatedSection delay={150}>
+                <BookingProcess />
+            </AnimatedSection>
+        </Suspense>
+
+        <Suspense fallback={<SectionLoader/>}>
+            <AnimatedSection delay={150}>
                 <StatisticsSection/>
             </AnimatedSection>
         </Suspense>
@@ -28,6 +34,18 @@ export default (() => (
         <Suspense fallback={<SectionLoader/>}>
             <AnimatedSection delay={100}>
                 <ExpertTeamSection/>
+            </AnimatedSection>
+        </Suspense>
+
+        <Suspense fallback={<SectionLoader/>}>
+            <AnimatedSection delay={150}>
+                <Partners/>
+            </AnimatedSection>
+        </Suspense>
+
+        <Suspense fallback={<SectionLoader/>}>
+            <AnimatedSection delay={200}>
+                <FAQ/>
             </AnimatedSection>
         </Suspense>
 
@@ -52,6 +70,9 @@ const StatisticsSection = lazy(() => import('@/components/sections/statistics').
 const ExpertTeamSection = lazy(() => import('@/components/sections/expert-team').then(module => ({ default: module.default })))
 const NewsletterSection = lazy(() => import('@/components/sections/newsletter').then(module => ({ default: module.default })))
 const CTASection = lazy(() => import('@/components/sections/cta'))
+const BookingProcess = lazy(() => import('@/components/sections/booking-process'))
+const Partners = lazy(() => import('@/components/sections/partners'))
+const FAQ = lazy(() => import('@/components/sections/faq'))
 
 // Optimized loading component
 const SectionLoader = () => (<div className="py-8 flex justify-center"><LoadingSpinner size="sm"/></div>)

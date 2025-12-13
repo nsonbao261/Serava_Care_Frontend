@@ -44,6 +44,11 @@ const nextConfig: NextConfig = {
             protocol: 'https',
             hostname: new URL(requiredEnv.STORAGE_HOST!).hostname,
             pathname: `/${STORAGE_BUCKET}/**`
+         },
+         {
+            protocol: 'https',
+            hostname: 'gakfhgpzzlfujxhypcpe.supabase.co',
+            pathname: '/storage/v1/object/public/**'
          }
       ]
    }

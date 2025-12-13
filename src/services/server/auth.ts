@@ -7,12 +7,23 @@ import {cookies} from 'next/headers'
 
 export const oauthWithGoogle = async (account: Account) => {
    const idToken = account.id_token
-   if (!idToken) return
+   if (!idToken) {
+      console.error('❌ No ID token from Google')
+      return
+   }
 
+   console.log('🔑 Sending Google ID token to backend...')
+   
    const res = await request<{ accessToken: string }, { idToken: string }>('auth/google', {
       method: 'POST',
       body: { idToken }
    })
+
+   if (!res.data?.accessToken) {
+      console.error('❌ Backend response:', res)
+   } else {
+      console.log('✅ Successfully received access token from backend')
+   }
 
    return res.data?.accessToken
 }

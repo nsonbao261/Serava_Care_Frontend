@@ -34,16 +34,27 @@ export const authOptions: NextAuthOptions = {
    ],
    callbacks: {
       async signIn({ user, account }) {
+         console.log('🔐 SignIn callback triggered:', { provider: account?.provider, email: user?.email })
+         
          if (account?.provider === 'google') {
-            const accessToken = await oauthWithGoogle(account)
-            if (!accessToken) return false
+            console.log('📧 Google account detected, starting OAuth flow...')
+            try {
+               const accessToken = await oauthWithGoogle(account)
+               if (!accessToken) {
+                  console.error('❌ Google OAuth failed: No access token returned from backend')
+                  return false
+               }
 
-            const userInfo = jwtDecode<JwtPayload>(accessToken)
+               const userInfo = jwtDecode<JwtPayload>(accessToken)
 
-            user.userId = userInfo.userId
-            user.fullName = userInfo.fullName
-            user.roles = userInfo.roles
-            user.accessToken = accessToken
+               user.userId = userInfo.userId
+               user.fullName = userInfo.fullName
+               user.roles = userInfo.roles
+               user.accessToken = accessToken
+            } catch (error) {
+               console.error('❌ Google OAuth error:', error)
+               return false
+            }
          }
 
          return true
@@ -78,6 +89,18 @@ export const authOptions: NextAuthOptions = {
    },
    pages: {
       signIn: '/auth'
+   },
+   debug: true,  // ✅ Enable debug mode
+   logger: {
+      error(code, metadata) {
+         console.error('❌ NextAuth Error:', code, metadata)
+      },
+      warn(code) {
+         console.warn('⚠️ NextAuth Warning:', code)
+      },
+      debug(code, metadata) {
+         console.log('🐛 NextAuth Debug:', code, metadata)
+      }
    }
 }
 
